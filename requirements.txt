@@ -1,0 +1,34 @@
+# Core AI/ML Libraries
+transformers>=4.40.0
+accelerate>=1.0.0
+datasets>=4.0.0
+trl>=0.16.0
+
+# LLM Training & Optimization
+deepspeed>=0.15.0
+bitsandbytes>=0.49.0
+flash-attn>=2.8.0
+liger-kernel>=0.5.0
+
+# Model Hub & Storage
+huggingface-hub>=0.36.0
+modelscope>=1.30.0
+safetensors>=0.7.0
+
+# OpenAI & API
+openai>=1.0.0
+aiohttp>=3.9.0
+
+# Web Automation (Playwright)
+playwright>=1.40.0
+
+# Utilities
+pydantic>=2.0.0
+PyYAML>=6.0.0
+tqdm>=4.60.0
+rich>=13.0.0
+
+# Experiment Tracking
+wandb>=0.18.0
+tensorboardX>=2.6.0
+
