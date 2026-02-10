@@ -1,0 +1,30 @@
+{
+  "interceptors": {
+    "cookie": false,
+    "permissions": [],
+    "captcha": false,
+    "register_correction": false
+  },
+  "pages": {
+    "min": 10,
+    "max": 15
+  },
+  "actions": {
+    "per_page_min": 3,
+    "per_page_max": 5
+  },
+  "terminals": {
+    "count": 3
+  },
+  "path_length": {
+    "len": [4, 6],
+    "shortest_only": true,
+    "count_interceptors": false
+  },
+  "home_nav_variants": ["direct"],
+  "home_nav_coverage": "each",
+  "list_filters": {
+    "enabled": false
+  }
+}
+

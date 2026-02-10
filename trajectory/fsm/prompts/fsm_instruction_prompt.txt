@@ -1,0 +1,419 @@
+Generate an **fsm.json** for:
+
+* theme = {theme}
+
+**Important**: If the theme contains a reference to a specific well-known application or website (e.g., "Email client-gmail", "Video platform-youtube", "E-commerce-amazon"), you should:
+1. Design the FSM to closely match the core features and page structure of that specific application
+2. Reference the typical user flows and interactions found in that application
+3. Include representative pages and actions that users would expect in that application
+4. Maintain realistic naming conventions and terminology used in that application
+5. Model the key functionalities that make that application distinctive
+
+For example, if theme is "Email client-gmail":
+- Include pages like: INBOX, COMPOSE, SENT, DRAFTS, SPAM, TRASH, SETTINGS
+- Include actions like: compose email, reply, forward, archive, star, label, search emails
+- Use Gmail-like terminology and workflows
+
+## Complexity Profile
+
+Complexity Profile JSON:
+{COMPLEXITY_PROFILE_JSON}
+
+YOU MUST Follow this Complexity Profile. Unspecified fields follow system prompt defaults.
+
+**Profile interpretation**:
+- `pages:{min,max}` → Generate pages within [min,max] range
+- `terminals:{count}` → Number of terminal success pages
+- `path_length:{len[min,max],shortest_only,count_interceptors}` → Ensure >=1 HOME→terminal trajectory within [min,max]
+- `home_nav_variants` → Navigation patterns from HOME (refer to system prompt for GUI patterns)
+- `list_filters:{enabled,fields_max,two_step_parity,allowed_shapes}` → Filter configuration
+- `interceptors:{cookie,permission}` → Gate actions configuration
+
+## Generation Steps
+
+### Step 1: Page Enumeration
+
+* **IMPORTANT: MUST generate pages within the profile range.**
+  - Add intermediate pages as needed: category pages, subcategory pages, detail pages, review pages, confirmation pages, etc.
+* Ensure at least one HOME→terminal trajectory length falls within path_length.len=[min,max] when provided.
+* For each page, define `signature_schema` with only essential runtime state (include any shared collections needed on this page).
+* **Follow system prompt constraint [D1-D5]** for collections and list/detail pages.
+
+### Step 2: Action Design
+
+For each page, list semantic actions. Each action MUST include:
+
+* id
+* name                # one of: click | type | search | select
+* is_navigation       # boolean
+* from, to            # page ids; if non-navigation, `to` == `from`
+* parameters          # semantic inputs only (no UI selectors); follow **system prompt [SPP-1 to SPP-3]**
+* preconditions       # optional; structured predicates over the page `signature_schema`
+* effects             # MUST update only fields in the page's `signature_schema`; follow **system prompt Effects Operations**
+* gui_procedure       # atomic GUI ops; follow **system prompt Standard GUI Procedures**
+
+**GUI Procedure Requirements**:
+
+* **Follow system prompt Standard GUI Procedures** for all standardized actions (type/search/select/scroll/interceptors/filters)
+* Use concrete selectors in all operations (e.g., `.option-1`, `#sort-option-newest`, NOT generic `.option`)
+* For `type_text` operations: use placeholder format in `text` field (e.g., `"{search_query}"`, `"{filter_value}"`, `"{input_text}"`)
+* For `click` operations selecting from options: add `ui_elements` field with container and all available options (refer to **system prompt UI Elements Definition**)
+* Example with ui_elements:
+  ```json
+  {
+    "op": "click",
+    "selector": "#sort-option-newest",
+    "ui_elements": {
+      "container": "#sort-dropdown",
+      "options": [
+        {"value": "newest", "selector": "#sort-option-newest"},
+        {"value": "oldest", "selector": "#sort-option-oldest"},
+        {"value": "updated", "selector": "#sort-option-updated"}
+      ]
+    }
+  }
+  ```
+
+**Widget-Specific Requirements**:
+
+* For `select` with `{"widget": "date_picker"}`: follow **system prompt date_picker selectors contract**
+* For `select` with `{"widget": "slider"}`: follow **system prompt slider pattern**
+* For `select` with `{"widget": "hover_menu"}`: follow **system prompt hover_menu pattern**
+* For `select` with `{"widget": "dropdown"}`: follow **system prompt dropdown pattern**
+
+### Step 3: Navigation Skeleton
+
+* Output only cross-page edges as objects: { from, to, via }.
+
+## Application-Level Constraints
+
+### Home Constraints
+
+* Generate navigation-only actions on HOME.
+* Do not generate business actions on HOME (create/delete/edit/submit/select/filter/search).
+* **EXCEPTION**: Cookie consent action is allowed on HOME (refer to **system prompt §Interceptor Actions**).
+
+### Navigation Policy
+
+* Generate only necessary navigation actions.
+
+### Path Length Strategy
+
+**CRITICAL FOR ALL COMPLEXITY LEVELS**: If `path_length.len=[min,max]` is provided, ensure there EXISTS >=1 valid HOME→terminal trajectory within [min,max]; apply `count_interceptors` as specified.
+
+**Design strategy for different complexity levels**:
+- Add intermediate pages between HOME and terminals (e.g., list → detail → form → review → success)
+- Use non-navigation actions to add steps without changing pages (e.g., search, filter, select attributes, scroll)
+- Combine multiple selections into single actions when appropriate (e.g., date+time in one date_picker action)
+- Create multi-level navigation hierarchies with realistic business flows
+- Interceptor actions (cookie, permissions) may add extra steps depending on `count_interceptors` policy
+
+**Key principles**:
+- Cookie consent: Always on HOME page, as the FIRST action before any navigation (refer to **system prompt §Interceptor Actions**)
+- Permission (location only): Define on the FIRST non-HOME page that user navigates to from HOME (refer to **system prompt §Interceptor Actions**)
+  * This is a non-navigation action that appears as a modal/dialog
+  * Uses global flag $.location_permission_granted to ensure one-time display
+- Date+Time: Combine into single date_picker action (not separate actions)
+
+**Avoid common mistakes**:
+- Do NOT create direct HOME → TERMINAL edges (results in 1-hop paths, too short)
+- Do NOT skip intermediate pages (e.g., HOME → LIST → SUCCESS is only 2 hops, insufficient)
+- Do NOT place cookie consent on pages other than HOME
+- Do NOT place permission action on multiple pages (only on first non-HOME page visited from HOME)
+- Do NOT split date and time into separate actions (use single date_picker widget)
+- Ensure all terminal pages are reachable through paths within [min,max]
+
+### Home Navigation Variants
+
+* Variants allowed: {direct, hover, menu, scroll}.
+* If provided in profile, enforce coverage="each" per target from HOME.
+* **Follow system prompt Home Navigation Variants** for GUI procedure patterns.
+
+### Interceptors (Profile-Driven)
+
+* {cookie, permission (location only)} → **Follow system prompt §Interceptor Actions**
+* All interceptor actions are non-navigation gates
+* Cookie: Place on HOME page (first action users encounter)
+* Permission (location only): Place on the FIRST non-HOME page that user navigates to from HOME
+
+### List Filters (Profile-Driven)
+
+* When enabled, use `allowed_shapes` if provided; otherwise default to {text_inputs, checkboxes, sliders, sort}
+* **Follow system prompt §List Filter Actions** for each shape's GUI procedure
+* **Always** generate OPEN_FILTERED_* navigation action for pages with filter/sort actions
+* Use **page-scoped** flag: `$.{page}_filters_applied` (e.g., `$.issues_list_filters_applied`), NOT generic `$.filters_applied`
+* If `two_step_parity=true`: combine all filter shapes into one APPLY_FILTERS action
+* If `two_step_parity=false`: create separate actions for each filter shape
+* Filter/sort actions are non-navigation; not allowed on HOME
+
+### Multiple User Journeys
+
+* For applications with multiple user journeys to the same goal, create separate terminals for different paths to ensure BFS trajectory coverage.
+* E.g., e-commerce: CHECKOUT_FROM_CART_SUCCESS (direct checkout) vs CHECKOUT_FROM_PRODUCT_SUCCESS (browse product → add to cart → checkout).
+
+### Data Persistence & Collections
+
+* **Follow system prompt §Data & Collections [D1-D5]**
+* Model persistent collections (lists) and list/detail pages for any CRUD-like theme
+* CRUD submit actions must persist to the relevant collection via `effects` (append / update / remove_where)
+* Reuse the SAME JSONPath for any shared collection fields across pages (e.g., always `$.groups`)
+* List pages must remain usable when the collection is empty (provide a first-action path like Create)
+
+### Finalize/Submit Flows
+
+* Finalize/Submit flows MUST gate on a non-empty selection/collection using `length_gt(...,0)`; do not rely on `value_expr` to satisfy the gate.
+* **Follow system prompt §Pre-success Form Realism [FR1-FR4]** for form entry requirements.
+
+### Search & Scroll
+
+* **Follow system prompt §Keyed Search on Child Pages [S-KEY-1 to S-KEY-5]** for search implementation
+* **Follow system prompt §Page-Scoped Scroll Anchors** for scroll implementation
+* **Follow system prompt §Search/Scroll Path Parity** to ensure both paths have equal step count
+
+### Back & Terminals
+
+* Every **non-initial** page MUST include a Back action to the previous page (effects may be empty).
+* Every terminal page MUST show a success message and provide a "Go Home" action to `HOME` (effects may be empty). Display-only fields should be optional (`"string|null"`) or set locally.
+
+## Generation-Specific Self-Check
+
+Before output, verify:
+
+* **Path length**: At least one HOME→terminal trajectory exists within path_length.len=[min,max] if specified
+* **Terminal coverage**: All `meta.terminal_pages` match the Complexity Profile if specified; all terminals are reachable
+* **Home constraints**: HOME has only navigation actions (plus optional cookie consent)
+* **Interceptor placement**:
+  - Cookie consent on HOME (if enabled)
+  - Permission on first non-HOME page (if enabled)
+* **Filter requirements** (if enabled):
+  - Page-scoped `$.{page}_filters_applied` flags used
+  - OPEN_FILTERED_* navigation actions present
+  - Filter actions follow system prompt GUI patterns
+* **Search/Scroll parity**:
+  - Pages with `open_matched_*` have page-scoped `<page>_has_searched` flag
+  - Pages with `open_any_*` have page-scoped `<page>_viewport_anchor_id` field
+  - Both paths have equal step count
+* **SPP compliance**: Parameters use `{ITEM_ANY}`/`{SKU_ANY}`; effects write via `value_ref`
+* **No pagination**: No next/prev page actions or page index fields anywhere
+* **CRUD persistence**: Submit actions update collections via effects; list/detail pages reflect changes
+* **GUI procedures**: All actions follow system prompt Standard GUI Procedures
+* **UI elements**: Click operations selecting from options include `ui_elements` with all options
+* **Selectors**: All selectors are concrete (no generic `.option`); no `{...}` placeholders in selector fields
+* **Placeholders**: `type_text` operations use `{...}` placeholders in `text` field only
+
+**Also verify all items in system prompt Universal Self-Check Requirements.**
+
+## Output Format
+
+* Return a **valid JSON object only** (no prose).
+* Recommended order: meta → pages.
+
+---
+
+## Example
+
+```json
+{
+  "meta": {
+    "app": "{theme}_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": ["SCHEDULE_SUCCESS"]
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "current_user_id": "string|null",
+        "cookie_consent_given": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ACCEPT_COOKIES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [{ "path": "$.cookie_consent_given", "cond": "eq", "value": null }],
+          "effects": [{ "op": "set", "path": "$.cookie_consent_given", "value": true }],
+          "gui_procedure": [{ "op": "click", "selector": "#cookie-accept" }]
+        },
+        {
+          "id": "ACT_GO_TO_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "ITEM_LIST",
+          "parameters": {},
+          "preconditions": [{ "path": "$.cookie_consent_given", "cond": "eq", "value": true }],
+          "effects": [],
+          "gui_procedure": [{ "op": "click", "selector": "#nav-items" }]
+        }
+      ]
+    },
+    {
+      "id": "ITEM_LIST",
+      "signature_schema": {
+        "items": "array<object>|null",
+        "location_permission_granted": "boolean|null",
+        "matched_item_id": "string|null",
+        "selected_item_id": "string|null",
+        "list_has_searched": "boolean|null",
+        "list_viewport_anchor_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_GRANT_LOCATION",
+          "name": "click",
+          "is_navigation": false,
+          "from": "ITEM_LIST",
+          "to": "ITEM_LIST",
+          "parameters": {},
+          "preconditions": [{ "path": "$.location_permission_granted", "cond": "eq", "value": null }],
+          "effects": [{ "op": "set", "path": "$.location_permission_granted", "value": true }],
+          "gui_procedure": [{ "op": "click", "selector": "#permission-location-allow" }]
+        },
+        {
+          "id": "ACT_SEARCH_ITEM",
+          "name": "search",
+          "is_navigation": false,
+          "from": "ITEM_LIST",
+          "to": "ITEM_LIST",
+          "parameters": { "item_id": "{ITEM_ANY}" },
+          "preconditions": [],
+          "effects": [
+            { "op": "set", "path": "$.matched_item_id", "value_ref": "{item_id}" },
+            { "op": "set", "path": "$.list_has_searched", "value": true }
+          ],
+          "gui_procedure": [
+            { "op": "click", "selector": "#list-search" },
+            { "op": "type_text", "selector": "#list-search", "text": "sample" },
+            { "op": "key_press", "key": "Enter" }
+          ]
+        },
+        {
+          "id": "ACT_OPEN_MATCHED_ITEM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ITEM_LIST",
+          "to": "ITEM_DETAIL",
+          "parameters": { "item_id": "{ITEM_ANY}" },
+          "preconditions": [
+            { "path": "$.matched_item_id", "cond": "length_gt", "value": 0 },
+            { "path": "$.list_has_searched", "cond": "eq", "value": true }
+          ],
+          "effects": [
+            { "op": "set", "path": "$.selected_item_id", "value_ref": "{item_id}" },
+            { "op": "clear", "path": "$.list_has_searched" }
+          ],
+          "gui_procedure": [{ "op": "click", "selector": "#item-list .row-matched" }]
+        },
+        {
+          "id": "ACT_SCROLL_ITEM_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "ITEM_LIST",
+          "to": "ITEM_LIST",
+          "parameters": { "item_id": "{ITEM_ANY}" },
+          "preconditions": [],
+          "effects": [
+            { "op": "set", "path": "$.list_viewport_anchor_id", "value_ref": "{item_id}" }
+          ],
+          "gui_procedure": [
+            { "op": "click", "selector": "#item-list" },
+            { "op": "drag", "selector": "#item-list", "to_value": "down" }
+          ]
+        },
+        {
+          "id": "ACT_OPEN_ANY_ITEM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ITEM_LIST",
+          "to": "ITEM_DETAIL",
+          "parameters": { "item_id": "{ITEM_ANY}" },
+          "preconditions": [
+            { "path": "$.list_viewport_anchor_id", "cond": "length_gt", "value": 0 }
+          ],
+          "effects": [
+            { "op": "set", "path": "$.selected_item_id", "value_ref": "{item_id}" },
+            { "op": "clear", "path": "$.list_viewport_anchor_id" }
+          ],
+          "gui_procedure": [{ "op": "click", "selector": "#item-list .row-visible" }]
+        },
+        {
+          "id": "ACT_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ITEM_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [{ "op": "click", "selector": "#back" }]
+        }
+      ]
+    },
+    {
+      "id": "ITEM_DETAIL",
+      "signature_schema": {
+        "selected_item_id": "string",
+        "selected_date": "string|date|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PICK_DATE_AND_SCHEDULE",
+          "name": "select",
+          "is_navigation": true,
+          "from": "ITEM_DETAIL",
+          "to": "SCHEDULE_SUCCESS",
+          "parameters": { "widget": "date_picker", "year": 2025, "month": 10, "day": 22, "hour": 10, "minute": 30 },
+          "preconditions": [{ "path": "$.selected_item_id", "cond": "length_gt", "value": 0 }],
+          "effects": [{ "op": "set", "path": "$.selected_date", "value_expr": "date(2025,10,22.10:30)" }],
+          "gui_procedure": [
+            { "op": "click", "selector": "#date-picker" },
+            { "op": "click", "selector": ".year-2025" },
+            { "op": "click", "selector": ".month-10" },
+            { "op": "click", "selector": ".day-22" },
+            { "op": "click", "selector": ".hour-10" },
+            { "op": "click", "selector": ".minute-30" },
+            { "op": "key_press", "key": "Enter" }
+          ]
+        },
+        {
+          "id": "ACT_BACK_TO_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ITEM_DETAIL",
+          "to": "ITEM_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [{ "op": "click", "selector": "#back" }]
+        }
+      ]
+    },
+    {
+      "id": "SCHEDULE_SUCCESS",
+      "signature_schema": {
+        "selected_item_id": "string",
+        "selected_date": "string|date"
+      },
+      "actions": [
+        {
+          "id": "ACT_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SCHEDULE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [{ "op": "click", "selector": "#go-home" }]
+        }
+      ]
+    }
+  ]
+}
+```
+

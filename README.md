@@ -8,30 +8,39 @@
 
 ## 📖 Introduction
 
+<div align="center">
+  <img src="./assets/main_figure.png" alt="AutoWebWorld Main Figure" width="800"/>
+</div>
+
 AutoWebWorld is an open-source framework for automated web application modeling, traversal, and intelligent agent training. This project provides a complete toolchain from Finite State Machine (FSM) generation to agent training, helping researchers and developers build and evaluate web automation agents.
 
 ## 📰 News
-- **[2026-02-06]** ✨ Completed FSM generator core functionality
-- **[2026-02-06]** 🎉 Project initialized, released v0.1.0. We put the FSM generation pipeline of autowebworld with the
+- **[2026-02-10]** 🚀 Added GRPO training module for vision-language model training
+- **[2026-02-10]** 🔄 Completed BFS traversal module migration
+- **[2026-02-10]** ✨ Completed FSM generator module migration
+- **[2026-02-06]** 🎉 Project initialized, released v0.1.0
 
 > 💡 **Tip**: Follow this project for the latest updates!
 
 ## ✨ Core Features
 
-### 🔄 FSM Generator
-- Automatically generate FSMs for web applications based on themes
-- Support complex page state and action modeling
-- Built-in validation and improvement mechanisms to ensure FSM quality
+### 🎯 FSM Generation (`trajectory/fsm/`)
+- **Automatic FSM Generation**: Use LLM to automatically generate Finite State Machines for web applications
+- **Multi-level Complexity**: Support easy/medium/hard complexity configurations
+- **Iterative Optimization**: Automatic validation and improvement to ensure FSM quality
+- **Multi-model Support**: Compatible with GPT-5, Claude, Gemini, DeepSeek, etc.
 
-### 🤖 Agent Training
-- Complete agent training pipeline
-- Support multiple training strategies and algorithms
-- Extensible training framework
+### 🔄 BFS Traversal (`trajectory/bfs/`)
+- **BFS Algorithm**: Generate all shortest paths using breadth-first search
+- **Action Generation**: Generate concrete action sequences with parameters
+- **FSM Normalization**: Standardize FSM structure for processing
+- **Filter Mapping**: Advanced filtering and mapping utilities
 
-### 🌐 BFS Traversal & Web Examples
-- Traverse FSM using BFS algorithm to generate trajectories
-- Include multiple real-world web application examples
-- Support trajectory visualization and analysis
+### 🤖 Agent Training (`training/`)
+- **GRPO Training**: Generalized Reward-based Policy Optimization for vision-language models
+- **DeepSpeed Integration**: Efficient distributed training with Zero-3 optimization
+- **Multi-GPU Support**: Scale training across multiple GPUs
+- **Flexible Configuration**: Easy-to-customize training parameters
 
 ## 🚀 Quick Start
 
@@ -46,47 +55,85 @@ pip install -r requirements.txt
 ### Basic Usage
 
 #### 1. Generate FSM
-```bash
-cd fsm_generator
-python -m fsm_generator.fsm --theme "Your_Theme" --model "gpt-4" --output_dir "outputs"
+```python
+import asyncio
+from trajectory.fsm.generator import generate_perfect_fsm
+
+async def main():
+    fsm_data = await generate_perfect_fsm(
+        theme="E-commerce Platform",
+        model="gpt-5",
+        target_score=100,
+        output_dir="outputs/ecommerce"
+    )
+    print(f"Generated FSM with {len(fsm_data['states'])} states")
+
+asyncio.run(main())
 ```
 
 #### 2. BFS Traversal
 ```bash
-cd bfs_traversal
-python normalize.py --input fsm.json --output fsm_norm.json
-python bfs_action.py --fsm fsm.json --norm fsm_norm.json --out trajectories.json
+# Normalize FSM
+python -m trajectory.bfs.normalize --input fsm.json --output fsm_norm.json
+
+# Generate action sequences
+python -m trajectory.bfs.bfs_action \
+    --fsm fsm.json \
+    --norm fsm_norm.json \
+    --out trajectories.json
 ```
 
-#### 3. Train Agent
+#### 3. Train Agent with GRPO
 ```bash
-cd agent_training
-python train.py --config config.yaml
+# Prepare your data in data/train_data/
+# - train.json: Training data
+# - train_imgs/: Training images
+
+# Run training
+bash training/scripts/train.sh
 ```
 
 ## 📂 Project Structure
 
 ```
 AutoWebWorld/
-├── fsm_generator/      # FSM generation module
-├── agent_training/     # Agent training module
-├── bfs_traversal/      # BFS traversal module
-└── examples/           # Web application examples
+├── trajectory/              # Trajectory generation modules
+│   ├── fsm/                # FSM generation
+│   │   ├── generator/      # Core FSM generator
+│   │   └── prompts/        # LLM prompt templates
+│   └── bfs/                # BFS traversal
+│       ├── bfs.py          # Core BFS algorithm
+│       ├── bfs_action.py   # Action generation
+│       └── normalize.py    # FSM normalization
+├── training/               # Agent training modules
+│   ├── grpo_train.py      # GRPO training script
+│   ├── trainer/           # Trainer implementations
+│   ├── configs/           # Training configurations
+│   └── scripts/           # Training shell scripts
+├── requirements.txt       # Python dependencies
+└── README.md             # Project documentation
 ```
 
 ## 📚 Documentation
 
-- [FSM Generator Documentation](./fsm_generator/README.md)
-- [Agent Training Documentation](./agent_training/README.md)
-- [BFS Traversal Documentation](./bfs_traversal/README.md)
-- [Examples Documentation](./examples/README.md)
+- [FSM Generator Documentation](./trajectory/fsm/README.md)
+- [BFS Traversal Documentation](./trajectory/bfs/README.md)
+- [Agent Training Documentation](./training/README.md)
 
 ## 🛠️ Tech Stack
 
-- Python 3.8+
-- OpenAI API / Other LLM APIs
-- Playwright (for web automation)
-- Vue.js (web examples)
+### Core Dependencies
+- **Python 3.8+**: Main programming language
+- **Transformers**: Hugging Face transformers library for LLMs
+- **DeepSpeed**: Distributed training optimization
+- **TRL**: Transformer Reinforcement Learning library
+- **OpenAI API**: For FSM generation (GPT-5, Claude, Gemini, DeepSeek)
+
+### Training & Optimization
+- **PyTorch**: Deep learning framework
+- **Flash Attention 2**: Efficient attention mechanism
+- **Liger Kernel**: Optimized kernels for training
+- **Qwen-VL-Utils**: Utilities for Qwen vision-language models
 
 ## 📊 Example Applications
 
@@ -96,6 +143,12 @@ The project includes web application examples from multiple domains:
 - Social media (Discord, Twitter)
 - Travel booking (Booking, Skyscanner)
 - And more...
+
+## 🚧 TODO List
+
+### Upcoming Features
+- [ ] **Evaluation Framework**: Comprehensive evaluation metrics and benchmarks for web automation agents
+- [ ] **Web Examples**: Real-world web application examples and demonstrations
 
 ## 🤝 Contributing
 

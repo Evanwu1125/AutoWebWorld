@@ -1,0 +1,33 @@
+{
+  "interceptors": {
+    "cookie": true,
+    "permissions": ["location"],
+    "captcha": false,
+    "register_correction": false
+  },
+  "pages": {
+    "min": 15,
+    "max": 25
+  },
+  "actions": {
+    "per_page_min": 4,
+    "per_page_max": 6
+  },
+  "terminals": {
+    "count": 5
+  },
+  "path_length": {
+    "len": [6, 8],
+    "shortest_only": true,
+    "count_interceptors": false
+  },
+  "home_nav_variants": ["direct", "hover"],
+  "home_nav_coverage": "each",
+  "list_filters": {
+    "enabled": true,
+    "fields_max": 3,
+    "two_step_parity": true,
+    "allowed_shapes": ["text_inputs", "checkboxes"]
+  }
+}
+
