@@ -18,7 +18,7 @@ AutoWebWorld 是一个用于**自动化 Web 环境生成与 GUI Agent 训练**�
 
 ## 🌍 示例 Web 项目
 
-我们提供了 **30 个预构建 Web 应用**，可直接体验 —— 在这里浏览：**[new_all_projects](./autowebworld/whole_pipeline/env_generator/data_augmentation/new_all_projects)**
+我们提供了 **29 个预构建 Web 应用**，可直接体验 —— 在这里浏览：**[new_all_projects](./autowebworld/whole_pipeline/env_generator/data_augmentation/new_all_projects)**
 
 本地启动任意一个项目：
 
@@ -173,7 +173,7 @@ playwright install chromium
 
 ### 使用示例项目运行完整 Pipeline
 
-项目内置 **30 个预构建 Web 应用**，覆盖 5 个领域，开箱即用：
+项目内置 **29 个预构建 Web 应用**，覆盖 5 个领域，开箱即用：
 
 | 分类 | 项目 |
 |------|------|

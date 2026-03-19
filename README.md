@@ -18,7 +18,7 @@ The core insight: **data generation is a compilation problem, not an annotation 
 
 ## 🌍 Example Web Projects
 
-We provide **30 pre-built web applications** ready to explore — browse them here: **[new_all_projects](./autowebworld/whole_pipeline/env_generator/data_augmentation/new_all_projects)**
+We provide **29 pre-built web applications** ready to explore — browse them here: **[new_all_projects](./autowebworld/whole_pipeline/env_generator/data_augmentation/new_all_projects)**
 
 To launch any project locally:
 
@@ -174,7 +174,7 @@ playwright install chromium
 
 ### Run the Pipeline on Example Projects
 
-The repository includes **30 pre-built web applications** across 5 domains, ready to run:
+The repository includes **29 pre-built web applications** across 5 domains, ready to run:
 
 | Category | Projects |
 |----------|----------|
