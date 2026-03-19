@@ -3,7 +3,7 @@ import os
 
 # API Configuration
 API_KEY = os.getenv("OPENAI_API_KEY", "")
-BASE_URL = "https://newapi.deepwisdom.ai/v1"
+BASE_URL = os.getenv("OPENAI_BASE_URL", "")
 
 # Model Configuration
 DEFAULT_LLM_MODEL = "deepseek-chat"

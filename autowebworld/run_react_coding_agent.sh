@@ -16,7 +16,7 @@ TEMPLATE_DIR="${TEMPLATE_DIR:-autowebworld/template/react_template}"
 PRELOADED_SKILL_FILE="${PRELOADED_SKILL_FILE:-/Users/evanwu/.codex/skills/frontend-design-ultimate/SKILL.md}"
 
 # OpenAI endpoint/auth
-OPENAI_BASE_URL="${OPENAI_BASE_URL:-https://newapi.deepwisdom.ai/v1}"
+OPENAI_BASE_URL="${OPENAI_BASE_URL:-}"
 OPENAI_API_KEY="${OPENAI_API_KEY:-}"
 
 # Model/runtime config

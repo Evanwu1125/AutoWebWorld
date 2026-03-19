@@ -1,7 +1,7 @@
 import os
 
 API_KEY = os.getenv("OPENAI_API_KEY", "")
-BASE_URL = "https://newapi.deepwisdom.ai/v1"
+BASE_URL = os.getenv("OPENAI_BASE_URL", "")
 MODEL = "gemini-2.5-flash"
 TEMPERATURE = 0.7
 MAX_TOKENS = 32768

@@ -43,7 +43,7 @@ class FilterParser:
         mockdata_schema: Dict[str, List[str]],
         use_llm: bool = False,
         model: str = "deepseek-v3.2-exp",
-        base_url: str = "https://newapi.deepwisdom.ai/v1"
+        base_url: str = ""
     ):
         """
         Initialize the filter parser.

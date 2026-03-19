@@ -22,7 +22,7 @@ export OPENAI_API_KEY="${OPENAI_API_KEY:-${DEFAULT_OPENAI_API_KEY}}"
 MODEL="${FSM_MODEL:-${DEFAULT_MODEL}}"
 
 # Note: base_url uses the default value from trajectory/fsm/generator/base_agent.py
-# Current default is https://newapi.deepwisdom.ai/v1
+# Set OPENAI_BASE_URL environment variable to override
 python -m trajectory.fsm.generator.fsm \
   --theme "${THEME}" \
   --model "${MODEL}" \

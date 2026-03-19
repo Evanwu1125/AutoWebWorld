@@ -16,7 +16,7 @@ class BaseAgent(ABC):
                  model: str = "gpt-5",
                  temperature: float = 1,
                  max_tokens: int = 128000,
-                 base_url: str = "https://newapi.deepwisdom.ai/v1",
+                 base_url: str = "",
                  debug_output_dir: Optional[str] = None):
 
         self.model = model

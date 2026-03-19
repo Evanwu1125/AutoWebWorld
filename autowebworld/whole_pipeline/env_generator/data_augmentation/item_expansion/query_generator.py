@@ -20,7 +20,7 @@ class QueryGenerator:
         self,
         mockdata: Dict[str, Any],
         model: str = "deepseek-v3.2-exp",
-        base_url: str = "https://newapi.deepwisdom.ai/v1"
+        base_url: str = ""
     ):
         self.mockdata = mockdata
         self.model = model
