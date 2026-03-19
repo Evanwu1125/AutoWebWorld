@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Fixed constraints (can be overridden via environment variables with the same name)
-DEFAULT_OPENAI_API_KEY="sk-xomIBGkhKPjxUqMrclrkNxbJ2sf2uPewuulcGrG0mBfAxlUK"
+DEFAULT_OPENAI_API_KEY=""
 DEFAULT_MODEL="gpt-5.4"
 DEFAULT_THEME="blog_platform-medium"
 

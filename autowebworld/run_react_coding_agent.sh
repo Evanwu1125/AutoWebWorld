@@ -17,7 +17,7 @@ PRELOADED_SKILL_FILE="${PRELOADED_SKILL_FILE:-/Users/evanwu/.codex/skills/fronte
 
 # OpenAI endpoint/auth
 OPENAI_BASE_URL="${OPENAI_BASE_URL:-https://newapi.deepwisdom.ai/v1}"
-OPENAI_API_KEY="${OPENAI_API_KEY:-sk-xomIBGkhKPjxUqMrclrkNxbJ2sf2uPewuulcGrG0mBfAxlUK}"
+OPENAI_API_KEY="${OPENAI_API_KEY:-}"
 
 # Model/runtime config
 MODEL="${MODEL:-gemini-3.1-pro-preview}"
