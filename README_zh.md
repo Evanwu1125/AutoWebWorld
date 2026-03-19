@@ -16,6 +16,21 @@ AutoWebWorld 是一个用于**自动化 Web 环境生成与 GUI Agent 训练**�
 
 核心理念：**数据生成是编译问题，而非标注问题**。FSM 是唯一的真实来源，其他一切都从它派生。
 
+## 🌍 示例 Web 项目
+
+我们提供了 **30 个预构建 Web 应用**，可直接体验 —— 在这里浏览：**[new_all_projects](./autowebworld/whole_pipeline/env_generator/data_augmentation/new_all_projects)**
+
+本地启动任意一个项目：
+
+```bash
+# 以 shopify 为例
+cd autowebworld/whole_pipeline/env_generator/data_augmentation/new_all_projects/Commerce_Finance/shopify/web
+pnpm install
+pnpm dev
+```
+
+启动后访问 `http://localhost:5173`。
+
 ## 📰 更新日志
 
 - **[2026-03-19]** 公开论文中使用的训练数据：[HuggingFace Dataset](https://huggingface.co/datasets/Evanwu50020/travel_media_commerce_communication_productivity/settings)
@@ -262,9 +277,13 @@ AutoWebWorld/
 如果本项目对你的研究有帮助，请引用：
 
 ```bibtex
-@software{autowebworld2026,
-  title  = {AutoWebWorld: An Open Framework for Web Environment Generation and GUI Agent Training},
-  year   = {2026},
-  url    = {https://github.com/your-username/AutoWebWorld}
+@misc{wu2026autowebworldsynthesizinginfiniteverifiable,
+      title={AutoWebWorld: Synthesizing Infinite Verifiable Web Environments via Finite State Machines},
+      author={Yifan Wu and Yiran Peng and Yiyu Chen and Jianhao Ruan and Zijie Zhuang and Cheng Yang and Jiayi Zhang and Man Chen and Yenchi Tseng and Zhaoyang Yu and Liang Chen and Yuyao Zhai and Bang Liu and Chenglin Wu and Yuyu Luo},
+      year={2026},
+      eprint={2602.14296},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2602.14296},
 }
 ```

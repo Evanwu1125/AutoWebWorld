@@ -16,6 +16,21 @@ AutoWebWorld is an open-source framework for **automated web environment generat
 
 The core insight: **data generation is a compilation problem, not an annotation problem**. The FSM is the single source of truth; everything else is derived from it.
 
+## 🌍 Example Web Projects
+
+We provide **30 pre-built web applications** ready to explore — browse them here: **[new_all_projects](./autowebworld/whole_pipeline/env_generator/data_augmentation/new_all_projects)**
+
+To launch any project locally:
+
+```bash
+# Example: shopify
+cd autowebworld/whole_pipeline/env_generator/data_augmentation/new_all_projects/Commerce_Finance/shopify/web
+pnpm install
+pnpm dev
+```
+
+The app will be available at `http://localhost:5173`.
+
 ## 📰 News
 
 - **[2026-03-19]** Released the training data used in our paper: [HuggingFace Dataset](https://huggingface.co/datasets/Evanwu50020/travel_media_commerce_communication_productivity/settings)
@@ -263,9 +278,13 @@ Contributions are welcome. Please open an issue first to discuss what you would 
 If this project helps your research, please cite:
 
 ```bibtex
-@software{autowebworld2026,
-  title  = {AutoWebWorld: An Open Framework for Web Environment Generation and GUI Agent Training},
-  year   = {2026},
-  url    = {https://github.com/your-username/AutoWebWorld}
+@misc{wu2026autowebworldsynthesizinginfiniteverifiable,
+      title={AutoWebWorld: Synthesizing Infinite Verifiable Web Environments via Finite State Machines},
+      author={Yifan Wu and Yiran Peng and Yiyu Chen and Jianhao Ruan and Zijie Zhuang and Cheng Yang and Jiayi Zhang and Man Chen and Yenchi Tseng and Zhaoyang Yu and Liang Chen and Yuyao Zhai and Bang Liu and Chenglin Wu and Yuyu Luo},
+      year={2026},
+      eprint={2602.14296},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2602.14296},
 }
 ```
