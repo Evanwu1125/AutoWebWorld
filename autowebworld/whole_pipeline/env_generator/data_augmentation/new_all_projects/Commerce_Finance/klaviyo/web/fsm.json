@@ -1,0 +1,3374 @@
+{
+  "meta": {
+    "app": "Email_SMS_Marketing-Klaviyo_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "EMAIL_CAMPAIGN_SCHEDULED_SUCCESS",
+      "SMS_CAMPAIGN_SCHEDULED_SUCCESS",
+      "FLOW_CREATED_SUCCESS",
+      "SEGMENT_CREATED_SUCCESS",
+      "SIGNUP_FORM_PUBLISHED_SUCCESS"
+    ],
+    "global_signature_schema": {
+      "location_permission_granted": "boolean|null",
+      "current_user_id": "string|null",
+      "accounts": "array<object>|null"
+    },
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 25,
+        "max": 35
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover",
+        "menu"
+      ],
+      "home_nav_coverage": "any",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 4,
+        "two_step_parity": false,
+        "allowed_shapes": [
+          "checkboxes",
+          "sliders",
+          "sort"
+        ]
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "current_user_id": "string|null",
+        "cookie_consent_given": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_HOME_ACCEPT_COOKIES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cookie_consent_given",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_NAV_DASHBOARD_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-dashboard"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_NAV_CAMPAIGNS_HOVER",
+          "name": "select",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "CAMPAIGNS_LIST",
+          "parameters": {
+            "widget": "hover_menu"
+          },
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#nav-campaigns-menu"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-campaigns-menu .option-campaigns",
+              "ui_elements": {
+                "container": "#nav-campaigns-menu",
+                "options": [
+                  {
+                    "value": "campaigns",
+                    "selector": "#nav-campaigns-menu .option-campaigns"
+                  },
+                  {
+                    "value": "flows",
+                    "selector": "#nav-campaigns-menu .option-flows"
+                  },
+                  {
+                    "value": "signup_forms",
+                    "selector": "#nav-campaigns-menu .option-forms"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_NAV_LISTS_MENU",
+          "name": "select",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "LISTS_SEGMENTS",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-audience-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-audience-lists-segments",
+              "ui_elements": {
+                "container": "#nav-audience-dropdown",
+                "options": [
+                  {
+                    "value": "lists_segments",
+                    "selector": "#nav-audience-lists-segments"
+                  },
+                  {
+                    "value": "profiles",
+                    "selector": "#nav-audience-profiles"
+                  },
+                  {
+                    "value": "preferences",
+                    "selector": "#nav-audience-preferences"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_NAV_FLOWS_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "FLOWS_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-flows"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_NAV_SIGNUP_FORMS_HOVER",
+          "name": "select",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "SIGNUP_FORMS_LIST",
+          "parameters": {
+            "widget": "hover_menu"
+          },
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#nav-forms-menu"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-forms-menu .option-signup-forms",
+              "ui_elements": {
+                "container": "#nav-forms-menu",
+                "options": [
+                  {
+                    "value": "signup_forms",
+                    "selector": "#nav-forms-menu .option-signup-forms"
+                  },
+                  {
+                    "value": "preference_pages",
+                    "selector": "#nav-forms-menu .option-preferences"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DASHBOARD",
+      "signature_schema": {
+        "location_permission_granted": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_DASHBOARD_GRANT_LOCATION",
+          "name": "click",
+          "is_navigation": false,
+          "from": "DASHBOARD",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DASHBOARD_GO_TO_CAMPAIGNS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD",
+          "to": "CAMPAIGNS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#card-campaigns"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DASHBOARD_GO_TO_FLOWS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD",
+          "to": "FLOWS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#card-flows"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DASHBOARD_GO_TO_LISTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD",
+          "to": "LISTS_SEGMENTS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#card-lists-segments"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DASHBOARD_GO_TO_SIGNUP_FORMS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD",
+          "to": "SIGNUP_FORMS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#card-signup-forms"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DASHBOARD_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#logo-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CAMPAIGNS_LIST",
+      "signature_schema": {
+        "campaigns": "array<object>|null",
+        "matched_campaign_id": "string|null",
+        "selected_campaign_id": "string|null",
+        "campaigns_list_has_searched": "boolean|null",
+        "campaigns_list_viewport_anchor_id": "string|null",
+        "campaigns_list_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CAMPAIGNS_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CAMPAIGNS_LIST",
+          "to": "CAMPAIGNS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.campaigns_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-status-scheduled-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CAMPAIGNS_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CAMPAIGNS_LIST",
+          "to": "CAMPAIGNS_LIST",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.campaigns_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-revenue-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#filter-revenue-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CAMPAIGNS_FILTER_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CAMPAIGNS_LIST",
+          "to": "CAMPAIGNS_LIST",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.campaigns_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#campaigns-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#campaigns-sort-option-newest",
+              "ui_elements": {
+                "container": "#campaigns-sort-dropdown",
+                "options": [
+                  {
+                    "value": "newest",
+                    "selector": "#campaigns-sort-option-newest"
+                  },
+                  {
+                    "value": "oldest",
+                    "selector": "#campaigns-sort-option-oldest"
+                  },
+                  {
+                    "value": "status",
+                    "selector": "#campaigns-sort-option-status"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_CAMPAIGNS_OPEN_FILTERED_ITEM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CAMPAIGNS_LIST",
+          "to": "CAMPAIGN_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.campaigns_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.campaigns_list_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_campaign_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#campaigns-table .row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CAMPAIGNS_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "CAMPAIGNS_LIST",
+          "to": "CAMPAIGNS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_campaign_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.campaigns_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#campaigns-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#campaigns-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CAMPAIGNS_OPEN_MATCHED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CAMPAIGNS_LIST",
+          "to": "CAMPAIGN_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_campaign_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.campaigns_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_campaign_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.campaigns_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#campaigns-table .row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CAMPAIGNS_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CAMPAIGNS_LIST",
+          "to": "CAMPAIGNS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.campaigns_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#campaigns-table"
+            },
+            {
+              "op": "drag",
+              "selector": "#campaigns-table",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CAMPAIGNS_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CAMPAIGNS_LIST",
+          "to": "CAMPAIGN_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.campaigns_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_campaign_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.campaigns_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#campaigns-table .row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CAMPAIGNS_CREATE_NEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CAMPAIGNS_LIST",
+          "to": "CREATE_CAMPAIGN_CHANNEL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-create-campaign"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CAMPAIGNS_BACK_DASHBOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CAMPAIGNS_LIST",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#breadcrumb-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_CAMPAIGN_CHANNEL",
+      "signature_schema": {
+        "selected_channel": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CHANNEL_SELECT_EMAIL",
+          "name": "select",
+          "is_navigation": true,
+          "from": "CREATE_CAMPAIGN_CHANNEL",
+          "to": "CREATE_CAMPAIGN_BASICS",
+          "parameters": {
+            "channel": "email",
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_channel",
+              "value": "email"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#channel-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#channel-email",
+              "ui_elements": {
+                "container": "#channel-dropdown",
+                "options": [
+                  {
+                    "value": "email",
+                    "selector": "#channel-email"
+                  },
+                  {
+                    "value": "sms",
+                    "selector": "#channel-sms"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNEL_SELECT_SMS",
+          "name": "select",
+          "is_navigation": true,
+          "from": "CREATE_CAMPAIGN_CHANNEL",
+          "to": "CREATE_SMS_CAMPAIGN_BASICS",
+          "parameters": {
+            "channel": "sms",
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_channel",
+              "value": "sms"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#channel-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#channel-sms",
+              "ui_elements": {
+                "container": "#channel-dropdown",
+                "options": [
+                  {
+                    "value": "email",
+                    "selector": "#channel-email"
+                  },
+                  {
+                    "value": "sms",
+                    "selector": "#channel-sms"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNEL_BACK_CAMPAIGNS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_CAMPAIGN_CHANNEL",
+          "to": "CAMPAIGNS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-campaigns"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_CAMPAIGN_BASICS",
+      "signature_schema": {
+        "campaign_name": "string|null",
+        "subject_line": "string|null",
+        "from_name": "string|null",
+        "from_email": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_EMAIL_BASICS_TYPE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CREATE_CAMPAIGN_BASICS",
+          "to": "CREATE_CAMPAIGN_BASICS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.campaign_name",
+              "value": "Campaign {input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#input-campaign-name"
+            },
+            {
+              "op": "type_text",
+              "selector": "#input-campaign-name",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EMAIL_BASICS_TYPE_SUBJECT",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CREATE_CAMPAIGN_BASICS",
+          "to": "CREATE_CAMPAIGN_BASICS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.subject_line",
+              "value": "Subject {input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#input-subject-line"
+            },
+            {
+              "op": "type_text",
+              "selector": "#input-subject-line",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EMAIL_BASICS_TYPE_FROM_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CREATE_CAMPAIGN_BASICS",
+          "to": "CREATE_CAMPAIGN_BASICS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.from_name",
+              "value": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#input-from-name"
+            },
+            {
+              "op": "type_text",
+              "selector": "#input-from-name",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EMAIL_BASICS_TYPE_FROM_EMAIL",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CREATE_CAMPAIGN_BASICS",
+          "to": "CREATE_CAMPAIGN_BASICS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.from_email",
+              "value": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#input-from-email"
+            },
+            {
+              "op": "type_text",
+              "selector": "#input-from-email",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EMAIL_BASICS_CONTINUE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_CAMPAIGN_BASICS",
+          "to": "CREATE_CAMPAIGN_RECIPIENTS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.campaign_name",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.subject_line",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.from_email",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-basics-continue"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EMAIL_BASICS_BACK_CHANNEL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_CAMPAIGN_BASICS",
+          "to": "CREATE_CAMPAIGN_CHANNEL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-channel"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_CAMPAIGN_RECIPIENTS",
+      "signature_schema": {
+        "selected_list_id": "string|null",
+        "selected_segment_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_EMAIL_RECIPIENTS_SELECT_LIST",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CREATE_CAMPAIGN_RECIPIENTS",
+          "to": "CREATE_CAMPAIGN_RECIPIENTS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}",
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_list_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dropdown-lists"
+            },
+            {
+              "op": "click",
+              "selector": "#dropdown-lists .option-list-1",
+              "ui_elements": {
+                "container": "#dropdown-lists",
+                "options": [
+                  {
+                    "value": "list_1",
+                    "selector": "#dropdown-lists .option-list-1"
+                  },
+                  {
+                    "value": "list_2",
+                    "selector": "#dropdown-lists .option-list-2"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_EMAIL_RECIPIENTS_SELECT_SEGMENT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CREATE_CAMPAIGN_RECIPIENTS",
+          "to": "CREATE_CAMPAIGN_RECIPIENTS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}",
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_segment_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dropdown-segments"
+            },
+            {
+              "op": "click",
+              "selector": "#dropdown-segments .option-segment-1",
+              "ui_elements": {
+                "container": "#dropdown-segments",
+                "options": [
+                  {
+                    "value": "segment_1",
+                    "selector": "#dropdown-segments .option-segment-1"
+                  },
+                  {
+                    "value": "segment_2",
+                    "selector": "#dropdown-segments .option-segment-2"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_EMAIL_RECIPIENTS_CONTINUE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_CAMPAIGN_RECIPIENTS",
+          "to": "CREATE_CAMPAIGN_CONTENT",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_list_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-recipients-continue"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EMAIL_RECIPIENTS_BACK_BASICS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_CAMPAIGN_RECIPIENTS",
+          "to": "CREATE_CAMPAIGN_BASICS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-basics"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_CAMPAIGN_CONTENT",
+      "signature_schema": {
+        "email_body_has_text": "boolean|null",
+        "selected_email_template_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_EMAIL_CONTENT_SELECT_TEMPLATE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CREATE_CAMPAIGN_CONTENT",
+          "to": "CREATE_CAMPAIGN_CONTENT",
+          "parameters": {
+            "item_id": "{ITEM_ANY}",
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_email_template_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.email_body_has_text",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#template-picker-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#template-picker-dropdown .option-template-1",
+              "ui_elements": {
+                "container": "#template-picker-dropdown",
+                "options": [
+                  {
+                    "value": "template_1",
+                    "selector": "#template-picker-dropdown .option-template-1"
+                  },
+                  {
+                    "value": "template_2",
+                    "selector": "#template-picker-dropdown .option-template-2"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_EMAIL_CONTENT_TYPE_BODY",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CREATE_CAMPAIGN_CONTENT",
+          "to": "CREATE_CAMPAIGN_CONTENT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.email_body_has_text",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#email-body-editor"
+            },
+            {
+              "op": "type_text",
+              "selector": "#email-body-editor",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EMAIL_CONTENT_CONTINUE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_CAMPAIGN_CONTENT",
+          "to": "CREATE_CAMPAIGN_REVIEW_SCHEDULE",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.email_body_has_text",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-content-continue"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EMAIL_CONTENT_BACK_RECIPIENTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_CAMPAIGN_CONTENT",
+          "to": "CREATE_CAMPAIGN_RECIPIENTS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-recipients"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_CAMPAIGN_REVIEW_SCHEDULE",
+      "signature_schema": {
+        "email_scheduled_datetime": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_EMAIL_REVIEW_PICK_SCHEDULE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CREATE_CAMPAIGN_REVIEW_SCHEDULE",
+          "to": "CREATE_CAMPAIGN_REVIEW_SCHEDULE",
+          "parameters": {
+            "widget": "date_picker",
+            "year": 2025,
+            "month": 10,
+            "day": 22,
+            "hour": 10,
+            "minute": 30
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.email_scheduled_datetime",
+              "value": "2025-10-22T10:30:00Z"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#date-picker"
+            },
+            {
+              "op": "click",
+              "selector": ".year-2025"
+            },
+            {
+              "op": "click",
+              "selector": ".month-10"
+            },
+            {
+              "op": "click",
+              "selector": ".day-22"
+            },
+            {
+              "op": "click",
+              "selector": ".hour-10"
+            },
+            {
+              "op": "click",
+              "selector": ".minute-30"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EMAIL_REVIEW_SCHEDULE_SEND",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_CAMPAIGN_REVIEW_SCHEDULE",
+          "to": "EMAIL_CAMPAIGN_SCHEDULED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.email_scheduled_datetime",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-schedule-campaign"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EMAIL_REVIEW_BACK_CONTENT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_CAMPAIGN_REVIEW_SCHEDULE",
+          "to": "CREATE_CAMPAIGN_CONTENT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-content"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EMAIL_CAMPAIGN_SCHEDULED_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_EMAIL_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EMAIL_CAMPAIGN_SCHEDULED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Email campaign scheduled"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EMAIL_SUCCESS_BACK_CAMPAIGNS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EMAIL_CAMPAIGN_SCHEDULED_SUCCESS",
+          "to": "CAMPAIGNS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-view-campaigns"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_SMS_CAMPAIGN_BASICS",
+      "signature_schema": {
+        "sms_campaign_name": "string|null",
+        "sms_sender_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SMS_BASICS_TYPE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CREATE_SMS_CAMPAIGN_BASICS",
+          "to": "CREATE_SMS_CAMPAIGN_BASICS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.sms_campaign_name",
+              "value": "SMS {input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#input-sms-campaign-name"
+            },
+            {
+              "op": "type_text",
+              "selector": "#input-sms-campaign-name",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SMS_BASICS_TYPE_SENDER",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CREATE_SMS_CAMPAIGN_BASICS",
+          "to": "CREATE_SMS_CAMPAIGN_BASICS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.sms_sender_id",
+              "value": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#input-sms-sender-id"
+            },
+            {
+              "op": "type_text",
+              "selector": "#input-sms-sender-id",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SMS_BASICS_CONTINUE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_SMS_CAMPAIGN_BASICS",
+          "to": "CREATE_SMS_CAMPAIGN_RECIPIENTS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.sms_campaign_name",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.sms_sender_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-sms-basics-continue"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SMS_BASICS_BACK_CHANNEL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_SMS_CAMPAIGN_BASICS",
+          "to": "CREATE_CAMPAIGN_CHANNEL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-sms-channel"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_SMS_CAMPAIGN_RECIPIENTS",
+      "signature_schema": {
+        "sms_selected_list_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SMS_RECIPIENTS_SELECT_LIST",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CREATE_SMS_CAMPAIGN_RECIPIENTS",
+          "to": "CREATE_SMS_CAMPAIGN_RECIPIENTS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}",
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.sms_selected_list_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sms-dropdown-lists"
+            },
+            {
+              "op": "click",
+              "selector": "#sms-dropdown-lists .option-list-1",
+              "ui_elements": {
+                "container": "#sms-dropdown-lists",
+                "options": [
+                  {
+                    "value": "sms_list_1",
+                    "selector": "#sms-dropdown-lists .option-list-1"
+                  },
+                  {
+                    "value": "sms_list_2",
+                    "selector": "#sms-dropdown-lists .option-list-2"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_SMS_RECIPIENTS_CONTINUE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_SMS_CAMPAIGN_RECIPIENTS",
+          "to": "CREATE_SMS_CAMPAIGN_CONTENT",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.sms_selected_list_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-sms-recipients-continue"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SMS_RECIPIENTS_BACK_BASICS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_SMS_CAMPAIGN_RECIPIENTS",
+          "to": "CREATE_SMS_CAMPAIGN_BASICS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-sms-basics"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_SMS_CAMPAIGN_CONTENT",
+      "signature_schema": {
+        "sms_body_has_text": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SMS_CONTENT_TYPE_BODY",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CREATE_SMS_CAMPAIGN_CONTENT",
+          "to": "CREATE_SMS_CAMPAIGN_CONTENT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.sms_body_has_text",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sms-body-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#sms-body-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SMS_CONTENT_CONTINUE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_SMS_CAMPAIGN_CONTENT",
+          "to": "CREATE_SMS_CAMPAIGN_REVIEW_SCHEDULE",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.sms_body_has_text",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-sms-content-continue"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SMS_CONTENT_BACK_RECIPIENTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_SMS_CAMPAIGN_CONTENT",
+          "to": "CREATE_SMS_CAMPAIGN_RECIPIENTS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-sms-recipients"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_SMS_CAMPAIGN_REVIEW_SCHEDULE",
+      "signature_schema": {
+        "sms_scheduled_datetime": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SMS_REVIEW_PICK_SCHEDULE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CREATE_SMS_CAMPAIGN_REVIEW_SCHEDULE",
+          "to": "CREATE_SMS_CAMPAIGN_REVIEW_SCHEDULE",
+          "parameters": {
+            "widget": "date_picker",
+            "year": 2025,
+            "month": 11,
+            "day": 5,
+            "hour": 14,
+            "minute": 0
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.sms_scheduled_datetime",
+              "value": "2025-11-05T14:00:00Z"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#date-picker"
+            },
+            {
+              "op": "click",
+              "selector": ".year-2025"
+            },
+            {
+              "op": "click",
+              "selector": ".month-11"
+            },
+            {
+              "op": "click",
+              "selector": ".day-5"
+            },
+            {
+              "op": "click",
+              "selector": ".hour-14"
+            },
+            {
+              "op": "click",
+              "selector": ".minute-0"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SMS_REVIEW_SCHEDULE_SEND",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_SMS_CAMPAIGN_REVIEW_SCHEDULE",
+          "to": "SMS_CAMPAIGN_SCHEDULED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.sms_scheduled_datetime",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-schedule-sms"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SMS_REVIEW_BACK_CONTENT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_SMS_CAMPAIGN_REVIEW_SCHEDULE",
+          "to": "CREATE_SMS_CAMPAIGN_CONTENT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-sms-content"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SMS_CAMPAIGN_SCHEDULED_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SMS_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SMS_CAMPAIGN_SCHEDULED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "SMS campaign scheduled"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SMS_SUCCESS_BACK_CAMPAIGNS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SMS_CAMPAIGN_SCHEDULED_SUCCESS",
+          "to": "CAMPAIGNS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-view-sms-campaigns"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CAMPAIGN_DETAIL",
+      "signature_schema": {
+        "selected_campaign_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CAMPAIGN_DETAIL_DUPLICATE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CAMPAIGN_DETAIL",
+          "to": "CREATE_CAMPAIGN_BASICS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_campaign_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-duplicate-campaign"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CAMPAIGN_DETAIL_BACK_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CAMPAIGN_DETAIL",
+          "to": "CAMPAIGNS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-campaigns-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FLOWS_LIST",
+      "signature_schema": {
+        "flows": "array<object>|null",
+        "flows_list_filters_applied": "boolean|null",
+        "flows_list_viewport_anchor_id": "string|null",
+        "flows_list_has_searched": "boolean|null",
+        "matched_flow_id": "string|null",
+        "selected_flow_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_FLOWS_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "FLOWS_LIST",
+          "to": "FLOWS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.flows_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-status-live-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FLOWS_FILTER_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "FLOWS_LIST",
+          "to": "FLOWS_LIST",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.flows_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#flows-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#flows-sort-option-newest",
+              "ui_elements": {
+                "container": "#flows-sort-dropdown",
+                "options": [
+                  {
+                    "value": "newest",
+                    "selector": "#flows-sort-option-newest"
+                  },
+                  {
+                    "value": "oldest",
+                    "selector": "#flows-sort-option-oldest"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_FLOWS_OPEN_FILTERED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FLOWS_LIST",
+          "to": "FLOW_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.flows_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.flows_list_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_flow_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#flows-table .row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FLOWS_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "FLOWS_LIST",
+          "to": "FLOWS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_flow_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.flows_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#flows-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#flows-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FLOWS_OPEN_MATCHED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FLOWS_LIST",
+          "to": "FLOW_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_flow_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.flows_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_flow_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.flows_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#flows-table .row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FLOWS_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "FLOWS_LIST",
+          "to": "FLOWS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.flows_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#flows-table"
+            },
+            {
+              "op": "drag",
+              "selector": "#flows-table",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FLOWS_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FLOWS_LIST",
+          "to": "FLOW_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.flows_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_flow_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.flows_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#flows-table .row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FLOWS_CREATE_NEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FLOWS_LIST",
+          "to": "FLOW_TRIGGER_SETUP",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-create-flow"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FLOWS_BACK_DASHBOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FLOWS_LIST",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#breadcrumb-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FLOW_TRIGGER_SETUP",
+      "signature_schema": {
+        "flow_trigger_type": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_FLOW_TRIGGER_SELECT_EVENT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "FLOW_TRIGGER_SETUP",
+          "to": "FLOW_TRIGGER_SETUP",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.flow_trigger_type",
+              "value": "event"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#trigger-type-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#trigger-type-event",
+              "ui_elements": {
+                "container": "#trigger-type-dropdown",
+                "options": [
+                  {
+                    "value": "event",
+                    "selector": "#trigger-type-event"
+                  },
+                  {
+                    "value": "segment",
+                    "selector": "#trigger-type-segment"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_FLOW_TRIGGER_CONTINUE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FLOW_TRIGGER_SETUP",
+          "to": "FLOW_EMAIL_CONTENT",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.flow_trigger_type",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-trigger-continue"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FLOW_TRIGGER_BACK_FLOWS_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FLOW_TRIGGER_SETUP",
+          "to": "FLOWS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-flows-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FLOW_EMAIL_CONTENT",
+      "signature_schema": {
+        "flow_email_subject": "string|null",
+        "flow_email_body_has_text": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_FLOW_EMAIL_TYPE_SUBJECT",
+          "name": "type",
+          "is_navigation": false,
+          "from": "FLOW_EMAIL_CONTENT",
+          "to": "FLOW_EMAIL_CONTENT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.flow_email_subject",
+              "value": "Flow {input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#flow-email-subject-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#flow-email-subject-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FLOW_EMAIL_TYPE_BODY",
+          "name": "type",
+          "is_navigation": false,
+          "from": "FLOW_EMAIL_CONTENT",
+          "to": "FLOW_EMAIL_CONTENT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.flow_email_body_has_text",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#flow-email-body-editor"
+            },
+            {
+              "op": "type_text",
+              "selector": "#flow-email-body-editor",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FLOW_EMAIL_CONTINUE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FLOW_EMAIL_CONTENT",
+          "to": "FLOW_REVIEW_ACTIVATE",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.flow_email_subject",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.flow_email_body_has_text",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-flow-email-continue"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FLOW_EMAIL_BACK_TRIGGER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FLOW_EMAIL_CONTENT",
+          "to": "FLOW_TRIGGER_SETUP",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-flow-trigger"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FLOW_REVIEW_ACTIVATE",
+      "signature_schema": {
+        "flow_is_activated": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_FLOW_REVIEW_ACTIVATE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FLOW_REVIEW_ACTIVATE",
+          "to": "FLOW_CREATED_SUCCESS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.flow_is_activated",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-activate-flow"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FLOW_REVIEW_BACK_EMAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FLOW_REVIEW_ACTIVATE",
+          "to": "FLOW_EMAIL_CONTENT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-flow-email"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FLOW_CREATED_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_FLOW_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FLOW_CREATED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Flow created and activated"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FLOW_SUCCESS_BACK_FLOWS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FLOW_CREATED_SUCCESS",
+          "to": "FLOWS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-view-flows"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FLOW_DETAIL",
+      "signature_schema": {
+        "selected_flow_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_FLOW_DETAIL_BACK_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FLOW_DETAIL",
+          "to": "FLOWS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-flows"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LISTS_SEGMENTS",
+      "signature_schema": {
+        "lists": "array<object>|null",
+        "segments": "array<object>|null",
+        "lists_segments_filters_applied": "boolean|null",
+        "lists_segments_viewport_anchor_id": "string|null",
+        "lists_segments_has_searched": "boolean|null",
+        "matched_segment_id": "string|null",
+        "selected_segment_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_LISTS_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "LISTS_SEGMENTS",
+          "to": "LISTS_SEGMENTS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.lists_segments_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-type-segment-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LISTS_FILTER_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "LISTS_SEGMENTS",
+          "to": "LISTS_SEGMENTS",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.lists_segments_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#lists-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#lists-sort-option-size",
+              "ui_elements": {
+                "container": "#lists-sort-dropdown",
+                "options": [
+                  {
+                    "value": "size",
+                    "selector": "#lists-sort-option-size"
+                  },
+                  {
+                    "value": "name",
+                    "selector": "#lists-sort-option-name"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_LISTS_OPEN_FILTERED_SEGMENT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "LISTS_SEGMENTS",
+          "to": "SEGMENT_BUILDER",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.lists_segments_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.lists_segments_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_segment_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#segments-table .row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LISTS_SEARCH_SEGMENT",
+          "name": "search",
+          "is_navigation": false,
+          "from": "LISTS_SEGMENTS",
+          "to": "LISTS_SEGMENTS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_segment_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.lists_segments_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#segments-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#segments-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LISTS_OPEN_MATCHED_SEGMENT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "LISTS_SEGMENTS",
+          "to": "SEGMENT_BUILDER",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_segment_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.lists_segments_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_segment_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.lists_segments_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#segments-table .row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LISTS_SCROLL_SEGMENT_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "LISTS_SEGMENTS",
+          "to": "LISTS_SEGMENTS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.lists_segments_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#segments-table"
+            },
+            {
+              "op": "drag",
+              "selector": "#segments-table",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LISTS_OPEN_ANY_SEGMENT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "LISTS_SEGMENTS",
+          "to": "SEGMENT_BUILDER",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.lists_segments_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_segment_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.lists_segments_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#segments-table .row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LISTS_CREATE_NEW_SEGMENT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "LISTS_SEGMENTS",
+          "to": "SEGMENT_BUILDER",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-create-segment"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LISTS_BACK_DASHBOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "LISTS_SEGMENTS",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#breadcrumb-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SEGMENT_BUILDER",
+      "signature_schema": {
+        "segment_name": "string|null",
+        "segment_condition_type": "string|null",
+        "segment_condition_value": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SEGMENT_NAME_TYPE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SEGMENT_BUILDER",
+          "to": "SEGMENT_BUILDER",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.segment_name",
+              "value": "Segment {input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#segment-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#segment-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SEGMENT_CONDITION_SELECT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SEGMENT_BUILDER",
+          "to": "SEGMENT_BUILDER",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.segment_condition_type",
+              "value": "opened_email"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#condition-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#condition-opened-email",
+              "ui_elements": {
+                "container": "#condition-dropdown",
+                "options": [
+                  {
+                    "value": "opened_email",
+                    "selector": "#condition-opened-email"
+                  },
+                  {
+                    "value": "clicked_link",
+                    "selector": "#condition-clicked-link"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_SEGMENT_CONDITION_VALUE_TYPE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SEGMENT_BUILDER",
+          "to": "SEGMENT_BUILDER",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.segment_condition_value",
+              "value": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#condition-value-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#condition-value-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SEGMENT_SAVE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SEGMENT_BUILDER",
+          "to": "SEGMENT_CREATED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.segment_name",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.segment_condition_type",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.segment_condition_value",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-save-segment"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SEGMENT_BACK_LISTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SEGMENT_BUILDER",
+          "to": "LISTS_SEGMENTS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-lists-segments"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SEGMENT_CREATED_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SEGMENT_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SEGMENT_CREATED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Segment created"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SEGMENT_SUCCESS_BACK_LISTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SEGMENT_CREATED_SUCCESS",
+          "to": "LISTS_SEGMENTS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-view-segments"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SIGNUP_FORMS_LIST",
+      "signature_schema": {
+        "signup_forms": "array<object>|null",
+        "signup_forms_filters_applied": "boolean|null",
+        "signup_forms_viewport_anchor_id": "string|null",
+        "signup_forms_has_searched": "boolean|null",
+        "matched_form_id": "string|null",
+        "selected_form_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_FORMS_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SIGNUP_FORMS_LIST",
+          "to": "SIGNUP_FORMS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.signup_forms_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-status-live-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FORMS_FILTER_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SIGNUP_FORMS_LIST",
+          "to": "SIGNUP_FORMS_LIST",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.signup_forms_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#forms-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#forms-sort-option-newest",
+              "ui_elements": {
+                "container": "#forms-sort-dropdown",
+                "options": [
+                  {
+                    "value": "newest",
+                    "selector": "#forms-sort-option-newest"
+                  },
+                  {
+                    "value": "oldest",
+                    "selector": "#forms-sort-option-oldest"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_FORMS_OPEN_FILTERED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SIGNUP_FORMS_LIST",
+          "to": "SIGNUP_FORM_BUILDER",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.signup_forms_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.signup_forms_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_form_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#forms-table .row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FORMS_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "SIGNUP_FORMS_LIST",
+          "to": "SIGNUP_FORMS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_form_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.signup_forms_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#forms-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#forms-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FORMS_OPEN_MATCHED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SIGNUP_FORMS_LIST",
+          "to": "SIGNUP_FORM_BUILDER",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_form_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.signup_forms_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_form_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.signup_forms_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#forms-table .row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FORMS_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SIGNUP_FORMS_LIST",
+          "to": "SIGNUP_FORMS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.signup_forms_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#forms-table"
+            },
+            {
+              "op": "drag",
+              "selector": "#forms-table",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FORMS_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SIGNUP_FORMS_LIST",
+          "to": "SIGNUP_FORM_BUILDER",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.signup_forms_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_form_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.signup_forms_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#forms-table .row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FORMS_CREATE_NEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SIGNUP_FORMS_LIST",
+          "to": "SIGNUP_FORM_BUILDER",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-create-form"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FORMS_BACK_DASHBOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SIGNUP_FORMS_LIST",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#breadcrumb-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SIGNUP_FORM_BUILDER",
+      "signature_schema": {
+        "form_name": "string|null",
+        "form_field_email_enabled": "boolean|null",
+        "form_call_to_action": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_FORM_NAME_TYPE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SIGNUP_FORM_BUILDER",
+          "to": "SIGNUP_FORM_BUILDER",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.form_name",
+              "value": "Form {input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#form-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#form-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FORM_ENABLE_EMAIL_FIELD",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SIGNUP_FORM_BUILDER",
+          "to": "SIGNUP_FORM_BUILDER",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.form_field_email_enabled",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#toggle-email-field"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FORM_CTA_TYPE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SIGNUP_FORM_BUILDER",
+          "to": "SIGNUP_FORM_BUILDER",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.form_call_to_action",
+              "value": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#form-cta-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#form-cta-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FORM_PUBLISH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SIGNUP_FORM_BUILDER",
+          "to": "SIGNUP_FORM_PUBLISHED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.form_name",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.form_field_email_enabled",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.form_call_to_action",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-publish-form"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FORM_BACK_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SIGNUP_FORM_BUILDER",
+          "to": "SIGNUP_FORMS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-forms-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SIGNUP_FORM_PUBLISHED_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_FORM_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SIGNUP_FORM_PUBLISHED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Signup form published"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FORM_SUCCESS_BACK_FORMS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SIGNUP_FORM_PUBLISHED_SUCCESS",
+          "to": "SIGNUP_FORMS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-view-forms"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

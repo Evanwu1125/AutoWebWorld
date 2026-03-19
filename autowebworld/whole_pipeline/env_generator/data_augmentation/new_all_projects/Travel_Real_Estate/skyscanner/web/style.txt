@@ -1,0 +1,35 @@
+# Style Guide: Skyscanner Inspiration
+
+## Theme & Atmosphere
+The application mimics the clean, professional, and trustworthy aesthetic of Skyscanner.
+- **Target Audience:** Travelers seeking efficiency and clarity.
+- **Visual Tone:** Modern, airy, blue-dominant, high contrast for readability.
+
+## Color Palette
+- **Primary:** Sky Blue `#0770E3` (Tailwind: `bg-blue-600`) - Used for primary buttons (`#search-flights-button`), active states, and key highlights.
+- **Secondary:** Ocean Blue `#002D5C` (Tailwind: `bg-blue-900`) - Used for headers, footers.
+- **Accent:** Green `#00A698` (Tailwind: `text-teal-600`) - Used for success states, "Best Value" tags.
+- **Background:** White `#FFFFFF` and Light Gray `#F1F5F9` (Tailwind: `bg-slate-100`) - Creates separation between cards.
+- **Text:** Dark Slate `#111827` (Tailwind: `text-gray-900`) for headings, Medium Gray `#6B7280` (Tailwind: `text-gray-500`) for secondary text.
+
+## Typography
+- **Font Family:** Inter, system-ui, sans-serif.
+- **Headings:** Bold, clear hierarchy (`text-2xl font-bold`).
+- **Body:** Clean, legible (`text-base`).
+
+## Component Styling
+- **Cards:** White background, rounded corners (`rounded-lg`), subtle shadow (`shadow-md`), padding (`p-4` or `p-6`). Used for flight options, hotel listings.
+- **Buttons:**
+  - Primary: Solid Sky Blue, white text, rounded (`rounded-md`), font-semibold. Hover: Darker blue.
+  - Secondary: Transparent or light gray background, blue text.
+- **Inputs:** White background, gray border (`border-gray-300`), rounded (`rounded-md`), focus ring (`focus:ring-blue-500`).
+- **Images:** High-quality realistic images for destinations, hotels, and cars. Rounded corners.
+
+## Layout Patterns
+- **Container:** Centered max-width (`max-w-7xl mx-auto`), responsive padding.
+- **Grid:** Responsive grids for search results (`grid-cols-1 md:grid-cols-3`).
+- **Spacing:** Generous whitespace (`gap-6`, `my-8`) to reduce cognitive load.
+
+## Special Elements
+- **Hero Section:** Large background image on HOME with central search widget overlay.
+- **Price Alerts:** Distinctive icon or card style.

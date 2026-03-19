@@ -1,0 +1,2320 @@
+{
+  "meta": {
+    "app": "Neobank-Revolut_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "TRANSFER_SUCCESS",
+      "EXCHANGE_SUCCESS",
+      "CARD_FREEZE_SUCCESS",
+      "CARD_LIMITS_SUCCESS",
+      "TOPUP_SUCCESS"
+    ],
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 20,
+        "max": 35
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover",
+        "menu"
+      ],
+      "home_nav_coverage": "any",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 4,
+        "two_step_parity": false,
+        "allowed_shapes": [
+          "checkboxes",
+          "sliders",
+          "sort"
+        ]
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "current_user_id": "string|null",
+        "cookie_consent_given": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ACCEPT_COOKIES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cookie_consent_given",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_ACCOUNTS_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "ACCOUNTS_DASHBOARD",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#tab-accounts"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_TRANSFERS_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "PAYMENTS_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#menu-more"
+            },
+            {
+              "op": "click",
+              "selector": "#menu-item-transfers"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_CARDS_HOVER",
+          "name": "select",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "CARDS_LIST",
+          "parameters": {
+            "widget": "hover_menu"
+          },
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#header-cards"
+            },
+            {
+              "op": "click",
+              "selector": "#header-cards-physical",
+              "ui_elements": {
+                "container": "#header-cards",
+                "options": [
+                  {
+                    "value": "physical_cards",
+                    "selector": "#header-cards-physical"
+                  },
+                  {
+                    "value": "virtual_cards",
+                    "selector": "#header-cards-virtual"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_EXCHANGE_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "EXCHANGE_DASHBOARD",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#quick-action-exchange"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ACCOUNTS_DASHBOARD",
+      "signature_schema": {
+        "location_permission_granted": "boolean|null",
+        "accounts": "array<object>|null",
+        "accounts_list_has_searched": "boolean|null",
+        "accounts_matched_account_id": "string|null",
+        "accounts_selected_account_id": "string|null",
+        "accounts_viewport_anchor_id": "string|null",
+        "accounts_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_LOCATION_PERMISSION_ALLOW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "ACCOUNTS_DASHBOARD",
+          "to": "ACCOUNTS_DASHBOARD",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ACCOUNTS_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "ACCOUNTS_DASHBOARD",
+          "to": "ACCOUNTS_DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.accounts_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-hide-zero-balance"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ACCOUNTS_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "ACCOUNTS_DASHBOARD",
+          "to": "ACCOUNTS_DASHBOARD",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.accounts_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#balance-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#balance-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ACCOUNTS_FILTER_SORT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "ACCOUNTS_DASHBOARD",
+          "to": "ACCOUNTS_DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.accounts_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#sort-option-balance-desc",
+              "ui_elements": {
+                "container": "#sort-dropdown",
+                "options": [
+                  {
+                    "value": "balance_desc",
+                    "selector": "#sort-option-balance-desc"
+                  },
+                  {
+                    "value": "balance_asc",
+                    "selector": "#sort-option-balance-asc"
+                  },
+                  {
+                    "value": "currency",
+                    "selector": "#sort-option-currency"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_ACCOUNTS_OPEN_FILTERED_ACCOUNT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNTS_DASHBOARD",
+          "to": "ACCOUNT_DETAIL",
+          "parameters": {
+            "account_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.accounts_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.accounts_selected_account_id",
+              "value_ref": "{account_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.accounts_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#accounts-list .account-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ACCOUNTS_SCROLL_ACCOUNT_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "ACCOUNTS_DASHBOARD",
+          "to": "ACCOUNTS_DASHBOARD",
+          "parameters": {
+            "account_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.accounts_viewport_anchor_id",
+              "value_ref": "{account_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#accounts-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#accounts-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ACCOUNTS_OPEN_ANY_ACCOUNT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNTS_DASHBOARD",
+          "to": "ACCOUNT_DETAIL",
+          "parameters": {
+            "account_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.accounts_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.accounts_selected_account_id",
+              "value_ref": "{account_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.accounts_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#accounts-list .account-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ACCOUNTS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNTS_DASHBOARD",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ACCOUNT_DETAIL",
+      "signature_schema": {
+        "accounts_selected_account_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ACCOUNT_GO_TO_TRANSFERS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_DETAIL",
+          "to": "PAYMENTS_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.accounts_selected_account_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cta-transfer"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ACCOUNT_BACK_TO_ACCOUNTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_DETAIL",
+          "to": "ACCOUNTS_DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-accounts"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PAYMENTS_LIST",
+      "signature_schema": {
+        "beneficiaries": "array<object>|null",
+        "payments_list_has_searched": "boolean|null",
+        "payments_matched_beneficiary_id": "string|null",
+        "payments_selected_beneficiary_id": "string|null",
+        "payments_viewport_anchor_id": "string|null",
+        "payments_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PAYMENTS_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PAYMENTS_LIST",
+          "to": "PAYMENTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.payments_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-favorites-only"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENTS_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PAYMENTS_LIST",
+          "to": "PAYMENTS_LIST",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.payments_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#amount-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#amount-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENTS_FILTER_SORT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PAYMENTS_LIST",
+          "to": "PAYMENTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.payments_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sort-dropdown-payments"
+            },
+            {
+              "op": "click",
+              "selector": "#sort-option-recent",
+              "ui_elements": {
+                "container": "#sort-dropdown-payments",
+                "options": [
+                  {
+                    "value": "recent",
+                    "selector": "#sort-option-recent"
+                  },
+                  {
+                    "value": "name",
+                    "selector": "#sort-option-name"
+                  },
+                  {
+                    "value": "amount",
+                    "selector": "#sort-option-amount"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENTS_OPEN_FILTERED_BENEFICIARY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PAYMENTS_LIST",
+          "to": "BENEFICIARY_DETAIL",
+          "parameters": {
+            "beneficiary_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.payments_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.payments_selected_beneficiary_id",
+              "value_ref": "{beneficiary_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.payments_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#beneficiaries-list .beneficiary-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENTS_SCROLL_BENEFICIARY_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PAYMENTS_LIST",
+          "to": "PAYMENTS_LIST",
+          "parameters": {
+            "beneficiary_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.payments_viewport_anchor_id",
+              "value_ref": "{beneficiary_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#beneficiaries-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#beneficiaries-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENTS_OPEN_ANY_BENEFICIARY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PAYMENTS_LIST",
+          "to": "BENEFICIARY_DETAIL",
+          "parameters": {
+            "beneficiary_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.payments_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.payments_selected_beneficiary_id",
+              "value_ref": "{beneficiary_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.payments_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#beneficiaries-list .beneficiary-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENTS_GO_TO_NEW_TRANSFER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PAYMENTS_LIST",
+          "to": "TRANSFER_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cta-new-transfer"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENTS_BACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PAYMENTS_LIST",
+          "to": "ACCOUNTS_DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-accounts"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BENEFICIARY_DETAIL",
+      "signature_schema": {
+        "payments_selected_beneficiary_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_BENEFICIARY_GO_TO_TRANSFER_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BENEFICIARY_DETAIL",
+          "to": "TRANSFER_FORM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.payments_selected_beneficiary_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cta-send-money"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BENEFICIARY_BACK_TO_PAYMENTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BENEFICIARY_DETAIL",
+          "to": "PAYMENTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-beneficiaries"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TRANSFER_FORM",
+      "signature_schema": {
+        "from_account_id": "string|null",
+        "to_beneficiary_id": "string|null",
+        "transfer_amount": "string|null",
+        "transfer_reference": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_TRANSFER_SELECT_FROM_ACCOUNT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "TRANSFER_FORM",
+          "to": "TRANSFER_FORM",
+          "parameters": {
+            "account_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.from_account_id",
+              "value_ref": "{account_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#from-account-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#from-account-option-1",
+              "ui_elements": {
+                "container": "#from-account-dropdown",
+                "options": [
+                  {
+                    "value": "primary",
+                    "selector": "#from-account-option-1"
+                  },
+                  {
+                    "value": "savings",
+                    "selector": "#from-account-option-2"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_TRANSFER_TYPE_AMOUNT",
+          "name": "type",
+          "is_navigation": false,
+          "from": "TRANSFER_FORM",
+          "to": "TRANSFER_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.transfer_amount",
+              "value": "placeholder"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#input-amount"
+            },
+            {
+              "op": "type_text",
+              "selector": "#input-amount",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TRANSFER_TYPE_REFERENCE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "TRANSFER_FORM",
+          "to": "TRANSFER_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.transfer_reference",
+              "value": "placeholder"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#input-reference"
+            },
+            {
+              "op": "type_text",
+              "selector": "#input-reference",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TRANSFER_CONTINUE_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TRANSFER_FORM",
+          "to": "TRANSFER_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.from_account_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.transfer_amount",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cta-continue-transfer"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TRANSFER_BACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TRANSFER_FORM",
+          "to": "PAYMENTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-transfer-form"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TRANSFER_REVIEW",
+      "signature_schema": {
+        "from_account_id": "string|null",
+        "to_beneficiary_id": "string|null",
+        "transfer_amount": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_TRANSFER_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TRANSFER_REVIEW",
+          "to": "TRANSFER_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.transfer_amount",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cta-confirm-transfer"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TRANSFER_REVIEW_BACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TRANSFER_REVIEW",
+          "to": "TRANSFER_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-transfer-review"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TRANSFER_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_TRANSFER_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TRANSFER_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Transfer completed"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TRANSFER_SUCCESS_BACK_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TRANSFER_SUCCESS",
+          "to": "TRANSFER_REVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-view-details"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EXCHANGE_DASHBOARD",
+      "signature_schema": {
+        "exchange_pairs": "array<object>|null",
+        "exchange_list_has_searched": "boolean|null",
+        "exchange_matched_pair_id": "string|null",
+        "exchange_selected_pair_id": "string|null",
+        "exchange_viewport_anchor_id": "string|null",
+        "exchange_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_EXCHANGE_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "EXCHANGE_DASHBOARD",
+          "to": "EXCHANGE_DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.exchange_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-majors-only"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EXCHANGE_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "EXCHANGE_DASHBOARD",
+          "to": "EXCHANGE_DASHBOARD",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.exchange_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#rate-change-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#rate-change-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EXCHANGE_FILTER_SORT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "EXCHANGE_DASHBOARD",
+          "to": "EXCHANGE_DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.exchange_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sort-dropdown-exchange"
+            },
+            {
+              "op": "click",
+              "selector": "#sort-option-best-rate-desc",
+              "ui_elements": {
+                "container": "#sort-dropdown-exchange",
+                "options": [
+                  {
+                    "value": "best_rate",
+                    "selector": "#sort-option-best-rate-desc"
+                  },
+                  {
+                    "value": "a_to_z",
+                    "selector": "#sort-option-a-z"
+                  },
+                  {
+                    "value": "z_to_a",
+                    "selector": "#sort-option-z-a"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_EXCHANGE_OPEN_FILTERED_PAIR",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXCHANGE_DASHBOARD",
+          "to": "EXCHANGE_FORM",
+          "parameters": {
+            "pair_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.exchange_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.exchange_selected_pair_id",
+              "value_ref": "{pair_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.exchange_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#exchange-list .pair-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EXCHANGE_SCROLL_PAIR_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "EXCHANGE_DASHBOARD",
+          "to": "EXCHANGE_DASHBOARD",
+          "parameters": {
+            "pair_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.exchange_viewport_anchor_id",
+              "value_ref": "{pair_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#exchange-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#exchange-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EXCHANGE_OPEN_ANY_PAIR",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXCHANGE_DASHBOARD",
+          "to": "EXCHANGE_FORM",
+          "parameters": {
+            "pair_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.exchange_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.exchange_selected_pair_id",
+              "value_ref": "{pair_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.exchange_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#exchange-list .pair-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EXCHANGE_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXCHANGE_DASHBOARD",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home-exchange"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EXCHANGE_FORM",
+      "signature_schema": {
+        "exchange_selected_pair_id": "string|null",
+        "sell_amount": "string|null",
+        "buy_amount": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_EXCHANGE_TYPE_SELL_AMOUNT",
+          "name": "type",
+          "is_navigation": false,
+          "from": "EXCHANGE_FORM",
+          "to": "EXCHANGE_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.sell_amount",
+              "value": "placeholder"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#input-sell-amount"
+            },
+            {
+              "op": "type_text",
+              "selector": "#input-sell-amount",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EXCHANGE_TYPE_BUY_AMOUNT",
+          "name": "type",
+          "is_navigation": false,
+          "from": "EXCHANGE_FORM",
+          "to": "EXCHANGE_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.buy_amount",
+              "value": "placeholder"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#input-buy-amount"
+            },
+            {
+              "op": "type_text",
+              "selector": "#input-buy-amount",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EXCHANGE_CONTINUE_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXCHANGE_FORM",
+          "to": "EXCHANGE_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.sell_amount",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cta-continue-exchange"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EXCHANGE_FORM_BACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXCHANGE_FORM",
+          "to": "EXCHANGE_DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-exchange-form"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EXCHANGE_REVIEW",
+      "signature_schema": {
+        "sell_amount": "string|null",
+        "buy_amount": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_EXCHANGE_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXCHANGE_REVIEW",
+          "to": "EXCHANGE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.sell_amount",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cta-confirm-exchange"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EXCHANGE_REVIEW_BACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXCHANGE_REVIEW",
+          "to": "EXCHANGE_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-exchange-review"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EXCHANGE_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_EXCHANGE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXCHANGE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Exchange completed"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-exchange-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EXCHANGE_SUCCESS_BACK_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXCHANGE_SUCCESS",
+          "to": "EXCHANGE_REVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-view-exchange-details"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CARDS_LIST",
+      "signature_schema": {
+        "cards": "array<object>|null",
+        "cards_list_has_searched": "boolean|null",
+        "cards_matched_card_id": "string|null",
+        "cards_selected_card_id": "string|null",
+        "cards_viewport_anchor_id": "string|null",
+        "cards_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CARDS_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CARDS_LIST",
+          "to": "CARDS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cards_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-active-only"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CARDS_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CARDS_LIST",
+          "to": "CARDS_LIST",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cards_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#limit-range-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#limit-range-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CARDS_FILTER_SORT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CARDS_LIST",
+          "to": "CARDS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cards_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sort-dropdown-cards"
+            },
+            {
+              "op": "click",
+              "selector": "#sort-option-created-desc",
+              "ui_elements": {
+                "container": "#sort-dropdown-cards",
+                "options": [
+                  {
+                    "value": "created",
+                    "selector": "#sort-option-created-desc"
+                  },
+                  {
+                    "value": "nickname",
+                    "selector": "#sort-option-nickname"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_CARDS_OPEN_FILTERED_CARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CARDS_LIST",
+          "to": "CARD_DETAIL",
+          "parameters": {
+            "card_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.cards_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cards_selected_card_id",
+              "value_ref": "{card_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.cards_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cards-list .card-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CARDS_SCROLL_CARD_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CARDS_LIST",
+          "to": "CARDS_LIST",
+          "parameters": {
+            "card_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cards_viewport_anchor_id",
+              "value_ref": "{card_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cards-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#cards-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CARDS_OPEN_ANY_CARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CARDS_LIST",
+          "to": "CARD_DETAIL",
+          "parameters": {
+            "card_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.cards_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cards_selected_card_id",
+              "value_ref": "{card_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.cards_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cards-list .card-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CARDS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CARDS_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home-cards"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CARD_DETAIL",
+      "signature_schema": {
+        "cards_selected_card_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CARD_GO_TO_FREEZE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CARD_DETAIL",
+          "to": "CARD_FREEZE_FORM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cards_selected_card_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cta-freeze-card"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CARD_GO_TO_LIMITS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CARD_DETAIL",
+          "to": "CARD_LIMITS_FORM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cards_selected_card_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cta-edit-limits"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CARD_BACK_TO_CARDS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CARD_DETAIL",
+          "to": "CARDS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-cards"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CARD_FREEZE_FORM",
+      "signature_schema": {
+        "freeze_reason": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CARD_FREEZE_TYPE_REASON",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CARD_FREEZE_FORM",
+          "to": "CARD_FREEZE_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.freeze_reason",
+              "value": "placeholder"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#input-freeze-reason"
+            },
+            {
+              "op": "type_text",
+              "selector": "#input-freeze-reason",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CARD_FREEZE_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CARD_FREEZE_FORM",
+          "to": "CARD_FREEZE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.freeze_reason",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cta-confirm-freeze"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CARD_FREEZE_BACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CARD_FREEZE_FORM",
+          "to": "CARD_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-freeze"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CARD_FREEZE_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CARD_FREEZE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CARD_FREEZE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Card frozen"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-freeze-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CARD_FREEZE_SUCCESS_BACK_CARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CARD_FREEZE_SUCCESS",
+          "to": "CARD_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-back-to-card"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CARD_LIMITS_FORM",
+      "signature_schema": {
+        "atm_limit": "string|null",
+        "pos_limit": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CARD_LIMITS_SLIDER_ATM",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CARD_LIMITS_FORM",
+          "to": "CARD_LIMITS_FORM",
+          "parameters": {
+            "widget": "slider"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.atm_limit",
+              "value": "placeholder"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#atm-limit-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#atm-limit-slider",
+              "to_value": "2000"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CARD_LIMITS_SLIDER_POS",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CARD_LIMITS_FORM",
+          "to": "CARD_LIMITS_FORM",
+          "parameters": {
+            "widget": "slider"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.pos_limit",
+              "value": "placeholder"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pos-limit-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#pos-limit-slider",
+              "to_value": "12000"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CARD_LIMITS_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CARD_LIMITS_FORM",
+          "to": "CARD_LIMITS_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.atm_limit",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.pos_limit",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cta-save-limits"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CARD_LIMITS_BACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CARD_LIMITS_FORM",
+          "to": "CARD_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-limits"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CARD_LIMITS_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CARD_LIMITS_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CARD_LIMITS_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Card limits updated"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-limits-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CARD_LIMITS_SUCCESS_BACK_CARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CARD_LIMITS_SUCCESS",
+          "to": "CARD_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-back-card-from-limits"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TOPUP_METHOD_LIST",
+      "signature_schema": {
+        "topup_methods": "array<object>|null",
+        "topup_filters_applied": "boolean|null",
+        "topup_viewport_anchor_id": "string|null",
+        "topup_selected_method_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_TOPUP_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "TOPUP_METHOD_LIST",
+          "to": "TOPUP_METHOD_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.topup_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-linked-only"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TOPUP_OPEN_FILTERED_METHOD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TOPUP_METHOD_LIST",
+          "to": "TOPUP_FORM",
+          "parameters": {
+            "method_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.topup_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.topup_selected_method_id",
+              "value_ref": "{method_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.topup_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#topup-methods-list .method-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TOPUP_SCROLL_METHOD_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "TOPUP_METHOD_LIST",
+          "to": "TOPUP_METHOD_LIST",
+          "parameters": {
+            "method_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.topup_viewport_anchor_id",
+              "value_ref": "{method_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#topup-methods-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#topup-methods-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TOPUP_OPEN_ANY_METHOD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TOPUP_METHOD_LIST",
+          "to": "TOPUP_FORM",
+          "parameters": {
+            "method_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.topup_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.topup_selected_method_id",
+              "value_ref": "{method_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.topup_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#topup-methods-list .method-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TOPUP_METHODS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TOPUP_METHOD_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home-topup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TOPUP_FORM",
+      "signature_schema": {
+        "topup_selected_method_id": "string|null",
+        "topup_amount": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_TOPUP_TYPE_AMOUNT",
+          "name": "type",
+          "is_navigation": false,
+          "from": "TOPUP_FORM",
+          "to": "TOPUP_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.topup_amount",
+              "value": "placeholder"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#input-topup-amount"
+            },
+            {
+              "op": "type_text",
+              "selector": "#input-topup-amount",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TOPUP_CONTINUE_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TOPUP_FORM",
+          "to": "TOPUP_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.topup_selected_method_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.topup_amount",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cta-continue-topup"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TOPUP_FORM_BACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TOPUP_FORM",
+          "to": "TOPUP_METHOD_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-topup-form"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TOPUP_REVIEW",
+      "signature_schema": {
+        "topup_amount": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_TOPUP_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TOPUP_REVIEW",
+          "to": "TOPUP_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.topup_amount",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cta-confirm-topup"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TOPUP_REVIEW_BACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TOPUP_REVIEW",
+          "to": "TOPUP_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-topup-review"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TOPUP_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_TOPUP_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TOPUP_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Top up completed"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-topup-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TOPUP_SUCCESS_BACK_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TOPUP_SUCCESS",
+          "to": "TOPUP_REVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-back-topup-review"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

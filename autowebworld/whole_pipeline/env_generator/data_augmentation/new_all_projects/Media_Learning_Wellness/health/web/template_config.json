@@ -1,0 +1,17 @@
+{
+  "description": "Vue 3 + JavaScript + Vite template for FSM-based applications. Includes Pinia for state management, Vue Router for routing, Tailwind CSS for styling, and support for FSM runtime with JSONPath and Lodash utilities. The template provides App.vue with router-view, main.js with Pinia and Router initialization, and basic project structure.",
+  "required_fields": [
+  ],
+  "required_files": [
+    "index.html",
+    "src/main.js",
+    "src/App.vue",
+    "src/router/index.js",
+    "package.json",
+    "vite.config.js"
+  ],
+  "lang": "JavaScript",
+  "framework": "Vue 3",
+  "name": "vue_template",
+  "scene": "fsm"
+}

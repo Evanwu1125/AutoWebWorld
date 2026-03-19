@@ -1,0 +1,44 @@
+# Visual Style Guide - Outlook Clone
+
+## Theme & Concept
+- **Reference Application**: Microsoft Outlook
+- **Theme**: Professional, Clean, Productivity-focused
+- **Target Audience**: Business professionals, enterprise users, organized individuals
+- **Visual Tone**: Efficient, Trustworthy, Modern, "Fluent Design" inspired
+
+## Color Palette
+- **Primary**: #0078D4 (Outlook Blue) - Used for primary buttons, active states, branding
+- **Secondary**: #005A9E (Darker Blue) - Hover states for primary actions
+- **Background (App)**: #F0F2F5 (Light Gray) - Main application background
+- **Background (Panel)**: #FFFFFF (White) - Cards, emails, calendar grid, sidebar
+- **Text (Primary)**: #323130 (Dark Gray) - Main content
+- **Text (Secondary)**: #605E5C (Medium Gray) - Metadata, subtitles, inactive icons
+- **Accent**: #E1DFDD (Light Gray) - Borders, dividers, hover backgrounds
+
+## Typography
+- **Font Family**: 'Segoe UI', Inter, system-ui, sans-serif
+- **Sizes**:
+  - Headings: 20px-24px (SemiBold)
+  - Body: 14px-16px (Regular)
+  - Small: 12px (Regular) - Dates, metadata
+
+## Layout
+- **Structure**:
+  - Header: Slim top bar with branding and search
+  - Navigation: Left vertical sidebar (collapsible or icon-based)
+  - List View: Middle pane for email/item lists
+  - Reading/Content Pane: Right large pane for details
+- **Spacing**: Comfortable density (not too tight, not too loose). 8px grid system.
+
+## Components
+- **Buttons**:
+  - Primary: Solid Blue (#0078D4), White text, Rounded corners (4px)
+  - Ghost: Transparent background, Dark text, Gray hover effect
+- **Cards/Items**: White background, subtle border (#E1DFDD), Hover effect (light gray background)
+- **Inputs**: Light gray border, focus ring with Primary Blue
+- **Icons**: Simple line icons (using SVG or CSS shapes)
+
+## Imagery
+- **Strategy**: Use real images for avatars and rich content to make it feel alive.
+- **Avatars**: Circular profile pictures for contacts.
+- **Empty States**: Clean illustrations for "All caught up".

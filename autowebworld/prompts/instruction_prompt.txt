@@ -1,0 +1,89 @@
+You are the coding agent for an FSM-to-Web task.
+
+Input below is the authoritative FSM JSON. Build a runnable React/Vite frontend from it.
+Real web theme name: {{REAL_WEB_THEME}}
+
+Design guidance (preloaded):
+- The `frontend-design-ultimate` guidance is preloaded into this task and must be followed as design reference.
+- Treat that guidance as already available in the prompt context.
+- Do not attempt to check the environment for Codex skill availability.
+- Do not stop with `SKILL_NOT_LOADED`.
+
+First step requirements (must do in project root, not in subdirectories):
+- Create `todo.md` first (highest priority before any code implementation).
+- In `todo.md`, include a complete page list for this FSM app (all pages that will be generated), then provide a concrete implementation checklist derived from FSM pages/actions.
+- Create `style.txt` in project root with concise design/style rules for this FSM app.
+
+Output file structure requirements:
+- Generate a consistent, auditable project structure.
+- Use TypeScript React source files for the final frontend implementation.
+- Follow this normalized file structure unless the FSM clearly requires a small justified deviation:
+
+```text
+mock_data.json              # Root-level mock domain data used by the generated web app.
+src/
+  main.tsx                  # React app entry; mounts the root application.
+  App.tsx                   # Top-level app shell; wires providers, layout, and page rendering.
+  index.css                 # Global styles, design tokens, resets, and shared visual foundations.
+  pages/
+    <PageName>Page.tsx      # One page component per FSM page; renders page-specific UI and actions.
+  components/
+    <SharedComponent>.tsx   # Reusable UI components and shared layout building blocks.
+  fsm/
+    context.tsx             # Shared FSM state context and provider used across the app.
+    engine.ts               # Core FSM transition logic: preconditions, effects, and navigation execution.
+    seed.ts                 # Loads and adapts initial runtime data from `mock_data.json`.
+```
+
+- `src/main.tsx` must be the only app entry.
+- `src/App.tsx` must remain focused on app composition and should not absorb all page logic.
+- `src/pages/` must contain one readable page component file for each FSM page.
+- `src/components/` should contain reusable UI, not page-specific business logic.
+- `src/fsm/` should centralize FSM runtime logic instead of scattering it across pages.
+- Keep the project structure stable across runs of similar FSM-to-web tasks.
+- Do not scatter FSM logic across arbitrary top-level source files.
+- Do not collapse the entire app into a single oversized file unless the FSM is genuinely trivial.
+
+Mock data requirements:
+- Create `mock_data.json` in the project root.
+- Store all generated mock domain data for the synthesized web app in this file.
+- This file should contain realistic product-facing content data such as users, channels, messages, workspaces, options, and other domain records required by the app.
+- Do not store transient UI state in `mock_data.json`.
+- Do not scatter mock data across multiple unrelated source files unless a small adapter is needed to load `mock_data.json` into the app.
+- The frontend should read from this root-level mock data file directly or through a thin runtime adapter.
+
+1. Core goal
+- Build a realistic and usable frontend website, not an FSM field viewer.
+- FSM is the behavior contract: page transitions, preconditions, effects, and navigation must remain strictly consistent.
+- Usability is the product contract: users should complete tasks smoothly, understand the UI clearly, and receive clear feedback.
+
+2. FSM hard constraints (must not be violated)
+- All page transitions must follow the FSM.
+- Every operable action must be executable in the frontend and produce an observable result.
+- Frontend action element selectors must match FSM-defined selectors exactly, character by character.
+- If usability or visual design decisions conflict with FSM constraints, FSM constraints take priority.
+
+3. Usability and UI design requirements
+- While preserving FSM behavior fidelity, prioritize a polished visual experience and a real product feel.
+- Maintain a cohesive visual language across pages (color, typography, spacing, and component style).
+- Use clear information hierarchy and layout rhythm so primary tasks and key actions are easy to identify.
+- Provide natural interaction feedback for key operations (in-progress, success, and failure).
+- Use user-facing, natural copy; avoid exposing internal FSM IDs or raw structure to end users.
+- Use real web `{{REAL_WEB_THEME}}` as a style and layout reference, but avoid mechanical 1:1 imitation.
+
+4. Prohibitions
+- Do not mechanically translate FSM fields page by page as the final UI.
+- Do not deliver static pages without truly executable interactions.
+- Do not claim completion if build passes but core user flows are not actually runnable.
+
+5. Definition of done (all required)
+- `npm run build` passes.
+- At least 3 core user flows can run end-to-end from entry action to result.
+- In the final response, explicitly describe:
+  - the FSM transition chain for each core flow
+  - how selector consistency is guaranteed
+  - how usability design is implemented (feedback, validation, and failure handling)
+- When all required implementation is complete and build is passing, include exact token `ALL_TASKS_DONE` in your submission.
+
+FSM JSON:
+{{FSM_JSON}}

@@ -1,0 +1,34 @@
+# Development Checklist
+
+- [ ] Update package.json (add pinia-plugin-persistedstate)
+- [ ] src/fsm/fsm-engine.js
+- [ ] src/stores/signature.js
+- [ ] src/stores/data.js
+- [ ] src/router/index.js
+- [ ] src/pages/HOME.vue
+- [ ] src/pages/REPO_LIST.vue
+- [ ] src/pages/REPO_DETAIL.vue
+- [ ] src/pages/CREATE_REPO_FORM.vue
+- [ ] src/pages/CREATE_REPO_REVIEW.vue
+- [ ] src/pages/CREATE_REPO_SUCCESS.vue
+- [ ] src/pages/PR_LIST.vue
+- [ ] src/pages/PR_DETAIL.vue
+- [ ] src/pages/CREATE_PR_FORM.vue
+- [ ] src/pages/CREATE_PR_REVIEW.vue
+- [ ] src/pages/CREATE_PR_SUCCESS.vue
+- [ ] src/pages/MERGE_PR_FORM.vue
+- [ ] src/pages/MERGE_PR_REVIEW.vue
+- [ ] src/pages/MERGE_PR_SUCCESS.vue
+- [ ] src/pages/PIPELINE_LIST.vue
+- [ ] src/pages/PIPELINE_DETAIL.vue
+- [ ] src/pages/PIPELINE_CONFIG_FORM.vue
+- [ ] src/pages/PIPELINE_CONFIG_REVIEW.vue
+- [ ] src/pages/CREATE_PIPELINE_SUCCESS.vue
+- [ ] src/pages/WORKSPACE_MEMBERS.vue
+- [ ] src/pages/INVITE_MEMBER_FORM.vue
+- [ ] src/pages/INVITE_MEMBER_REVIEW.vue
+- [ ] src/pages/INVITE_USER_SUCCESS.vue
+- [ ] src/pages/REPO_PR_LIST.vue
+- [ ] src/pages/REPO_PIPELINES.vue
+- [ ] src/pages/REPO_SETTINGS.vue
+- [ ] src/main.js (update)

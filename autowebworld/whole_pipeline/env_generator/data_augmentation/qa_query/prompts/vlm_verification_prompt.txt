@@ -1,0 +1,26 @@
+Look at the screenshot carefully. You are given a question and its ground truth answer.
+
+**Question:** {question}
+**Ground Truth Answer:** {ground_truth}
+
+**Your Task:**
+Determine if the ground truth answer can be found in the screenshot.
+
+**Criteria:**
+1. The information must be VISUALLY PRESENT in the screenshot
+2. The answer must be CLEARLY READABLE (not blurred or cut off)
+3. The answer must match or be consistent with the ground truth
+
+**Response Format (JSON only):**
+{{
+  "answerable": true/false,
+  "reason": "Brief explanation of why it is/isn't answerable",
+  "confidence": "high/medium/low",
+  "location": "Where in the screenshot the answer was found (if answerable)"
+}}
+
+**Examples:**
+- If ground truth is "Family Therapy" and you see "Specialty: Family Therapy" clearly in the image → answerable: true
+- If ground truth is "8 years" but the experience field shows "5 years" → answerable: false
+- If ground truth is "Family Therapy" but the specialty field is not visible → answerable: false
+

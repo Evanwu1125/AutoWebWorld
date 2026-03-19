@@ -1,0 +1,3007 @@
+{
+  "meta": {
+    "app": "Microblogging_Social-X(Twitter)_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "TWEET_POST_SUCCESS",
+      "TWEET_SCHEDULE_SUCCESS",
+      "FOLLOW_USER_SUCCESS",
+      "MESSAGE_SEND_SUCCESS",
+      "PROFILE_UPDATE_SUCCESS"
+    ],
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 25,
+        "max": 35
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover",
+        "menu"
+      ],
+      "home_nav_coverage": "any",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 4,
+        "two_step_parity": false,
+        "allowed_shapes": [
+          "checkboxes",
+          "sliders",
+          "sort"
+        ]
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "current_user_id": "string|null",
+        "cookie_consent_given": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_HOME_ACCEPT_COOKIES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cookie_consent_given",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_HOME_TIMELINE_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "HOME_TIMELINE",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#primary-home-link"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_PROFILE_HOVER",
+          "name": "select",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "PROFILE_OVERVIEW",
+          "parameters": {
+            "widget": "hover_menu"
+          },
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#nav-user-menu"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-user-menu-profile",
+              "ui_elements": {
+                "container": "#nav-user-menu",
+                "options": [
+                  {
+                    "value": "profile",
+                    "selector": "#nav-user-menu-profile"
+                  },
+                  {
+                    "value": "lists",
+                    "selector": "#nav-user-menu-lists"
+                  },
+                  {
+                    "value": "topics",
+                    "selector": "#nav-user-menu-topics"
+                  },
+                  {
+                    "value": "bookmarks",
+                    "selector": "#nav-user-menu-bookmarks"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_MESSAGES_MENU",
+          "name": "select",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "MESSAGES_INBOX",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#more-menu-toggle"
+            },
+            {
+              "op": "click",
+              "selector": "#more-menu-messages",
+              "ui_elements": {
+                "container": "#more-menu-toggle",
+                "options": [
+                  {
+                    "value": "messages",
+                    "selector": "#more-menu-messages"
+                  },
+                  {
+                    "value": "settings",
+                    "selector": "#more-menu-settings"
+                  },
+                  {
+                    "value": "help",
+                    "selector": "#more-menu-help"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_NOTIFICATIONS_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "NOTIFICATIONS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-notifications"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HOME_TIMELINE",
+      "signature_schema": {
+        "tweets": "array<object>|null",
+        "home_timeline_filters_applied": "boolean|null",
+        "home_timeline_viewport_anchor_tweet_id": "string|null",
+        "matched_tweet_id": "string|null",
+        "home_timeline_has_searched": "boolean|null",
+        "location_permission_granted": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_TIMELINE_GRANT_LOCATION",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME_TIMELINE",
+          "to": "HOME_TIMELINE",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TIMELINE_FILTER_FOLLOWING_CHECKBOX",
+          "name": "select",
+          "is_navigation": false,
+          "from": "HOME_TIMELINE",
+          "to": "HOME_TIMELINE",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.home_timeline_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#timeline-filter-following-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TIMELINE_FILTER_MEDIA_ONLY_CHECKBOX",
+          "name": "select",
+          "is_navigation": false,
+          "from": "HOME_TIMELINE",
+          "to": "HOME_TIMELINE",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.home_timeline_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#timeline-filter-media-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TIMELINE_FILTER_ENGAGEMENT_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "HOME_TIMELINE",
+          "to": "HOME_TIMELINE",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.home_timeline_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#timeline-filter-engagement-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#timeline-filter-engagement-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TIMELINE_FILTER_SORT_DROPDOWN",
+          "name": "select",
+          "is_navigation": false,
+          "from": "HOME_TIMELINE",
+          "to": "HOME_TIMELINE",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.home_timeline_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#timeline-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#timeline-sort-top",
+              "ui_elements": {
+                "container": "#timeline-sort-dropdown",
+                "options": [
+                  {
+                    "value": "top",
+                    "selector": "#timeline-sort-top"
+                  },
+                  {
+                    "value": "latest",
+                    "selector": "#timeline-sort-latest"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_TIMELINE_OPEN_FILTERED_TWEET",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME_TIMELINE",
+          "to": "TWEET_DETAIL",
+          "parameters": {
+            "tweet_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.home_timeline_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.home_timeline_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#timeline .tweet-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TIMELINE_SEARCH_TWEET",
+          "name": "search",
+          "is_navigation": false,
+          "from": "HOME_TIMELINE",
+          "to": "HOME_TIMELINE",
+          "parameters": {
+            "tweet_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_tweet_id",
+              "value_ref": "{tweet_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.home_timeline_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#timeline-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#timeline-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TIMELINE_OPEN_MATCHED_TWEET",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME_TIMELINE",
+          "to": "TWEET_DETAIL",
+          "parameters": {
+            "tweet_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_tweet_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.home_timeline_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.home_timeline_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#timeline .tweet-search-result"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TIMELINE_SCROLL_TWEET_INTO_VIEW",
+          "name": "select",
+          "is_navigation": false,
+          "from": "HOME_TIMELINE",
+          "to": "HOME_TIMELINE",
+          "parameters": {
+            "widget": "slider",
+            "tweet_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.home_timeline_viewport_anchor_tweet_id",
+              "value_ref": "{tweet_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#timeline-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#timeline-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TIMELINE_OPEN_ANY_TWEET",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME_TIMELINE",
+          "to": "TWEET_DETAIL",
+          "parameters": {
+            "tweet_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.home_timeline_viewport_anchor_tweet_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.home_timeline_viewport_anchor_tweet_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#timeline .tweet-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TIMELINE_OPEN_COMPOSE_TWEET",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME_TIMELINE",
+          "to": "COMPOSE_TWEET",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#primary-compose-tweet"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TIMELINE_NAV_PROFILE_BACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME_TIMELINE",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-to-root-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TWEET_DETAIL",
+      "signature_schema": {
+        "selected_tweet_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_TWEET_DETAIL_REPLY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TWEET_DETAIL",
+          "to": "COMPOSE_TWEET",
+          "parameters": {
+            "tweet_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#tweet-reply-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TWEET_DETAIL_QUOTE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TWEET_DETAIL",
+          "to": "COMPOSE_TWEET",
+          "parameters": {
+            "tweet_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#tweet-quote-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TWEET_DETAIL_OPEN_AUTHOR_PROFILE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TWEET_DETAIL",
+          "to": "PROFILE_OVERVIEW",
+          "parameters": {
+            "user_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#tweet-author-handle"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TWEET_DETAIL_BACK_TIMELINE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TWEET_DETAIL",
+          "to": "HOME_TIMELINE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-timeline"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "COMPOSE_TWEET",
+      "signature_schema": {
+        "draft_tweet_text": "string|null",
+        "draft_tweet_visibility": "string|null",
+        "draft_tweet_allow_replies": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_COMPOSE_TYPE_TWEET_TEXT",
+          "name": "type",
+          "is_navigation": false,
+          "from": "COMPOSE_TWEET",
+          "to": "COMPOSE_TWEET",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.draft_tweet_text",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#compose-tweet-textarea"
+            },
+            {
+              "op": "type_text",
+              "selector": "#compose-tweet-textarea",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COMPOSE_SELECT_VISIBILITY",
+          "name": "select",
+          "is_navigation": false,
+          "from": "COMPOSE_TWEET",
+          "to": "COMPOSE_TWEET",
+          "parameters": {
+            "widget": "dropdown",
+            "visibility": "public"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.draft_tweet_visibility",
+              "value": "public"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#tweet-visibility-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#tweet-visibility-public",
+              "ui_elements": {
+                "container": "#tweet-visibility-dropdown",
+                "options": [
+                  {
+                    "value": "public",
+                    "selector": "#tweet-visibility-public"
+                  },
+                  {
+                    "value": "followers",
+                    "selector": "#tweet-visibility-followers"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_COMPOSE_SELECT_ALLOW_REPLIES",
+          "name": "select",
+          "is_navigation": false,
+          "from": "COMPOSE_TWEET",
+          "to": "COMPOSE_TWEET",
+          "parameters": {
+            "widget": "dropdown",
+            "allow": "everyone"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.draft_tweet_allow_replies",
+              "value": "everyone"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#tweet-replies-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#tweet-replies-everyone",
+              "ui_elements": {
+                "container": "#tweet-replies-dropdown",
+                "options": [
+                  {
+                    "value": "everyone",
+                    "selector": "#tweet-replies-everyone"
+                  },
+                  {
+                    "value": "following",
+                    "selector": "#tweet-replies-following"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_COMPOSE_POST_TWEET",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COMPOSE_TWEET",
+          "to": "TWEET_POST_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.draft_tweet_text",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#tweet-submit-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COMPOSE_SCHEDULE_TWEET_PICK_DATE",
+          "name": "select",
+          "is_navigation": true,
+          "from": "COMPOSE_TWEET",
+          "to": "TWEET_SCHEDULE_SUCCESS",
+          "parameters": {
+            "widget": "date_picker",
+            "year": 2025,
+            "month": 10,
+            "day": 22,
+            "hour": 10,
+            "minute": 30
+          },
+          "preconditions": [
+            {
+              "path": "$.draft_tweet_text",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#schedule-tweet-button"
+            },
+            {
+              "op": "click",
+              "selector": "#date-picker"
+            },
+            {
+              "op": "click",
+              "selector": ".year-2025"
+            },
+            {
+              "op": "click",
+              "selector": ".month-10"
+            },
+            {
+              "op": "click",
+              "selector": ".day-22"
+            },
+            {
+              "op": "click",
+              "selector": ".hour-10"
+            },
+            {
+              "op": "click",
+              "selector": ".minute-30"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COMPOSE_BACK_TIMELINE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COMPOSE_TWEET",
+          "to": "HOME_TIMELINE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#compose-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TWEET_POST_SUCCESS",
+      "signature_schema": {
+        "posted_tweet_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_TWEET_POST_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TWEET_POST_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TWEET_POST_SUCCESS_VIEW_TWEET",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TWEET_POST_SUCCESS",
+          "to": "TWEET_DETAIL",
+          "parameters": {
+            "tweet_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#success-view-tweet"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TWEET_SCHEDULE_SUCCESS",
+      "signature_schema": {
+        "scheduled_tweet_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_TWEET_SCHEDULE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TWEET_SCHEDULE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#schedule-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TWEET_SCHEDULE_SUCCESS_VIEW_SCHEDULED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TWEET_SCHEDULE_SUCCESS",
+          "to": "PROFILE_TWEETS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#schedule-success-view-queue"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROFILE_OVERVIEW",
+      "signature_schema": {
+        "profile_user_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PROFILE_OVERVIEW_OPEN_TWEETS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_OVERVIEW",
+          "to": "PROFILE_TWEETS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-tab-tweets"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_OVERVIEW_OPEN_FOLLOWING",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_OVERVIEW",
+          "to": "PROFILE_FOLLOWING_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-following-link"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_OVERVIEW_OPEN_EDIT_PROFILE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_OVERVIEW",
+          "to": "SETTINGS_PROFILE_EDIT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-edit-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_OVERVIEW_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_OVERVIEW",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROFILE_TWEETS",
+      "signature_schema": {
+        "tweets": "array<object>|null",
+        "profile_tweets_filters_applied": "boolean|null",
+        "profile_tweets_viewport_anchor_tweet_id": "string|null",
+        "matched_tweet_id": "string|null",
+        "profile_tweets_has_searched": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PROFILE_TWEETS_FILTER_REPLIES_CHECKBOX",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PROFILE_TWEETS",
+          "to": "PROFILE_TWEETS",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.profile_tweets_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-filter-replies-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_TWEETS_FILTER_MEDIA_CHECKBOX",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PROFILE_TWEETS",
+          "to": "PROFILE_TWEETS",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.profile_tweets_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-filter-media-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_TWEETS_FILTER_LIKES_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PROFILE_TWEETS",
+          "to": "PROFILE_TWEETS",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.profile_tweets_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-filter-likes-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#profile-filter-likes-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_TWEETS_FILTER_SORT_DROPDOWN",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PROFILE_TWEETS",
+          "to": "PROFILE_TWEETS",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.profile_tweets_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-tweets-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#profile-tweets-sort-pinned",
+              "ui_elements": {
+                "container": "#profile-tweets-sort-dropdown",
+                "options": [
+                  {
+                    "value": "pinned",
+                    "selector": "#profile-tweets-sort-pinned"
+                  },
+                  {
+                    "value": "latest",
+                    "selector": "#profile-tweets-sort-latest"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_TWEETS_OPEN_FILTERED_TWEET",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_TWEETS",
+          "to": "TWEET_DETAIL",
+          "parameters": {
+            "tweet_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.profile_tweets_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.profile_tweets_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-tweets-list .tweet-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_TWEETS_SEARCH_TWEET",
+          "name": "search",
+          "is_navigation": false,
+          "from": "PROFILE_TWEETS",
+          "to": "PROFILE_TWEETS",
+          "parameters": {
+            "tweet_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_tweet_id",
+              "value_ref": "{tweet_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.profile_tweets_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-tweets-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#profile-tweets-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_TWEETS_OPEN_MATCHED_TWEET",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_TWEETS",
+          "to": "TWEET_DETAIL",
+          "parameters": {
+            "tweet_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_tweet_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.profile_tweets_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.profile_tweets_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-tweets-list .tweet-search-result"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_TWEETS_SCROLL_TWEET_INTO_VIEW",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PROFILE_TWEETS",
+          "to": "PROFILE_TWEETS",
+          "parameters": {
+            "widget": "slider",
+            "tweet_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.profile_tweets_viewport_anchor_tweet_id",
+              "value_ref": "{tweet_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-tweets-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#profile-tweets-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_TWEETS_OPEN_ANY_TWEET",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_TWEETS",
+          "to": "TWEET_DETAIL",
+          "parameters": {
+            "tweet_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.profile_tweets_viewport_anchor_tweet_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.profile_tweets_viewport_anchor_tweet_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-tweets-list .tweet-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_TWEETS_BACK_PROFILE_OVERVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_TWEETS",
+          "to": "PROFILE_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-tweets-back-overview"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROFILE_FOLLOWING_LIST",
+      "signature_schema": {
+        "following_users": "array<object>|null",
+        "profile_following_filters_applied": "boolean|null",
+        "profile_following_viewport_anchor_user_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PROFILE_FOLLOWING_FILTER_VERIFIED_CHECKBOX",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PROFILE_FOLLOWING_LIST",
+          "to": "PROFILE_FOLLOWING_LIST",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.profile_following_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#following-filter-verified-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_FOLLOWING_FILTER_MUTED_CHECKBOX",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PROFILE_FOLLOWING_LIST",
+          "to": "PROFILE_FOLLOWING_LIST",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.profile_following_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#following-filter-muted-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_FOLLOWING_FILTER_SORT_DROPDOWN",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PROFILE_FOLLOWING_LIST",
+          "to": "PROFILE_FOLLOWING_LIST",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.profile_following_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#following-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#following-sort-alphabetical-inc",
+              "ui_elements": {
+                "container": "#following-sort-dropdown",
+                "options": [
+                  {
+                    "value": "latest",
+                    "selector": "#following-sort-desc"
+                  },
+                  {
+                    "value": "alphabetical",
+                    "selector": "#following-sort-alphabetical-inc"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_FOLLOWING_OPEN_FILTERED_USER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_FOLLOWING_LIST",
+          "to": "USER_PROFILE_OVERVIEW",
+          "parameters": {
+            "user_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.profile_following_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.profile_following_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#following-list .user-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_FOLLOWING_SCROLL_USER_INTO_VIEW",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PROFILE_FOLLOWING_LIST",
+          "to": "PROFILE_FOLLOWING_LIST",
+          "parameters": {
+            "widget": "slider",
+            "user_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.profile_following_viewport_anchor_user_id",
+              "value_ref": "{user_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#following-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#following-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_FOLLOWING_OPEN_ANY_USER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_FOLLOWING_LIST",
+          "to": "USER_PROFILE_OVERVIEW",
+          "parameters": {
+            "user_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.profile_following_viewport_anchor_user_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.profile_following_viewport_anchor_user_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#following-list .user-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_FOLLOWING_BACK_PROFILE_OVERVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_FOLLOWING_LIST",
+          "to": "PROFILE_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#following-back-profile"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "USER_PROFILE_OVERVIEW",
+      "signature_schema": {
+        "user_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_USER_PROFILE_OPEN_FOLLOW_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "USER_PROFILE_OVERVIEW",
+          "to": "FOLLOW_USER_CONFIRM",
+          "parameters": {
+            "user_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#user-profile-follow-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_USER_PROFILE_OPEN_MESSAGE_COMPOSE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "USER_PROFILE_OVERVIEW",
+          "to": "MESSAGES_COMPOSE",
+          "parameters": {
+            "user_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#user-profile-message-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_USER_PROFILE_BACK_FOLLOWING_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "USER_PROFILE_OVERVIEW",
+          "to": "PROFILE_FOLLOWING_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#user-profile-back-following"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FOLLOW_USER_CONFIRM",
+      "signature_schema": {
+        "target_user_id": "string|null",
+        "confirm_checked": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_FOLLOW_USER_CONFIRM_CHECK_BOX",
+          "name": "select",
+          "is_navigation": false,
+          "from": "FOLLOW_USER_CONFIRM",
+          "to": "FOLLOW_USER_CONFIRM",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.confirm_checked",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#confirm-follow-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FOLLOW_USER_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FOLLOW_USER_CONFIRM",
+          "to": "FOLLOW_USER_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.confirm_checked",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#confirm-follow-submit"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FOLLOW_USER_CONFIRM_BACK_USER_PROFILE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FOLLOW_USER_CONFIRM",
+          "to": "USER_PROFILE_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#confirm-follow-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FOLLOW_USER_SUCCESS",
+      "signature_schema": {
+        "followed_user_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_FOLLOW_USER_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FOLLOW_USER_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#follow-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FOLLOW_USER_SUCCESS_VIEW_PROFILE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FOLLOW_USER_SUCCESS",
+          "to": "USER_PROFILE_OVERVIEW",
+          "parameters": {
+            "user_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#follow-success-view-profile"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MESSAGES_INBOX",
+      "signature_schema": {
+        "threads": "array<object>|null",
+        "messages_inbox_filters_applied": "boolean|null",
+        "messages_inbox_viewport_anchor_thread_id": "string|null",
+        "matched_thread_id": "string|null",
+        "messages_inbox_has_searched": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MESSAGES_FILTER_UNREAD_CHECKBOX",
+          "name": "select",
+          "is_navigation": false,
+          "from": "MESSAGES_INBOX",
+          "to": "MESSAGES_INBOX",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.messages_inbox_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#messages-filter-unread-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MESSAGES_FILTER_REQUESTS_CHECKBOX",
+          "name": "select",
+          "is_navigation": false,
+          "from": "MESSAGES_INBOX",
+          "to": "MESSAGES_INBOX",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.messages_inbox_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#messages-filter-requests-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MESSAGES_FILTER_SORT_DROPDOWN",
+          "name": "select",
+          "is_navigation": false,
+          "from": "MESSAGES_INBOX",
+          "to": "MESSAGES_INBOX",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.messages_inbox_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#messages-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#messages-sort-unread-first",
+              "ui_elements": {
+                "container": "#messages-sort-dropdown",
+                "options": [
+                  {
+                    "value": "unread_first",
+                    "selector": "#messages-sort-unread-first"
+                  },
+                  {
+                    "value": "latest",
+                    "selector": "#messages-sort-latest"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_MESSAGES_OPEN_FILTERED_THREAD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGES_INBOX",
+          "to": "MESSAGES_THREAD",
+          "parameters": {
+            "thread_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.messages_inbox_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.messages_inbox_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#messages-thread-list .thread-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MESSAGES_SEARCH_THREAD",
+          "name": "search",
+          "is_navigation": false,
+          "from": "MESSAGES_INBOX",
+          "to": "MESSAGES_INBOX",
+          "parameters": {
+            "thread_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_thread_id",
+              "value_ref": "{thread_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.messages_inbox_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#messages-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#messages-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MESSAGES_OPEN_MATCHED_THREAD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGES_INBOX",
+          "to": "MESSAGES_THREAD",
+          "parameters": {
+            "thread_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_thread_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.messages_inbox_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.messages_inbox_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#messages-thread-list .thread-search-result"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MESSAGES_SCROLL_THREAD_INTO_VIEW",
+          "name": "select",
+          "is_navigation": false,
+          "from": "MESSAGES_INBOX",
+          "to": "MESSAGES_INBOX",
+          "parameters": {
+            "widget": "slider",
+            "thread_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.messages_inbox_viewport_anchor_thread_id",
+              "value_ref": "{thread_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#messages-thread-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#messages-thread-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MESSAGES_OPEN_ANY_THREAD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGES_INBOX",
+          "to": "MESSAGES_THREAD",
+          "parameters": {
+            "thread_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.messages_inbox_viewport_anchor_thread_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.messages_inbox_viewport_anchor_thread_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#messages-thread-list .thread-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MESSAGES_START_NEW_MESSAGE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGES_INBOX",
+          "to": "MESSAGES_COMPOSE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#messages-new-message"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MESSAGES_INBOX_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGES_INBOX",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#messages-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MESSAGES_THREAD",
+      "signature_schema": {
+        "thread_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MESSAGES_THREAD_REPLY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGES_THREAD",
+          "to": "MESSAGES_COMPOSE",
+          "parameters": {
+            "thread_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#thread-reply-input"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MESSAGES_THREAD_BACK_INBOX",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGES_THREAD",
+          "to": "MESSAGES_INBOX",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#thread-back-inbox"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MESSAGES_COMPOSE",
+      "signature_schema": {
+        "recipient_user_id": "string|null",
+        "message_text": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MESSAGES_COMPOSE_TYPE_RECIPIENT",
+          "name": "type",
+          "is_navigation": false,
+          "from": "MESSAGES_COMPOSE",
+          "to": "MESSAGES_COMPOSE",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.recipient_user_id",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-recipient-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#message-recipient-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MESSAGES_COMPOSE_TYPE_TEXT",
+          "name": "type",
+          "is_navigation": false,
+          "from": "MESSAGES_COMPOSE",
+          "to": "MESSAGES_COMPOSE",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.message_text",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-textarea"
+            },
+            {
+              "op": "type_text",
+              "selector": "#message-textarea",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MESSAGES_COMPOSE_SEND",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGES_COMPOSE",
+          "to": "MESSAGE_SEND_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.recipient_user_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.message_text",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-send-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MESSAGES_COMPOSE_BACK_INBOX",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGES_COMPOSE",
+          "to": "MESSAGES_INBOX",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-compose-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MESSAGE_SEND_SUCCESS",
+      "signature_schema": {
+        "sent_thread_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MESSAGE_SEND_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGE_SEND_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MESSAGE_SEND_SUCCESS_VIEW_INBOX",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGE_SEND_SUCCESS",
+          "to": "MESSAGES_INBOX",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-success-view-inbox"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "NOTIFICATIONS",
+      "signature_schema": {
+        "notifications": "array<object>|null",
+        "notifications_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_NOTIFICATIONS_FILTER_MENTIONS_CHECKBOX",
+          "name": "select",
+          "is_navigation": false,
+          "from": "NOTIFICATIONS",
+          "to": "NOTIFICATIONS",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.notifications_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#notifications-filter-mentions-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTIFICATIONS_FILTER_FOLLOWS_CHECKBOX",
+          "name": "select",
+          "is_navigation": false,
+          "from": "NOTIFICATIONS",
+          "to": "NOTIFICATIONS",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.notifications_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#notifications-filter-follows-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTIFICATIONS_FILTER_SORT_DROPDOWN",
+          "name": "select",
+          "is_navigation": false,
+          "from": "NOTIFICATIONS",
+          "to": "NOTIFICATIONS",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.notifications_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#notifications-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#notifications-sort-unread",
+              "ui_elements": {
+                "container": "#notifications-sort-dropdown",
+                "options": [
+                  {
+                    "value": "unread",
+                    "selector": "#notifications-sort-unread"
+                  },
+                  {
+                    "value": "latest",
+                    "selector": "#notifications-sort-latest"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTIFICATIONS_OPEN_ITEM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTIFICATIONS",
+          "to": "TWEET_DETAIL",
+          "parameters": {
+            "tweet_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#notifications-list .notification-item"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTIFICATIONS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTIFICATIONS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#notifications-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SETTINGS_PROFILE_EDIT",
+      "signature_schema": {
+        "display_name": "string|null",
+        "bio": "string|null",
+        "location": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SETTINGS_TYPE_DISPLAY_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SETTINGS_PROFILE_EDIT",
+          "to": "SETTINGS_PROFILE_EDIT",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.display_name",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-display-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#settings-display-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_TYPE_BIO",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SETTINGS_PROFILE_EDIT",
+          "to": "SETTINGS_PROFILE_EDIT",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.bio",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-bio-textarea"
+            },
+            {
+              "op": "type_text",
+              "selector": "#settings-bio-textarea",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_TYPE_LOCATION",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SETTINGS_PROFILE_EDIT",
+          "to": "SETTINGS_PROFILE_EDIT",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-location-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#settings-location-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_SAVE_PROFILE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SETTINGS_PROFILE_EDIT",
+          "to": "PROFILE_UPDATE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.display_name",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.bio",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-save-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_PROFILE_BACK_PROFILE_OVERVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SETTINGS_PROFILE_EDIT",
+          "to": "PROFILE_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-back-profile"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROFILE_UPDATE_SUCCESS",
+      "signature_schema": {
+        "updated_profile_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PROFILE_UPDATE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_UPDATE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-update-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_UPDATE_SUCCESS_VIEW_PROFILE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_UPDATE_SUCCESS",
+          "to": "PROFILE_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-update-success-view-profile"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TRENDS_EXPLORE",
+      "signature_schema": {
+        "trends": "array<object>|null",
+        "trends_filters_applied": "boolean|null",
+        "trends_viewport_anchor_tweet_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_TRENDS_FILTER_NEARBY_CHECKBOX",
+          "name": "select",
+          "is_navigation": false,
+          "from": "TRENDS_EXPLORE",
+          "to": "TRENDS_EXPLORE",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.trends_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#trends-filter-nearby-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TRENDS_FILTER_SPORTS_CHECKBOX",
+          "name": "select",
+          "is_navigation": false,
+          "from": "TRENDS_EXPLORE",
+          "to": "TRENDS_EXPLORE",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.trends_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#trends-filter-sports-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TRENDS_FILTER_SORT_DROPDOWN",
+          "name": "select",
+          "is_navigation": false,
+          "from": "TRENDS_EXPLORE",
+          "to": "TRENDS_EXPLORE",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.trends_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#trends-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#trends-sort-trending",
+              "ui_elements": {
+                "container": "#trends-sort-dropdown",
+                "options": [
+                  {
+                    "value": "trending",
+                    "selector": "#trends-sort-trending"
+                  },
+                  {
+                    "value": "latest",
+                    "selector": "#trends-sort-latest"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_TRENDS_OPEN_TOPIC_TWEETS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TRENDS_EXPLORE",
+          "to": "TOPIC_TWEET_LIST",
+          "parameters": {
+            "topic_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#trends-list .trend-item"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TRENDS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TRENDS_EXPLORE",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#trends-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TOPIC_TWEET_LIST",
+      "signature_schema": {
+        "tweets": "array<object>|null",
+        "topic_tweets_filters_applied": "boolean|null",
+        "topic_tweets_viewport_anchor_tweet_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_TOPIC_TWEETS_FILTER_MEDIA_CHECKBOX",
+          "name": "select",
+          "is_navigation": false,
+          "from": "TOPIC_TWEET_LIST",
+          "to": "TOPIC_TWEET_LIST",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.topic_tweets_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#topic-filter-media-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TOPIC_TWEETS_FILTER_SORT_DROPDOWN",
+          "name": "select",
+          "is_navigation": false,
+          "from": "TOPIC_TWEET_LIST",
+          "to": "TOPIC_TWEET_LIST",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.topic_tweets_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#topic-tweets-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#topic-tweets-sort-top",
+              "ui_elements": {
+                "container": "#topic-tweets-sort-dropdown",
+                "options": [
+                  {
+                    "value": "top",
+                    "selector": "#topic-tweets-sort-top"
+                  },
+                  {
+                    "value": "latest",
+                    "selector": "#topic-tweets-sort-latest"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_TOPIC_TWEETS_OPEN_FILTERED_TWEET",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TOPIC_TWEET_LIST",
+          "to": "TWEET_DETAIL",
+          "parameters": {
+            "tweet_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.topic_tweets_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.topic_tweets_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#topic-tweets-list .tweet-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TOPIC_TWEETS_SCROLL_TWEET_INTO_VIEW",
+          "name": "select",
+          "is_navigation": false,
+          "from": "TOPIC_TWEET_LIST",
+          "to": "TOPIC_TWEET_LIST",
+          "parameters": {
+            "widget": "slider",
+            "tweet_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.topic_tweets_viewport_anchor_tweet_id",
+              "value_ref": "{tweet_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#topic-tweets-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#topic-tweets-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TOPIC_TWEETS_OPEN_ANY_TWEET",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TOPIC_TWEET_LIST",
+          "to": "TWEET_DETAIL",
+          "parameters": {
+            "tweet_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.topic_tweets_viewport_anchor_tweet_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.topic_tweets_viewport_anchor_tweet_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#topic-tweets-list .tweet-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TOPIC_TWEETS_BACK_TRENDS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TOPIC_TWEET_LIST",
+          "to": "TRENDS_EXPLORE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#topic-tweets-back-trends"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BOOKMARKS",
+      "signature_schema": {
+        "bookmarked_tweets": "array<object>|null",
+        "bookmarks_filters_applied": "boolean|null",
+        "bookmarks_viewport_anchor_tweet_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_BOOKMARKS_FILTER_MEDIA_CHECKBOX",
+          "name": "select",
+          "is_navigation": false,
+          "from": "BOOKMARKS",
+          "to": "BOOKMARKS",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.bookmarks_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#bookmarks-filter-media-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BOOKMARKS_FILTER_SORT_DROPDOWN",
+          "name": "select",
+          "is_navigation": false,
+          "from": "BOOKMARKS",
+          "to": "BOOKMARKS",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.bookmarks_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#bookmarks-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#bookmarks-sort-latest",
+              "ui_elements": {
+                "container": "#bookmarks-sort-dropdown",
+                "options": [
+                  {
+                    "value": "latest",
+                    "selector": "#bookmarks-sort-latest"
+                  },
+                  {
+                    "value": "oldest",
+                    "selector": "#bookmarks-sort-oldest"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_BOOKMARKS_OPEN_FILTERED_TWEET",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BOOKMARKS",
+          "to": "TWEET_DETAIL",
+          "parameters": {
+            "tweet_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.bookmarks_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.bookmarks_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#bookmarks-list .tweet-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BOOKMARKS_SCROLL_TWEET_INTO_VIEW",
+          "name": "select",
+          "is_navigation": false,
+          "from": "BOOKMARKS",
+          "to": "BOOKMARKS",
+          "parameters": {
+            "widget": "slider",
+            "tweet_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.bookmarks_viewport_anchor_tweet_id",
+              "value_ref": "{tweet_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#bookmarks-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#bookmarks-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BOOKMARKS_OPEN_ANY_TWEET",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BOOKMARKS",
+          "to": "TWEET_DETAIL",
+          "parameters": {
+            "tweet_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.bookmarks_viewport_anchor_tweet_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.bookmarks_viewport_anchor_tweet_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#bookmarks-list .tweet-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BOOKMARKS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BOOKMARKS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#bookmarks-back-home"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

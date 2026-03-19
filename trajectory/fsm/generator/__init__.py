@@ -3,7 +3,7 @@
 
 """
 fsm_generator package
-FSM 生成、验证、改进系统
+FSM generation, validation, and improvement system
 """
 
 from .base_agent import BaseAgent

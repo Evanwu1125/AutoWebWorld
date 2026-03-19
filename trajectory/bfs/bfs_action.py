@@ -13,7 +13,7 @@ def save_json(obj, p):
     with open(p, "w", encoding="utf-8") as f:
         json.dump(obj, f, ensure_ascii=False, indent=2)
 
-# ---------- 默认签名 ----------
+# ---------- Default Signature ----------
 def _default_from_type(tp_tuple: Tuple[str,str]):
     kind, spec = tp_tuple
     if kind == 'array':   return []
@@ -27,13 +27,13 @@ def _default_from_type(tp_tuple: Tuple[str,str]):
 def default_signature_for_page(page_id: str, schema_lookup: Dict[str, Dict[str,str]]):
     sig = {}
     for path, tp in schema_lookup.get(page_id, {}).items():
-        if path == '$':  # 根
+        if path == '$':  # root
             continue
-        keys = path[2:].split('.')  # 去掉 "$."
+        keys = path[2:].split('.')  # strip "$."
         cur = sig
         for k in keys[:-1]:
             cur = cur.setdefault(k, {})
-        # 检查是否是 nullable 类型 (如 "boolean|null")
+        # Check if the type is nullable (e.g. "boolean|null")
         if '|null' in tp.lower():
             cur[keys[-1]] = None
         else:
@@ -41,7 +41,7 @@ def default_signature_for_page(page_id: str, schema_lookup: Dict[str, Dict[str,s
     return sig
 
 
-# ---------- HOME 一跳直达子页面收集 ----------
+# ---------- HOME one-hop sub-page collection ----------
 def direct_nav_targets_from_home(norm: Dict[str, Any]):
     init = norm["meta"]["initial_page_id"]
     return sorted({
@@ -49,7 +49,7 @@ def direct_nav_targets_from_home(norm: Dict[str, Any]):
         if e.get("is_navigation") and e.get("from") == init
     })
 
-# ---------- JSONPath 辅助 ----------
+# ---------- JSONPath Helpers ----------
 def read_path(sig, path):
     cur = sig
     for k in path.replace("$.","").split("."):
@@ -75,7 +75,7 @@ def clear_value(current):
     if isinstance(current, float): return 0.0
     return None
 
-# ---------- 前置 & 效果 ----------
+# ---------- Preconditions & Effects ----------
 def cond_ok(val, cond, expect):
     try:
         if cond == 'eq':        return val == expect
@@ -126,7 +126,7 @@ def apply_effects(sig, effects, params):
             if v not in arr:
                 arr.append(v)
             write_path(new_sig, path, arr)
-        # 其它 GUI-only 操作忽略
+        # Other GUI-only operations are ignored
     return new_sig
 
 def transition(page_id: str, sig: Dict[str,Any], act: Dict[str,Any], params: Dict[str,Any],
@@ -135,7 +135,7 @@ def transition(page_id: str, sig: Dict[str,Any], act: Dict[str,Any], params: Dic
     if act.get('is_navigation'):
         to_page = act['to']
         base = default_signature_for_page(to_page, schema_lookup)
-        # “目标页默认签名 + 同名字段合并”
+        # “target page default signature + merge fields with matching names”
         merged = {**base, **{k: v for k, v in cur.items() if k in base}}
         return to_page, merged
     else:
@@ -144,13 +144,13 @@ def transition(page_id: str, sig: Dict[str,Any], act: Dict[str,Any], params: Dic
 def state_key(page_id, sig):
     return page_id + "::" + json.dumps(sig, sort_keys=True, ensure_ascii=False)
 
-# ---------- Interceptor 处理逻辑 ----------
-# 弹窗类 interceptor 强制第一个处理，captcha 排除（后面强制最后）
+# ---------- Interceptor Handling Logic ----------
+# Dialog-type interceptors are forced to be handled first; captcha is excluded (forced last below)
 INTERCEPTOR_PATTERNS = ['accepted', 'permission', 'granted']
 INTERCEPTOR_EXCLUDE = ['captcha']
 
 def get_interceptor_fields_from_schema(page_schema: Dict[str, str]) -> List[str]:
-    """从页面 schema 中识别 interceptor 字段（排除 captcha）"""
+    """Identify interceptor fields from the page schema (excluding captcha)"""
     interceptor_fields = []
     for field_path, field_type in page_schema.items():
         field_name = field_path.replace('$.', '')
@@ -163,14 +163,14 @@ def get_interceptor_fields_from_schema(page_schema: Dict[str, str]) -> List[str]
     return interceptor_fields
 
 def has_unhandled_interceptors(sig: Dict[str, Any], page_schema: Dict[str, str]) -> bool:
-    """检查是否有未处理的 interceptor"""
+    """Check whether there are unhandled interceptors"""
     for field in get_interceptor_fields_from_schema(page_schema):
         if sig.get(field) is None:
             return True
     return False
 
 def is_interceptor_action(action: Dict[str, Any]) -> bool:
-    """判断是否是 interceptor 处理动作（排除 captcha）"""
+    """Determine whether an action is an interceptor-handling action (excluding captcha)"""
     for eff in action.get('effects', []):
         if eff.get('op') == 'set':
             path = eff.get('path', '').lower()
@@ -180,35 +180,35 @@ def is_interceptor_action(action: Dict[str, Any]) -> bool:
                 return True
     return False
 
-# ---------- CAPTCHA 强制最后处理 ----------
+# ---------- CAPTCHA Forced Last ----------
 def is_captcha_action(action: Dict[str, Any]) -> bool:
-    """判断是否是 CAPTCHA 动作"""
+    """Determine whether an action is a CAPTCHA action"""
     return 'captcha' in action.get('id', '').lower()
 
 def is_submit_action(action: Dict[str, Any]) -> bool:
-    """判断是否是提交动作"""
+    """Determine whether an action is a submit action"""
     return 'submit' in action.get('id', '').lower()
 
 def is_navigation_action(action: Dict[str, Any]) -> bool:
-    """判断是否是导航动作（离开当前页面）"""
+    """Determine whether an action is a navigation action (leaving the current page)"""
     aid = action.get('id', '').upper()
     return 'BACK' in aid or 'NAV' in aid
 
 def action_still_needed(sig: Dict[str, Any], action: Dict[str, Any]) -> bool:
-    """检查动作是否还需要执行（effect 对应的字段还是空的）"""
+    """Check whether an action still needs to be executed (the field its effect targets is still empty)"""
     for eff in action.get('effects', []):
         if eff.get('op') == 'set':
             path = eff.get('path', '')
             if path.startswith('$.'):
                 field = path[2:].split('.')[0]
                 val = sig.get(field)
-                # 字段为空或 None，说明还需要执行
+                # Field is empty or None, meaning the action still needs to run
                 if val is None or val == '' or val == []:
                     return True
     return False
 
 def get_action_effect_field(action: Dict[str, Any]) -> str:
-    """获取动作 effect 设置的字段名"""
+    """Get the field name set by the action's effect"""
     for eff in action.get('effects', []):
         if eff.get('op') == 'set':
             path = eff.get('path', '')
@@ -217,7 +217,7 @@ def get_action_effect_field(action: Dict[str, Any]) -> str:
     return None
 
 def get_submit_required_fields(actions: List[Dict[str, Any]]) -> set:
-    """获取 SUBMIT 动作的 preconditions 依赖的字段"""
+    """Get the fields that the SUBMIT action's preconditions depend on"""
     required = set()
     for act in actions:
         if is_submit_action(act):
@@ -231,8 +231,8 @@ def get_submit_required_fields(actions: List[Dict[str, Any]]) -> set:
 
 def has_pending_form_actions(sig: Dict[str, Any], actions: List[Dict[str, Any]],
                               disabled_actions: set = None) -> bool:
-    """检查是否有待完成的必须表单动作（只检查被 SUBMIT 依赖的字段）"""
-    # 获取 SUBMIT 依赖的必须字段
+    """Check whether there are pending required form actions (only checks fields depended on by SUBMIT)"""
+    # Get the required fields that SUBMIT depends on
     required_fields = get_submit_required_fields(actions)
 
     for act in actions:
@@ -247,35 +247,35 @@ def has_pending_form_actions(sig: Dict[str, Any], actions: List[Dict[str, Any]],
         if not preconditions_ok(sig, act.get('preconditions')):
             continue
 
-        # 只检查必须动作（effect 字段被 SUBMIT 依赖的）
+        # Only check required actions (whose effect fields are depended on by SUBMIT)
         effect_field = get_action_effect_field(act)
         if effect_field and effect_field not in required_fields:
-            continue  # 可选动作，跳过
+            continue  # Optional action, skip
 
-        # 检查动作是否还需要执行
+        # Check whether the action still needs to run
         if action_still_needed(sig, act):
             return True
     return False
 
-# ---------- Item Access Method 识别与覆盖 ----------
-# precondition 中的字段模式
+# ---------- Item Access Method Identification and Coverage ----------
+# Field patterns in preconditions
 PRECOND_PATTERNS = {
     'filter': ['filters_applied'],
     'search': ['has_searched'],
     'scroll': ['viewport_anchor_id'],
 }
 
-# action ID 中的名称模式（用于识别没有 precondition 的捷径 action）
-# 注意：scroll 只匹配 ACT_SCROLL_*_INTO_VIEW，不匹配 ACT_NAV_EXPLORE_SCROLL 等导航 action
+# Name patterns in action IDs (used to identify shortcut actions without preconditions)
+# Note: scroll only matches ACT_SCROLL_*_INTO_VIEW, not navigation actions like ACT_NAV_EXPLORE_SCROLL
 ACTION_NAME_PATTERNS = {
     'filter': ['FILTERED'],
     'search': ['SEARCH'],
-    'scroll': ['SCROLL_', '_ANY_'],  # SCROLL_ 确保匹配 SCROLL_xxx_INTO_VIEW 而非 NAV_xxx_SCROLL
+    'scroll': ['SCROLL_', '_ANY_'],  # SCROLL_ ensures matching SCROLL_xxx_INTO_VIEW rather than NAV_xxx_SCROLL
 }
 
 
 def get_access_method_from_preconditions(preconditions: List[Dict]) -> str:
-    """根据 precondition 判断 OPEN 动作属于哪种查找方式"""
+    """Determine which access method an OPEN action belongs to based on its preconditions"""
     for pre in preconditions or []:
         path = pre.get('path', '').lower()
         for method, patterns in PRECOND_PATTERNS.items():
@@ -285,7 +285,7 @@ def get_access_method_from_preconditions(preconditions: List[Dict]) -> str:
 
 
 def get_access_method_from_action_id(action_id: str) -> str:
-    """根据 action ID 名称判断查找方式（用于没有 precondition 的捷径）"""
+    """Determine the access method from the action ID name (for shortcuts without preconditions)"""
     action_id_upper = action_id.upper()
     for method, patterns in ACTION_NAME_PATTERNS.items():
         if any(p in action_id_upper for p in patterns):
@@ -295,27 +295,27 @@ def get_access_method_from_action_id(action_id: str) -> str:
 
 def identify_item_access_actions(fsm: Dict[str, Any]) -> Dict[str, List[str]]:
     """
-    分析 FSM，识别所有 item 查找方式及其对应的"入口动作"
-    包括：
-    1. 有 precondition 的 OPEN 动作（如 ACT_OPEN_FILTERED_PROJECT）
-    2. 没有 precondition 但名称包含特征的导航动作（如 ACT_NAV_SCROLL_TO_xxx）
-    返回: {'filter': [...], 'search': [...], 'scroll': [...]}
+    Analyze the FSM and identify all item access methods and their corresponding entry actions.
+    Includes:
+    1. OPEN actions that have preconditions (e.g. ACT_OPEN_FILTERED_PROJECT)
+    2. Navigation actions without preconditions but whose names contain characteristic patterns (e.g. ACT_NAV_SCROLL_TO_xxx)
+    Returns: {'filter': [...], 'search': [...], 'scroll': [...]}
     """
     result = {'filter': [], 'search': [], 'scroll': []}
 
     for page in fsm.get('pages', []):
         for action in page.get('actions', []):
-            # 只分析导航动作
+            # Only analyze navigation actions
             if not action.get('is_navigation'):
                 continue
 
             action_id = action.get('id', '')
             preconditions = action.get('preconditions', [])
 
-            # 优先通过 precondition 识别
+            # Prefer identification via precondition
             method = get_access_method_from_preconditions(preconditions)
 
-            # 如果 precondition 没有识别出来，尝试通过 action ID 识别
+            # If precondition did not identify the method, try identification via action ID
             if not method:
                 method = get_access_method_from_action_id(action_id)
 
@@ -327,7 +327,7 @@ def identify_item_access_actions(fsm: Dict[str, Any]) -> Dict[str, List[str]]:
 
 
 def get_competing_actions(method: str, all_methods: Dict[str, List[str]]) -> set:
-    """获取与指定方式竞争的其他入口动作"""
+    """Get the entry actions of other methods that compete with the given method"""
     competing = set()
     for m, actions in all_methods.items():
         if m != method:
@@ -335,7 +335,7 @@ def get_competing_actions(method: str, all_methods: Dict[str, List[str]]) -> set
     return competing
 
 
-# ---------- 多父指针 BFS：列出所有等长最短路径 ----------
+# ---------- Multi-parent-pointer BFS: enumerate all equal-length shortest paths ----------
 def bfs_all_shortest_paths(fsm: Dict[str, Any],
                            schema_lookup: Dict[str, Dict[str, str]],
                            initial_page: str,
@@ -363,34 +363,34 @@ def bfs_all_shortest_paths(fsm: Dict[str, Any],
         cur_depth = dist[cur_key]
         page_id, sig = state_by_key[cur_key]
 
-        # 已知最短深度后，不再扩展更深层
+        # Once the shortest depth is known, do not expand deeper layers
         if found_depth is not None and cur_depth >= found_depth:
             continue
 
         page_actions = actions_from_page(page_id)
         for act in page_actions:
-            # 0) 检查是否被禁用（用于强制特定查找方式）
+            # 0) Check whether the action is disabled (used to force a specific access method)
             if disabled_actions and act.get('id') in disabled_actions:
                 continue
 
-            # 1) 检查前置
+            # 1) Check preconditions
             if not preconditions_ok(sig, act.get('preconditions')):
                 continue
 
-            # 1.5) Interceptor 检查：弹窗类强制第一个处理
+            # 1.5) Interceptor check: dialog-type interceptors must be handled first
             page_schema = schema_lookup.get(page_id, {})
             if has_unhandled_interceptors(sig, page_schema):
                 if not is_interceptor_action(act):
                     continue
 
-            # 1.6) CAPTCHA 强制最后：如果还有待完成的表单动作，跳过 CAPTCHA
+            # 1.6) CAPTCHA forced last: if there are still pending form actions, skip CAPTCHA
             if is_captcha_action(act):
                 if has_pending_form_actions(sig, page_actions, disabled_actions):
                     continue
 
-            # 2) 直接使用 FSM 中的参数（保留占位符）
+            # 2) Use parameters directly from FSM (preserve placeholders)
             params = act.get('parameters', {})
-            # 3) 过渡
+            # 3) Transition
             next_page, next_sig = transition(page_id, sig, act, params, schema_lookup)
             nxt_key = state_key(next_page, next_sig)
             step_depth = cur_depth + 1
@@ -414,7 +414,7 @@ def bfs_all_shortest_paths(fsm: Dict[str, Any],
                         target_keys_at_depth.append(nxt_key)
 
             elif dist[nxt_key] == step_depth:
-                # 另一条同长父指针
+                # Another parent pointer of the same length
                 parents[nxt_key].append((cur_key, {
                     "id": act['id'],
                     "name": act.get('name',''),
@@ -425,14 +425,14 @@ def bfs_all_shortest_paths(fsm: Dict[str, Any],
                 if next_page == target_page and (found_depth is not None) and found_depth == step_depth:
                     target_keys_at_depth.append(nxt_key)
 
-        # 安全阈值（避免组合爆炸）
+        # Safety threshold (avoid combinatorial explosion)
         if found_depth is not None and len(target_keys_at_depth) > max_paths:
             break
 
     if found_depth is None:
         return {"shortest_step_count": None, "paths": []}
 
-    # 回溯生成所有等长最短路径（带缓存）
+    # Backtrack to generate all equal-length shortest paths (with cache)
     from functools import lru_cache
     @lru_cache(maxsize=None)
     def backtrack(key: str) -> List[List[Dict[str,Any]]]:
@@ -449,7 +449,7 @@ def bfs_all_shortest_paths(fsm: Dict[str, Any],
         for p in backtrack(end_key):
             all_paths.append(p)
 
-    # 按动作 id 序列去重（不同签名导致的重复路径合并）
+    # Deduplicate by action id sequence (merge duplicate paths caused by different signatures)
     seen_seq = set()
     unique_paths = []
     for p in all_paths:
@@ -468,17 +468,17 @@ def bfs_with_access_coverage(fsm: Dict[str, Any],
                              seed: int = 42,
                              max_paths: int = 5000) -> Dict[str, Any]:
     """
-    包装函数：确保覆盖所有 item 查找方式 (filter/search/scroll)
-    1. 识别 FSM 中的所有查找方式
-    2. 为每种方式分别生成路径（禁用其他方式的入口动作）
-    3. 合并所有路径并去重
+    Wrapper function: ensures coverage of all item access methods (filter/search/scroll)
+    1. Identify all access methods in the FSM
+    2. Generate paths separately for each method (disabling entry actions of other methods)
+    3. Merge all paths and deduplicate
     """
-    # 识别所有查找方式
+    # Identify all access methods
     access_methods = identify_item_access_actions(fsm)
     active_methods = {m: acts for m, acts in access_methods.items() if acts}
 
     if not active_methods:
-        # 没有识别到查找方式，直接用普通 BFS
+        # No access methods identified, fall back to plain BFS
         return bfs_all_shortest_paths(
             fsm, schema_lookup, initial_page, target_page, seed, max_paths
         )
@@ -486,7 +486,7 @@ def bfs_with_access_coverage(fsm: Dict[str, Any],
     all_results = []
     min_step = None
 
-    # 为每种查找方式分别生成路径
+    # Generate paths separately for each access method
     for method, method_actions in active_methods.items():
         competing = get_competing_actions(method, active_methods)
 
@@ -503,7 +503,7 @@ def bfs_with_access_coverage(fsm: Dict[str, Any],
     if not all_results:
         return {"shortest_step_count": None, "paths": []}
 
-    # 合并所有路径并去重
+    # Merge all paths and deduplicate
     seen_seq = set()
     merged_paths = []
 
@@ -512,7 +512,7 @@ def bfs_with_access_coverage(fsm: Dict[str, Any],
             seq = tuple(path_obj.get("id_seq", []))
             if seq not in seen_seq:
                 seen_seq.add(seq)
-                # 添加查找方式标记
+                # Tag with access method
                 path_obj["access_method"] = method
                 merged_paths.append(path_obj)
 
@@ -545,7 +545,7 @@ def main():
     schema_lk = norm["schema_lookup"]
     all_pages = norm["pages"]
 
-    # 识别并打印查找方式
+    # Identify and print access methods
     access_methods = identify_item_access_actions(fsm)
     active_methods = {m: acts for m, acts in access_methods.items() if acts}
     if active_methods:
@@ -553,7 +553,7 @@ def main():
         for method, actions in active_methods.items():
             print(f"   {method}: {actions}")
 
-    # 1️⃣ 仅当提供 --out 时生成 home_initial
+    # 1. Generate home_initial only when --out is provided
     if args.out:
         print(f"\n🏠 Generating home_initial paths from {initial}...")
         home_results = {"initial": initial, "terminals": []}
@@ -569,7 +569,7 @@ def main():
         save_json(home_results, args.out)
         print(f"✅ Saved home_initial to {args.out}")
 
-    # 2️⃣ 仅当提供 --out_sub 时生成 sub_initial
+    # 2. Generate sub_initial only when --out_sub is provided
     if args.out_sub:
         print(f"\n📄 Generating sub_initial paths from HOME one-hop pages...")
         sub_pages = [

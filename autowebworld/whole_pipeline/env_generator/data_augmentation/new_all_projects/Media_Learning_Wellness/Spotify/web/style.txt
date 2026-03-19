@@ -1,0 +1,76 @@
+# Visual Design Style Guide: Spotify Replica
+
+## Theme Overview
+- **Reference App:** Spotify
+- **Target Audience:** Music lovers, general consumers, youth
+- **Visual Tone:** Immersive, modern, dark, sleek, energetic
+- **Core Principle:** Content-first design where album art pops against a dark background.
+
+## Color Palette
+- **Background:**
+  - Primary: #121212 (Near Black - Main Background)
+  - Secondary: #242424 (Dark Grey - Cards/Hover states)
+  - Sidebar/Player: #000000 (Black)
+- **Text:**
+  - Primary: #FFFFFF (White)
+  - Secondary: #B3B3B3 (Light Grey)
+- **Accent:**
+  - Brand: #1DB954 (Spotify Green) - Primary Buttons, Active States
+  - Error: #E91429 (Red)
+- **Gradients:** Use subtle top-down gradients on playlist pages derived from album art colors.
+
+## Typography
+- **Font Family:** 'Circular Std', Inter, system-ui, sans-serif
+- **Weights:**
+  - Bold (700): Headings, Active Links
+  - Medium (500): Subheadings, Buttons
+  - Regular (400): Body text
+- **Sizing:**
+  - H1 (Title): 2rem (32px) - 6rem (96px) for hero titles
+  - H2 (Section): 1.5rem (24px)
+  - Body: 0.875rem (14px) - 1rem (16px)
+  - Small: 0.75rem (12px)
+
+## UI Components
+
+### Buttons
+- **Primary (Pill):** Full rounded corners (rounded-full), #1DB954 background, Black text, Bold, uppercase tracking-wider. Hover: Scale 1.05, Brighten.
+- **Secondary (Outline):** Transparent background, White border (1px), White text, rounded-full.
+- **Text Link:** #B3B3B3 text, hover: White, underline on hover.
+
+### Cards (Albums/Playlists)
+- Background: #181818
+- Hover: #282828, ease-in-out duration-300
+- Content: Image top, Title (White), Subtitle (Grey) below.
+- Corner Radius: rounded-md (6px) or rounded-lg.
+- Interaction: Play button appears on hover (Green circle with black triangle).
+
+### Navigation
+- Sidebar layout for desktop.
+- Active state: White text + Icon.
+- Inactive state: Grey text + Icon.
+- Hover: White text.
+
+### Inputs/Forms
+- Background: #3E3E3E or Transparent with border.
+- Text: White.
+- Border: Focus ring #1DB954.
+
+## Layout
+- **Desktop:**
+  - Left Sidebar (Fixed width 240px)
+  - Top Header (Sticky, transparent to solid scroll)
+  - Main Content (Scrollable area)
+  - Bottom Player (Fixed height 90px) - *Visual simulation only as per FSM*
+- **Grid:** Responsive grid for album/playlist cards (grid-cols-2 to grid-cols-6).
+
+## Imagery
+- **Hero:** Large, high-quality artist images or gradient meshes.
+- **Thumbnails:** Square aspect ratio (1:1).
+- **Avatars:** Circular rounded-full.
+- **Use Real Images:** Unsplash/Pixabay via ImageGetter for all musical content.
+
+## Animations
+- **Micro-interactions:** Button scale on click, hover brightness.
+- **Transitions:** Smooth fade-in for page loads.
+- **Scroll:** Smooth scrolling.

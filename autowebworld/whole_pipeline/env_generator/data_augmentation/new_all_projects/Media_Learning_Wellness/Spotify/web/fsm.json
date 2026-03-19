@@ -1,0 +1,3219 @@
+{
+  "meta": {
+    "app": "Music_Streaming-Spotify_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "SIGNUP_SUCCESS",
+      "PREMIUM_UPGRADE_SUCCESS",
+      "PLAYLIST_CREATED_SUCCESS",
+      "PLAYLIST_SHARED_SUCCESS",
+      "ALBUM_DOWNLOAD_SUCCESS"
+    ],
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 25,
+        "max": 35
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover",
+        "menu"
+      ],
+      "home_nav_coverage": "any",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 4,
+        "two_step_parity": false,
+        "allowed_shapes": [
+          "checkboxes",
+          "sliders",
+          "sort"
+        ]
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "current_user_id": "string|null",
+        "cookie_consent_given": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_HOME_ACCEPT_COOKIES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cookie_consent_given",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_BROWSE_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "BROWSE",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-browse-direct"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_LIBRARY_HOVER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "YOUR_LIBRARY",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#nav-library-menu"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-library-menu .item-library",
+              "ui_elements": {
+                "container": "#nav-library-menu",
+                "options": [
+                  {
+                    "value": "your_library",
+                    "selector": "#nav-library-menu .item-library"
+                  },
+                  {
+                    "value": "recently_played",
+                    "selector": "#nav-library-menu .item-recently-played"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_ACCOUNT_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "ACCOUNT_OVERVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-account-toggle"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-account-overview",
+              "ui_elements": {
+                "container": "#nav-account-toggle",
+                "options": [
+                  {
+                    "value": "account_overview",
+                    "selector": "#nav-account-overview"
+                  },
+                  {
+                    "value": "profile",
+                    "selector": "#nav-account-profile"
+                  },
+                  {
+                    "value": "settings",
+                    "selector": "#nav-account-settings"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_SIGNUP_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "SIGNUP",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-user-toggle"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-signup",
+              "ui_elements": {
+                "container": "#nav-user-toggle",
+                "options": [
+                  {
+                    "value": "login",
+                    "selector": "#nav-login"
+                  },
+                  {
+                    "value": "signup",
+                    "selector": "#nav-signup"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BROWSE",
+      "signature_schema": {
+        "location_permission_granted": "boolean|null",
+        "categories": "array<object>|null",
+        "browse_filters_applied": "boolean|null",
+        "browse_viewport_anchor_id": "string|null",
+        "browse_has_searched": "boolean|null",
+        "matched_playlist_id": "string|null",
+        "selected_playlist_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_BROWSE_LOCATION_PERMISSION_ALLOW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "BROWSE",
+          "to": "BROWSE",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BROWSE_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "BROWSE",
+          "to": "BROWSE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.browse_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#browse-filter-explicit"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BROWSE_FILTER_SLIDER_MOOD",
+          "name": "select",
+          "is_navigation": false,
+          "from": "BROWSE",
+          "to": "BROWSE",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.browse_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#browse-mood-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#browse-mood-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BROWSE_FILTER_SORT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "BROWSE",
+          "to": "BROWSE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.browse_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#browse-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#browse-sort-option-featured",
+              "ui_elements": {
+                "container": "#browse-sort-dropdown",
+                "options": [
+                  {
+                    "value": "featured",
+                    "selector": "#browse-sort-option-featured"
+                  },
+                  {
+                    "value": "new_releases",
+                    "selector": "#browse-sort-option-new"
+                  },
+                  {
+                    "value": "top_charts",
+                    "selector": "#browse-sort-option-top"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_BROWSE_OPEN_FILTERED_CATEGORY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BROWSE",
+          "to": "GENRE_CATEGORY",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.browse_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.browse_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#browse-category-featured"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BROWSE_SCROLL_PLAYLIST_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "BROWSE",
+          "to": "BROWSE",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.browse_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#browse-playlists-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#browse-playlists-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BROWSE_OPEN_ANY_PLAYLIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BROWSE",
+          "to": "PLAYLIST_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.browse_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_playlist_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.browse_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#browse-playlists-container .playlist-card-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BROWSE_SEARCH_PLAYLIST",
+          "name": "search",
+          "is_navigation": false,
+          "from": "BROWSE",
+          "to": "BROWSE",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_playlist_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.browse_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#browse-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#browse-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BROWSE_OPEN_MATCHED_PLAYLIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BROWSE",
+          "to": "PLAYLIST_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_playlist_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.browse_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_playlist_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.browse_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#browse-search-results .playlist-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BROWSE_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BROWSE",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GENRE_CATEGORY",
+      "signature_schema": {
+        "genre_playlists": "array<object>|null",
+        "genre_category_filters_applied": "boolean|null",
+        "genre_category_viewport_anchor_id": "string|null",
+        "genre_category_has_searched": "boolean|null",
+        "matched_playlist_id": "string|null",
+        "selected_playlist_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_GENRE_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "GENRE_CATEGORY",
+          "to": "GENRE_CATEGORY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.genre_category_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#genre-filter-curated"
+            }
+          ]
+        },
+        {
+          "id": "ACT_GENRE_FILTER_SORT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "GENRE_CATEGORY",
+          "to": "GENRE_CATEGORY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.genre_category_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#genre-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#genre-sort-option-popular",
+              "ui_elements": {
+                "container": "#genre-sort-dropdown",
+                "options": [
+                  {
+                    "value": "popular",
+                    "selector": "#genre-sort-option-popular"
+                  },
+                  {
+                    "value": "new",
+                    "selector": "#genre-sort-option-new"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_GENRE_OPEN_FILTERED_PLAYLIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "GENRE_CATEGORY",
+          "to": "PLAYLIST_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.genre_category_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_playlist_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.genre_category_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#genre-playlists .playlist-card-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_GENRE_SCROLL_PLAYLIST_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "GENRE_CATEGORY",
+          "to": "GENRE_CATEGORY",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.genre_category_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#genre-playlists"
+            },
+            {
+              "op": "drag",
+              "selector": "#genre-playlists",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_GENRE_OPEN_ANY_PLAYLIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "GENRE_CATEGORY",
+          "to": "PLAYLIST_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.genre_category_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_playlist_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.genre_category_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#genre-playlists .playlist-card-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_GENRE_SEARCH_PLAYLIST",
+          "name": "search",
+          "is_navigation": false,
+          "from": "GENRE_CATEGORY",
+          "to": "GENRE_CATEGORY",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_playlist_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.genre_category_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#genre-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#genre-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_GENRE_OPEN_MATCHED_PLAYLIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "GENRE_CATEGORY",
+          "to": "PLAYLIST_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_playlist_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.genre_category_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_playlist_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.genre_category_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#genre-search-results .playlist-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_GENRE_BACK_BROWSE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "GENRE_CATEGORY",
+          "to": "BROWSE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-browse"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "YOUR_LIBRARY",
+      "signature_schema": {
+        "playlists": "array<object>|null",
+        "albums": "array<object>|null",
+        "artists": "array<object>|null",
+        "your_library_filters_applied": "boolean|null",
+        "your_library_viewport_anchor_id": "string|null",
+        "your_library_has_searched": "boolean|null",
+        "matched_playlist_id": "string|null",
+        "selected_playlist_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_LIBRARY_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "YOUR_LIBRARY",
+          "to": "YOUR_LIBRARY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.your_library_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#library-filter-downloads"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LIBRARY_FILTER_SORT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "YOUR_LIBRARY",
+          "to": "YOUR_LIBRARY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.your_library_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#library-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#library-sort-option-alpha-inc",
+              "ui_elements": {
+                "container": "#library-sort-dropdown",
+                "options": [
+                  {
+                    "value": "recently_played",
+                    "selector": "#library-sort-option-desc"
+                  },
+                  {
+                    "value": "alphabetical",
+                    "selector": "#library-sort-option-alpha-inc"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_LIBRARY_OPEN_FILTERED_PLAYLIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "YOUR_LIBRARY",
+          "to": "PLAYLIST_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.your_library_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_playlist_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.your_library_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#library-playlists .playlist-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LIBRARY_SCROLL_PLAYLIST_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "YOUR_LIBRARY",
+          "to": "YOUR_LIBRARY",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.your_library_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#library-playlists"
+            },
+            {
+              "op": "drag",
+              "selector": "#library-playlists",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LIBRARY_OPEN_ANY_PLAYLIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "YOUR_LIBRARY",
+          "to": "PLAYLIST_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.your_library_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_playlist_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.your_library_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#library-playlists .playlist-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LIBRARY_SEARCH_PLAYLIST",
+          "name": "search",
+          "is_navigation": false,
+          "from": "YOUR_LIBRARY",
+          "to": "YOUR_LIBRARY",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_playlist_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.your_library_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#library-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#library-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LIBRARY_OPEN_MATCHED_PLAYLIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "YOUR_LIBRARY",
+          "to": "PLAYLIST_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_playlist_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.your_library_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_playlist_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.your_library_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#library-search-results .playlist-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LIBRARY_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "YOUR_LIBRARY",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAYLIST_DETAIL",
+      "signature_schema": {
+        "selected_playlist_id": "string|null",
+        "tracks": "array<object>|null",
+        "playlist_detail_viewport_anchor_id": "string|null",
+        "playlist_detail_has_searched": "boolean|null",
+        "matched_track_id": "string|null",
+        "selected_track_id": "string|null",
+        "playlist_added_to_library": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PLAYLIST_SCROLL_TRACK_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PLAYLIST_DETAIL",
+          "to": "PLAYLIST_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.playlist_detail_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#playlist-tracks"
+            },
+            {
+              "op": "drag",
+              "selector": "#playlist-tracks",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PLAYLIST_OPEN_ANY_TRACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PLAYLIST_DETAIL",
+          "to": "TRACK_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.playlist_detail_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_track_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.playlist_detail_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#playlist-tracks .track-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PLAYLIST_SEARCH_TRACK",
+          "name": "search",
+          "is_navigation": false,
+          "from": "PLAYLIST_DETAIL",
+          "to": "PLAYLIST_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_track_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.playlist_detail_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#playlist-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#playlist-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PLAYLIST_OPEN_MATCHED_TRACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PLAYLIST_DETAIL",
+          "to": "TRACK_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_track_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.playlist_detail_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_track_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.playlist_detail_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#playlist-search-results .track-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PLAYLIST_ADD_TO_LIBRARY",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PLAYLIST_DETAIL",
+          "to": "PLAYLIST_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.playlist_added_to_library",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#playlist-save-to-library"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PLAYLIST_OPEN_CONTEXT_MENU_SHARE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PLAYLIST_DETAIL",
+          "to": "PLAYLIST_SHARE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#playlist-more-menu"
+            },
+            {
+              "op": "click",
+              "selector": "#playlist-more-menu .item-share",
+              "ui_elements": {
+                "container": "#playlist-more-menu",
+                "options": [
+                  {
+                    "value": "share",
+                    "selector": "#playlist-more-menu .item-share"
+                  },
+                  {
+                    "value": "delete",
+                    "selector": "#playlist-more-menu .item-delete"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_PLAYLIST_BACK_LIBRARY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PLAYLIST_DETAIL",
+          "to": "YOUR_LIBRARY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-library"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TRACK_DETAIL",
+      "signature_schema": {
+        "selected_track_id": "string|null",
+        "track_liked": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_TRACK_TOGGLE_LIKE",
+          "name": "click",
+          "is_navigation": false,
+          "from": "TRACK_DETAIL",
+          "to": "TRACK_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.track_liked",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#track-like-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TRACK_OPEN_ALBUM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TRACK_DETAIL",
+          "to": "ALBUM_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#track-album-link"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TRACK_OPEN_ARTIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TRACK_DETAIL",
+          "to": "ARTIST_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#track-artist-link"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TRACK_BACK_PLAYLIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TRACK_DETAIL",
+          "to": "PLAYLIST_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-playlist"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ALBUM_DETAIL",
+      "signature_schema": {
+        "selected_album_id": "string|null",
+        "album_download_ready": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ALBUM_DOWNLOAD_TOGGLE",
+          "name": "click",
+          "is_navigation": false,
+          "from": "ALBUM_DETAIL",
+          "to": "ALBUM_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.album_download_ready",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#album-download-toggle"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ALBUM_GO_TO_DOWNLOAD_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ALBUM_DETAIL",
+          "to": "ALBUM_DOWNLOAD_CONFIRM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.album_download_ready",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#album-download-confirm-link"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ALBUM_BACK_TRACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ALBUM_DETAIL",
+          "to": "TRACK_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-track"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ALBUM_DOWNLOAD_CONFIRM",
+      "signature_schema": {
+        "album_download_confirmed": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ALBUM_CONFIRM_DOWNLOAD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ALBUM_DOWNLOAD_CONFIRM",
+          "to": "ALBUM_DOWNLOAD_SUCCESS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.album_download_confirmed",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#confirm-download-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ALBUM_DOWNLOAD_CONFIRM_BACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ALBUM_DOWNLOAD_CONFIRM",
+          "to": "ALBUM_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-album"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ALBUM_DOWNLOAD_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ALBUM_DOWNLOAD_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ALBUM_DOWNLOAD_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#success-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ARTIST_DETAIL",
+      "signature_schema": {
+        "selected_artist_id": "string|null",
+        "artist_top_tracks_filters_applied": "boolean|null",
+        "artist_top_tracks_viewport_anchor_id": "string|null",
+        "artist_top_tracks_has_searched": "boolean|null",
+        "matched_track_id": "string|null",
+        "selected_track_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ARTIST_FILTER_TOP_TRACKS_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "ARTIST_DETAIL",
+          "to": "ARTIST_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.artist_top_tracks_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#artist-filter-popular"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ARTIST_OPEN_FILTERED_TRACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ARTIST_DETAIL",
+          "to": "TRACK_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.artist_top_tracks_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_track_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.artist_top_tracks_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#artist-top-tracks .track-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ARTIST_SCROLL_TRACK_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "ARTIST_DETAIL",
+          "to": "ARTIST_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.artist_top_tracks_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#artist-top-tracks"
+            },
+            {
+              "op": "drag",
+              "selector": "#artist-top-tracks",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ARTIST_OPEN_ANY_TRACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ARTIST_DETAIL",
+          "to": "TRACK_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.artist_top_tracks_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_track_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.artist_top_tracks_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#artist-top-tracks .track-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ARTIST_SEARCH_TRACK",
+          "name": "search",
+          "is_navigation": false,
+          "from": "ARTIST_DETAIL",
+          "to": "ARTIST_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_track_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.artist_top_tracks_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#artist-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#artist-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ARTIST_OPEN_MATCHED_TRACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ARTIST_DETAIL",
+          "to": "TRACK_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_track_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.artist_top_tracks_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_track_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.artist_top_tracks_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#artist-search-results .track-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ARTIST_BACK_TRACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ARTIST_DETAIL",
+          "to": "TRACK_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-track"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SEARCH_PAGE",
+      "signature_schema": {
+        "search_results_tracks": "array<object>|null",
+        "search_results_playlists": "array<object>|null",
+        "search_page_filters_applied": "boolean|null",
+        "search_page_viewport_anchor_id": "string|null",
+        "search_page_has_searched": "boolean|null",
+        "matched_track_id": "string|null",
+        "selected_track_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SEARCH_PAGE_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SEARCH_PAGE",
+          "to": "SEARCH_PAGE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.search_page_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#search-filter-songs"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SEARCH_PAGE_FILTER_SORT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SEARCH_PAGE",
+          "to": "SEARCH_PAGE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.search_page_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#search-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#search-sort-option-relevance",
+              "ui_elements": {
+                "container": "#search-sort-dropdown",
+                "options": [
+                  {
+                    "value": "relevance",
+                    "selector": "#search-sort-option-relevance"
+                  },
+                  {
+                    "value": "recent",
+                    "selector": "#search-sort-option-recent"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_SEARCH_PAGE_OPEN_FILTERED_TRACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SEARCH_PAGE",
+          "to": "TRACK_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.search_page_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_track_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.search_page_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#search-results-tracks .track-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SEARCH_PAGE_SCROLL_TRACK_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SEARCH_PAGE",
+          "to": "SEARCH_PAGE",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.search_page_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#search-results-tracks"
+            },
+            {
+              "op": "drag",
+              "selector": "#search-results-tracks",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SEARCH_PAGE_OPEN_ANY_TRACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SEARCH_PAGE",
+          "to": "TRACK_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.search_page_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_track_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.search_page_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#search-results-tracks .track-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SEARCH_PAGE_SEARCH_TRACK",
+          "name": "search",
+          "is_navigation": false,
+          "from": "SEARCH_PAGE",
+          "to": "SEARCH_PAGE",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_track_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.search_page_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#global-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#global-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SEARCH_PAGE_OPEN_MATCHED_TRACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SEARCH_PAGE",
+          "to": "TRACK_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_track_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.search_page_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_track_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.search_page_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#search-results-tracks .track-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SEARCH_PAGE_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SEARCH_PAGE",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SIGNUP",
+      "signature_schema": {
+        "signup_email": "string|null",
+        "signup_password": "string|null",
+        "signup_username": "string|null",
+        "signup_birthdate": "string|null",
+        "signup_plan_selected": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SIGNUP_TYPE_EMAIL",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SIGNUP",
+          "to": "SIGNUP",
+          "parameters": {
+            "value": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.signup_email",
+              "value_ref": "{value}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#signup-email-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#signup-email-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SIGNUP_TYPE_PASSWORD",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SIGNUP",
+          "to": "SIGNUP",
+          "parameters": {
+            "value": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.signup_password",
+              "value_ref": "{value}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#signup-password-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#signup-password-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SIGNUP_TYPE_USERNAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SIGNUP",
+          "to": "SIGNUP",
+          "parameters": {
+            "value": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.signup_username",
+              "value_ref": "{value}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#signup-username-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#signup-username-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SIGNUP_PICK_BIRTHDATE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SIGNUP",
+          "to": "SIGNUP",
+          "parameters": {
+            "widget": "date_picker",
+            "year": 1995,
+            "month": 5,
+            "day": 10
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.signup_birthdate",
+              "value_expr": "merge({}, {\"date\":\"1995-5-10\"})"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#date-picker1"
+            },
+            {
+              "op": "click",
+              "selector": ".year-1995"
+            },
+            {
+              "op": "click",
+              "selector": ".month-5"
+            },
+            {
+              "op": "click",
+              "selector": ".day-10"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SIGNUP_SELECT_PLAN_DROPDOWN",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SIGNUP",
+          "to": "SIGNUP",
+          "parameters": {
+            "plan": "premium"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.signup_plan_selected",
+              "value_ref": "{plan}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#signup-plan-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#signup-plan-premium",
+              "ui_elements": {
+                "container": "#signup-plan-dropdown",
+                "options": [
+                  {
+                    "value": "free",
+                    "selector": "#signup-plan-free"
+                  },
+                  {
+                    "value": "premium",
+                    "selector": "#signup-plan-premium"
+                  },
+                  {
+                    "value": "family",
+                    "selector": "#signup-plan-family"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_SIGNUP_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SIGNUP",
+          "to": "SIGNUP_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.signup_email",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.signup_password",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.signup_username",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.signup_plan_selected",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#signup-submit-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SIGNUP_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SIGNUP",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SIGNUP_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SIGNUP_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SIGNUP_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#success-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ACCOUNT_OVERVIEW",
+      "signature_schema": {
+        "account_plan": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ACCOUNT_GO_TO_PREMIUM_UPSELL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_OVERVIEW",
+          "to": "PREMIUM_UPSELL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#account-go-premium"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ACCOUNT_GO_TO_SETTINGS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_OVERVIEW",
+          "to": "SETTINGS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#account-settings-link"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ACCOUNT_GO_TO_PAYMENT_METHODS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_OVERVIEW",
+          "to": "PAYMENT_METHODS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#account-payment-methods-link"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ACCOUNT_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_OVERVIEW",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PREMIUM_UPSELL",
+      "signature_schema": {
+        "selected_premium_plan": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PREMIUM_SELECT_PLAN",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PREMIUM_UPSELL",
+          "to": "PREMIUM_UPSELL",
+          "parameters": {
+            "plan": "premium_individual"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_premium_plan",
+              "value_ref": "{plan}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#premium-plan-individual-card"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PREMIUM_CONTINUE_TO_PAYMENT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PREMIUM_UPSELL",
+          "to": "PREMIUM_PAYMENT",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_premium_plan",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#premium-continue-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PREMIUM_BACK_ACCOUNT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PREMIUM_UPSELL",
+          "to": "ACCOUNT_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-account-overview"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PREMIUM_PAYMENT",
+      "signature_schema": {
+        "card_number": "string|null",
+        "card_expiry": "string|null",
+        "card_cvc": "string|null",
+        "billing_name": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PREMIUM_PAYMENT_TYPE_CARD_NUMBER",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PREMIUM_PAYMENT",
+          "to": "PREMIUM_PAYMENT",
+          "parameters": {
+            "value": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.card_number",
+              "value_ref": "{value}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#card-number-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#card-number-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PREMIUM_PAYMENT_TYPE_EXPIRY",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PREMIUM_PAYMENT",
+          "to": "PREMIUM_PAYMENT",
+          "parameters": {
+            "value": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.card_expiry",
+              "value_ref": "{value}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#card-expiry-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#card-expiry-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PREMIUM_PAYMENT_TYPE_CVC",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PREMIUM_PAYMENT",
+          "to": "PREMIUM_PAYMENT",
+          "parameters": {
+            "value": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.card_cvc",
+              "value_ref": "{value}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#card-cvc-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#card-cvc-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PREMIUM_PAYMENT_TYPE_BILLING_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PREMIUM_PAYMENT",
+          "to": "PREMIUM_PAYMENT",
+          "parameters": {
+            "value": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.billing_name",
+              "value_ref": "{value}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#billing-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#billing-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PREMIUM_PAYMENT_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PREMIUM_PAYMENT",
+          "to": "PREMIUM_UPGRADE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.card_number",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.card_expiry",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.card_cvc",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.billing_name",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#premium-pay-submit"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PREMIUM_PAYMENT_BACK_PREMIUM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PREMIUM_PAYMENT",
+          "to": "PREMIUM_UPSELL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-premium-upsell"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PREMIUM_UPGRADE_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PREMIUM_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PREMIUM_UPGRADE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#success-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAYLIST_CREATE",
+      "signature_schema": {
+        "playlist_name": "string|null",
+        "playlist_description": "string|null",
+        "playlist_visibility": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PLAYLIST_CREATE_TYPE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PLAYLIST_CREATE",
+          "to": "PLAYLIST_CREATE",
+          "parameters": {
+            "value": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.playlist_name",
+              "value_ref": "{value}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#playlist-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#playlist-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PLAYLIST_CREATE_TYPE_DESCRIPTION",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PLAYLIST_CREATE",
+          "to": "PLAYLIST_CREATE",
+          "parameters": {
+            "value": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.playlist_description",
+              "value_ref": "{value}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#playlist-description-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#playlist-description-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PLAYLIST_CREATE_SELECT_VISIBILITY",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PLAYLIST_CREATE",
+          "to": "PLAYLIST_CREATE",
+          "parameters": {
+            "visibility": "public"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.playlist_visibility",
+              "value_ref": "{visibility}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#playlist-visibility-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#playlist-visibility-public",
+              "ui_elements": {
+                "container": "#playlist-visibility-dropdown",
+                "options": [
+                  {
+                    "value": "public",
+                    "selector": "#playlist-visibility-public"
+                  },
+                  {
+                    "value": "private",
+                    "selector": "#playlist-visibility-private"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_PLAYLIST_CREATE_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PLAYLIST_CREATE",
+          "to": "PLAYLIST_CREATED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.playlist_name",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.playlist_visibility",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#playlist-create-submit"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PLAYLIST_CREATE_BACK_LIBRARY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PLAYLIST_CREATE",
+          "to": "YOUR_LIBRARY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-library"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAYLIST_CREATED_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PLAYLIST_CREATED_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PLAYLIST_CREATED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#success-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAYLIST_SHARE",
+      "signature_schema": {
+        "share_target": "string|null",
+        "share_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PLAYLIST_SHARE_SELECT_TARGET",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PLAYLIST_SHARE",
+          "to": "PLAYLIST_SHARE",
+          "parameters": {
+            "target": "copy_link"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.share_target",
+              "value_ref": "{target}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#share-target-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#share-target-copy-link",
+              "ui_elements": {
+                "container": "#share-target-dropdown",
+                "options": [
+                  {
+                    "value": "copy_link",
+                    "selector": "#share-target-copy-link"
+                  },
+                  {
+                    "value": "facebook",
+                    "selector": "#share-target-facebook"
+                  },
+                  {
+                    "value": "twitter",
+                    "selector": "#share-target-twitter"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_PLAYLIST_SHARE_TYPE_MESSAGE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PLAYLIST_SHARE",
+          "to": "PLAYLIST_SHARE",
+          "parameters": {
+            "value": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.share_message",
+              "value_ref": "{value}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#share-message-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#share-message-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PLAYLIST_SHARE_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PLAYLIST_SHARE",
+          "to": "PLAYLIST_SHARED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.share_target",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#share-submit-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PLAYLIST_SHARE_BACK_PLAYLIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PLAYLIST_SHARE",
+          "to": "PLAYLIST_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-playlist"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAYLIST_SHARED_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PLAYLIST_SHARED_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PLAYLIST_SHARED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#success-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PAYMENT_METHODS",
+      "signature_schema": {
+        "payment_methods": "array<object>|null",
+        "payment_methods_filters_applied": "boolean|null",
+        "payment_methods_viewport_anchor_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PAYMENT_METHODS_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PAYMENT_METHODS",
+          "to": "PAYMENT_METHODS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.payment_methods_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#payment-filter-active"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENT_METHODS_OPEN_FILTERED_METHOD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PAYMENT_METHODS",
+          "to": "PAYMENT_METHOD_DETAIL",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.payment_methods_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.payment_methods_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#payment-methods .method-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENT_METHODS_SCROLL_METHOD_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PAYMENT_METHODS",
+          "to": "PAYMENT_METHODS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.payment_methods_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#payment-methods"
+            },
+            {
+              "op": "drag",
+              "selector": "#payment-methods",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENT_METHODS_OPEN_ANY_METHOD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PAYMENT_METHODS",
+          "to": "PAYMENT_METHOD_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.payment_methods_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.payment_methods_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#payment-methods .method-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENT_METHODS_BACK_ACCOUNT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PAYMENT_METHODS",
+          "to": "ACCOUNT_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-account-overview"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PAYMENT_METHOD_DETAIL",
+      "signature_schema": {
+        "selected_payment_method_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PAYMENT_METHOD_DETAIL_BACK_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PAYMENT_METHOD_DETAIL",
+          "to": "PAYMENT_METHODS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-payment-methods"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SETTINGS",
+      "signature_schema": {
+        "selected_theme": "string|null",
+        "explicit_content_filter_enabled": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SETTINGS_SELECT_THEME",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SETTINGS",
+          "to": "SETTINGS",
+          "parameters": {
+            "theme": "dark"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_theme",
+              "value_ref": "{theme}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-theme-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#settings-theme-dark",
+              "ui_elements": {
+                "container": "#settings-theme-dropdown",
+                "options": [
+                  {
+                    "value": "light",
+                    "selector": "#settings-theme-light"
+                  },
+                  {
+                    "value": "dark",
+                    "selector": "#settings-theme-dark"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_TOGGLE_EXPLICIT_FILTER",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SETTINGS",
+          "to": "SETTINGS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.explicit_content_filter_enabled",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-explicit-toggle"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_BACK_ACCOUNT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SETTINGS",
+          "to": "ACCOUNT_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-account-overview"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SETTINGS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,3035 @@
+{
+  "meta": {
+    "app": "A/B_Testing-Optimizely",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "EXPERIMENT_LAUNCHED_SUCCESS",
+      "EXPERIMENT_SCHEDULED_SUCCESS",
+      "EXPERIMENT_ARCHIVED_SUCCESS",
+      "AUDIENCE_SAVED_SUCCESS",
+      "ACCOUNT_BILLING_UPDATED_SUCCESS"
+    ],
+    "global_signature_schema": {
+      "experiments": "array<object>|null",
+      "audiences": "array<object>|null",
+      "feature_flags": "array<object>|null",
+      "selected_experiment_id": "string|null",
+      "selected_audience_id": "string|null",
+      "selected_feature_flag_id": "string|null",
+      "location_permission_granted": "boolean|null"
+    },
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 25,
+        "max": 30
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover",
+        "menu"
+      ],
+      "home_nav_coverage": "each",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 4,
+        "two_step_parity": false,
+        "allowed_shapes": [
+          "checkboxes",
+          "sliders",
+          "sort"
+        ]
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "current_user_id": "string|null",
+        "cookie_accepted": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_COOKIE_ACCEPT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_accepted",
+              "cond": "neq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cookie_accepted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ]
+        },
+        {
+          "id": "NAV_HOME_DASHBOARD_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_accepted",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-dashboard"
+            }
+          ]
+        },
+        {
+          "id": "NAV_HOME_EXPERIMENTS_HOVER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "EXPERIMENTS_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_accepted",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#nav-main-experiments"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-main-experiments-all"
+            }
+          ]
+        },
+        {
+          "id": "NAV_HOME_AUDIENCES_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "AUDIENCES_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_accepted",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-more-toggle"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-more-audiences"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DASHBOARD",
+      "signature_schema": {
+        "experiments": "array<object>|null",
+        "audiences": "array<object>|null",
+        "recent_activity_viewport_anchor_id": "string|null",
+        "recent_activity_selected_item_id": "string|null",
+        "dashboard_view_filters_applied": "boolean|null",
+        "dashboard_location_permission_granted": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_LOCATION_PERMISSION_ALLOW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "DASHBOARD",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.dashboard_location_permission_granted",
+              "cond": "neq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.dashboard_location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "DASHBOARD_FILTER_STATUS_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "DASHBOARD",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.dashboard_view_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dashboard-filter-running-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "DASHBOARD_FILTER_PRIORITY_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "DASHBOARD",
+          "to": "DASHBOARD",
+          "parameters": {
+            "widget": "slider"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.dashboard_view_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dashboard-priority-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#dashboard-priority-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "DASHBOARD_SORT_RECENT_ACTIVITY",
+          "name": "select",
+          "is_navigation": false,
+          "from": "DASHBOARD",
+          "to": "DASHBOARD",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.dashboard_view_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dashboard-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#dashboard-sort-option-last-updated",
+              "ui_elements": {
+                "container": "#dashboard-sort-dropdown",
+                "options": [
+                  {
+                    "value": "last_updated",
+                    "selector": "#dashboard-sort-option-last-updated"
+                  },
+                  {
+                    "value": "created",
+                    "selector": "#dashboard-sort-option-created"
+                  },
+                  {
+                    "value": "status",
+                    "selector": "#dashboard-sort-option-status"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "DASHBOARD_OPEN_FILTERED_ACTIVITY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD",
+          "to": "EXPERIMENT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.dashboard_view_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.recent_activity_selected_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.dashboard_view_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dashboard-activity-list .row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "DASHBOARD_SCROLL_ACTIVITY_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "DASHBOARD",
+          "to": "DASHBOARD",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.recent_activity_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dashboard-activity-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#dashboard-activity-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "DASHBOARD_OPEN_ANY_ACTIVITY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD",
+          "to": "EXPERIMENT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.recent_activity_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.recent_activity_selected_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.recent_activity_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dashboard-activity-list .row-visible"
+            }
+          ]
+        },
+        {
+          "id": "DASHBOARD_GO_TO_EXPERIMENTS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#logo-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EXPERIMENTS_LIST",
+      "signature_schema": {
+        "experiments": "array<object>|null",
+        "experiments_list_matched_item_id": "string|null",
+        "experiments_list_selected_item_id": "string|null",
+        "experiments_list_has_searched": "boolean|null",
+        "experiments_list_viewport_anchor_id": "string|null",
+        "experiments_list_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "EXPERIMENTS_LIST_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "EXPERIMENTS_LIST",
+          "to": "EXPERIMENTS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.experiments_list_matched_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.experiments_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#experiments-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#experiments-search-input",
+              "text": "{ITEM_ANY}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "EXPERIMENTS_LIST_FILTER_STATUS_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "EXPERIMENTS_LIST",
+          "to": "EXPERIMENTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.experiments_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#experiments-filter-running-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "EXPERIMENTS_LIST_FILTER_TYPE_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "EXPERIMENTS_LIST",
+          "to": "EXPERIMENTS_LIST",
+          "parameters": {
+            "widget": "slider"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.experiments_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#experiments-type-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#experiments-type-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "EXPERIMENTS_LIST_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "EXPERIMENTS_LIST",
+          "to": "EXPERIMENTS_LIST",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.experiments_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#experiments-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#experiments-sort-option-last-modified-desc",
+              "ui_elements": {
+                "container": "#experiments-sort-dropdown",
+                "options": [
+                  {
+                    "value": "last_modified",
+                    "selector": "#experiments-sort-option-last-modified-desc"
+                  },
+                  {
+                    "value": "created",
+                    "selector": "#experiments-sort-option-created"
+                  },
+                  {
+                    "value": "status",
+                    "selector": "#experiments-sort-option-status"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "EXPERIMENTS_LIST_OPEN_MATCHED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENTS_LIST",
+          "to": "EXPERIMENT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.experiments_list_matched_item_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.experiments_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.experiments_list_selected_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.experiments_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#experiments-table .row-matched"
+            }
+          ]
+        },
+        {
+          "id": "EXPERIMENTS_LIST_OPEN_FILTERED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENTS_LIST",
+          "to": "EXPERIMENT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.experiments_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.experiments_list_selected_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.experiments_list_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#experiments-table .row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "EXPERIMENTS_LIST_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "EXPERIMENTS_LIST",
+          "to": "EXPERIMENTS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.experiments_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#experiments-table"
+            },
+            {
+              "op": "drag",
+              "selector": "#experiments-table",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "EXPERIMENTS_LIST_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENTS_LIST",
+          "to": "EXPERIMENT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.experiments_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.experiments_list_selected_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.experiments_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#experiments-table .row-visible"
+            }
+          ]
+        },
+        {
+          "id": "EXPERIMENTS_LIST_GO_TO_CREATE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENTS_LIST",
+          "to": "EXPERIMENT_CREATE_TYPE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-new-experiment"
+            }
+          ]
+        },
+        {
+          "id": "EXPERIMENTS_LIST_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENTS_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#logo-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EXPERIMENT_DETAIL",
+      "signature_schema": {
+        "selected_experiment_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "EXPERIMENT_DETAIL_SET_FROM_LIST",
+          "name": "click",
+          "is_navigation": false,
+          "from": "EXPERIMENT_DETAIL",
+          "to": "EXPERIMENT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.selected_experiment_id",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_experiment_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#experiment-header"
+            }
+          ]
+        },
+        {
+          "id": "EXPERIMENT_DETAIL_GO_TO_EDIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENT_DETAIL",
+          "to": "EXPERIMENT_EDIT_VARIATIONS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_experiment_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-edit-experiment"
+            }
+          ]
+        },
+        {
+          "id": "EXPERIMENT_DETAIL_GO_TO_TARGETING",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENT_DETAIL",
+          "to": "EXPERIMENT_EDIT_TARGETING",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_experiment_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#tab-targeting"
+            }
+          ]
+        },
+        {
+          "id": "EXPERIMENT_DETAIL_GO_TO_SCHEDULING",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENT_DETAIL",
+          "to": "EXPERIMENT_SCHEDULE",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_experiment_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#tab-scheduling"
+            }
+          ]
+        },
+        {
+          "id": "EXPERIMENT_DETAIL_BACK_TO_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENT_DETAIL",
+          "to": "EXPERIMENTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-to-experiments"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EXPERIMENT_CREATE_TYPE",
+      "signature_schema": {
+        "new_experiment_name": "string|null",
+        "new_experiment_url": "string|null",
+        "new_experiment_type": "string|null"
+      },
+      "actions": [
+        {
+          "id": "EXPERIMENT_CREATE_TYPE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "EXPERIMENT_CREATE_TYPE",
+          "to": "EXPERIMENT_CREATE_TYPE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_experiment_name",
+              "value": "New Homepage Experiment"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#input-experiment-name"
+            },
+            {
+              "op": "type_text",
+              "selector": "#input-experiment-name",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "EXPERIMENT_CREATE_TYPE_URL",
+          "name": "type",
+          "is_navigation": false,
+          "from": "EXPERIMENT_CREATE_TYPE",
+          "to": "EXPERIMENT_CREATE_TYPE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_experiment_url",
+              "value": "https://example.com/home"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#input-experiment-url"
+            },
+            {
+              "op": "type_text",
+              "selector": "#input-experiment-url",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "EXPERIMENT_CREATE_TYPE_SELECT_KIND",
+          "name": "select",
+          "is_navigation": false,
+          "from": "EXPERIMENT_CREATE_TYPE",
+          "to": "EXPERIMENT_CREATE_TYPE",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_experiment_type",
+              "value": "a_b"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#experiment-type-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#experiment-type-ab",
+              "ui_elements": {
+                "container": "#experiment-type-dropdown",
+                "options": [
+                  {
+                    "value": "a_b",
+                    "selector": "#experiment-type-ab"
+                  },
+                  {
+                    "value": "multivariate",
+                    "selector": "#experiment-type-mvt"
+                  },
+                  {
+                    "value": "personalization",
+                    "selector": "#experiment-type-personalization"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "EXPERIMENT_CREATE_TYPE_CONTINUE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENT_CREATE_TYPE",
+          "to": "EXPERIMENT_EDIT_VARIATIONS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.new_experiment_name",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.new_experiment_url",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.new_experiment_type",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-create-experiment-next"
+            }
+          ]
+        },
+        {
+          "id": "EXPERIMENT_CREATE_TYPE_BACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENT_CREATE_TYPE",
+          "to": "EXPERIMENTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-experiment-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EXPERIMENT_EDIT_VARIATIONS",
+      "signature_schema": {
+        "selected_experiment_id": "string|null",
+        "variation_a_name": "string|null",
+        "variation_b_name": "string|null",
+        "traffic_allocation_slider_set": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "VARIATIONS_SET_BASELINE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "EXPERIMENT_EDIT_VARIATIONS",
+          "to": "EXPERIMENT_EDIT_VARIATIONS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.variation_a_name",
+              "value": "Original"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#input-variation-a-name"
+            },
+            {
+              "op": "type_text",
+              "selector": "#input-variation-a-name",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "VARIATIONS_SET_VARIANT_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "EXPERIMENT_EDIT_VARIATIONS",
+          "to": "EXPERIMENT_EDIT_VARIATIONS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.variation_b_name",
+              "value": "New Headline"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#input-variation-b-name"
+            },
+            {
+              "op": "type_text",
+              "selector": "#input-variation-b-name",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "VARIATIONS_SET_TRAFFIC_ALLOCATION",
+          "name": "select",
+          "is_navigation": false,
+          "from": "EXPERIMENT_EDIT_VARIATIONS",
+          "to": "EXPERIMENT_EDIT_VARIATIONS",
+          "parameters": {
+            "widget": "slider"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.traffic_allocation_slider_set",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#traffic-allocation-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#traffic-allocation-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "VARIATIONS_CONTINUE_TO_TARGETING",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENT_EDIT_VARIATIONS",
+          "to": "EXPERIMENT_EDIT_TARGETING",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.variation_a_name",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.variation_b_name",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.traffic_allocation_slider_set",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-variations-next"
+            }
+          ]
+        },
+        {
+          "id": "VARIATIONS_BACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENT_EDIT_VARIATIONS",
+          "to": "EXPERIMENT_CREATE_TYPE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-variations-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EXPERIMENT_EDIT_TARGETING",
+      "signature_schema": {
+        "selected_experiment_id": "string|null",
+        "selected_audience_id": "string|null",
+        "url_match_pattern": "string|null",
+        "targeting_device_checkbox_set": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "TARGETING_SET_URL_PATTERN",
+          "name": "type",
+          "is_navigation": false,
+          "from": "EXPERIMENT_EDIT_TARGETING",
+          "to": "EXPERIMENT_EDIT_TARGETING",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.url_match_pattern",
+              "value": "https://example.com/home*"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#input-url-pattern"
+            },
+            {
+              "op": "type_text",
+              "selector": "#input-url-pattern",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "TARGETING_SELECT_AUDIENCE_DROPDOWN",
+          "name": "select",
+          "is_navigation": false,
+          "from": "EXPERIMENT_EDIT_TARGETING",
+          "to": "EXPERIMENT_EDIT_TARGETING",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_audience_id",
+              "value": "audience_any"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#audience-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#audience-option-1",
+              "ui_elements": {
+                "container": "#audience-dropdown",
+                "options": [
+                  {
+                    "value": "audience_any",
+                    "selector": "#audience-option-1"
+                  },
+                  {
+                    "value": "audience_returning",
+                    "selector": "#audience-option-2"
+                  },
+                  {
+                    "value": "audience_new",
+                    "selector": "#audience-option-3"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "TARGETING_DEVICE_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "EXPERIMENT_EDIT_TARGETING",
+          "to": "EXPERIMENT_EDIT_TARGETING",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.targeting_device_checkbox_set",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#target-mobile-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "TARGETING_CONTINUE_TO_SCHEDULE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENT_EDIT_TARGETING",
+          "to": "EXPERIMENT_SCHEDULE",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.url_match_pattern",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.selected_audience_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.targeting_device_checkbox_set",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-targeting-next"
+            }
+          ]
+        },
+        {
+          "id": "TARGETING_BACK_TO_VARIATIONS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENT_EDIT_TARGETING",
+          "to": "EXPERIMENT_EDIT_VARIATIONS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-targeting-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EXPERIMENT_SCHEDULE",
+      "signature_schema": {
+        "selected_experiment_id": "string|null",
+        "schedule_start_selected": "boolean|null",
+        "schedule_end_selected": "boolean|null",
+        "launch_immediately_checkbox": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "SCHEDULE_SELECT_START_DATE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "EXPERIMENT_SCHEDULE",
+          "to": "EXPERIMENT_SCHEDULE",
+          "parameters": {
+            "widget": "date_picker"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.schedule_start_selected",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#date-picker1"
+            },
+            {
+              "op": "click",
+              "selector": ".year-2025"
+            },
+            {
+              "op": "click",
+              "selector": ".year-2025"
+            },
+            {
+              "op": "click",
+              "selector": ".month-5"
+            },
+            {
+              "op": "click",
+              "selector": ".day-10"
+            },
+            {
+              "op": "click",
+              "selector": ".hour-10"
+            },
+            {
+              "op": "click",
+              "selector": ".minute-30"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "SCHEDULE_SELECT_END_DATE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "EXPERIMENT_SCHEDULE",
+          "to": "EXPERIMENT_SCHEDULE",
+          "parameters": {
+            "widget": "date_picker"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.schedule_end_selected",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#date-picker2"
+            },
+            {
+              "op": "click",
+              "selector": ".year-2025"
+            },
+            {
+              "op": "click",
+              "selector": ".month-6"
+            },
+            {
+              "op": "click",
+              "selector": ".day-10"
+            },
+            {
+              "op": "click",
+              "selector": ".hour-18"
+            },
+            {
+              "op": "click",
+              "selector": ".minute-0"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "SCHEDULE_LAUNCH_IMMEDIATELY_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "EXPERIMENT_SCHEDULE",
+          "to": "EXPERIMENT_SCHEDULE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.launch_immediately_checkbox",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#launch-immediately-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "SCHEDULE_SUBMIT_AND_LAUNCH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENT_SCHEDULE",
+          "to": "EXPERIMENT_LAUNCHED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.schedule_start_selected",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.launch_immediately_checkbox",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-launch-now"
+            }
+          ]
+        },
+        {
+          "id": "SCHEDULE_SUBMIT_SCHEDULE_ONLY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENT_SCHEDULE",
+          "to": "EXPERIMENT_SCHEDULED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.schedule_start_selected",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.schedule_end_selected",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-schedule"
+            }
+          ]
+        },
+        {
+          "id": "SCHEDULE_BACK_TO_TARGETING",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENT_SCHEDULE",
+          "to": "EXPERIMENT_EDIT_TARGETING",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-schedule-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EXPERIMENT_LAUNCHED_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "LAUNCHED_GO_TO_EXPERIMENTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENT_LAUNCHED_SUCCESS",
+          "to": "EXPERIMENTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Experiment launched successfully"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-view-experiments"
+            }
+          ]
+        },
+        {
+          "id": "LAUNCHED_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENT_LAUNCHED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EXPERIMENT_SCHEDULED_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "SCHEDULED_GO_TO_EXPERIMENTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENT_SCHEDULED_SUCCESS",
+          "to": "EXPERIMENTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Experiment scheduled successfully"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-view-experiments"
+            }
+          ]
+        },
+        {
+          "id": "SCHEDULED_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENT_SCHEDULED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EXPERIMENT_ARCHIVE_CONFIRM",
+      "signature_schema": {
+        "selected_experiment_id": "string|null",
+        "archive_reason": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ARCHIVE_TYPE_REASON",
+          "name": "type",
+          "is_navigation": false,
+          "from": "EXPERIMENT_ARCHIVE_CONFIRM",
+          "to": "EXPERIMENT_ARCHIVE_CONFIRM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.archive_reason",
+              "value": "Test complete"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#input-archive-reason"
+            },
+            {
+              "op": "type_text",
+              "selector": "#input-archive-reason",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ARCHIVE_CONFIRM_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENT_ARCHIVE_CONFIRM",
+          "to": "EXPERIMENT_ARCHIVED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_experiment_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.archive_reason",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-confirm-archive"
+            }
+          ]
+        },
+        {
+          "id": "ARCHIVE_BACK_TO_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENT_ARCHIVE_CONFIRM",
+          "to": "EXPERIMENT_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-archive-cancel"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EXPERIMENT_ARCHIVED_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ARCHIVED_GO_TO_EXPERIMENTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENT_ARCHIVED_SUCCESS",
+          "to": "EXPERIMENTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Experiment archived successfully"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-view-experiments"
+            }
+          ]
+        },
+        {
+          "id": "ARCHIVED_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPERIMENT_ARCHIVED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AUDIENCES_LIST",
+      "signature_schema": {
+        "audiences": "array<object>|null",
+        "audiences_list_matched_item_id": "string|null",
+        "audiences_list_selected_item_id": "string|null",
+        "audiences_list_has_searched": "boolean|null",
+        "audiences_list_viewport_anchor_id": "string|null",
+        "audiences_list_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "AUDIENCES_LIST_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "AUDIENCES_LIST",
+          "to": "AUDIENCES_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.audiences_list_matched_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.audiences_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#audiences-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#audiences-search-input",
+              "text": "{ITEM_ANY}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "AUDIENCES_LIST_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "AUDIENCES_LIST",
+          "to": "AUDIENCES_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.audiences_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#audiences-filter-saved-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "AUDIENCES_LIST_FILTER_SIZE_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "AUDIENCES_LIST",
+          "to": "AUDIENCES_LIST",
+          "parameters": {
+            "widget": "slider"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.audiences_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#audiences-size-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#audiences-size-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "AUDIENCES_LIST_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "AUDIENCES_LIST",
+          "to": "AUDIENCES_LIST",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.audiences_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#audiences-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#audiences-sort-option-size",
+              "ui_elements": {
+                "container": "#audiences-sort-dropdown",
+                "options": [
+                  {
+                    "value": "size",
+                    "selector": "#audiences-sort-option-size"
+                  },
+                  {
+                    "value": "name",
+                    "selector": "#audiences-sort-option-name"
+                  },
+                  {
+                    "value": "last_modified",
+                    "selector": "#audiences-sort-option-last-modified"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "AUDIENCES_LIST_OPEN_MATCHED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "AUDIENCES_LIST",
+          "to": "AUDIENCE_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.audiences_list_matched_item_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.audiences_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.audiences_list_selected_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.audiences_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#audiences-table .row-matched"
+            }
+          ]
+        },
+        {
+          "id": "AUDIENCES_LIST_OPEN_FILTERED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "AUDIENCES_LIST",
+          "to": "AUDIENCE_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.audiences_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.audiences_list_selected_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.audiences_list_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#audiences-table .row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "AUDIENCES_LIST_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "AUDIENCES_LIST",
+          "to": "AUDIENCES_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.audiences_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#audiences-table"
+            },
+            {
+              "op": "drag",
+              "selector": "#audiences-table",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "AUDIENCES_LIST_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "AUDIENCES_LIST",
+          "to": "AUDIENCE_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.audiences_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.audiences_list_selected_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.audiences_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#audiences-table .row-visible"
+            }
+          ]
+        },
+        {
+          "id": "AUDIENCES_LIST_GO_TO_CREATE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "AUDIENCES_LIST",
+          "to": "AUDIENCE_CREATE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-new-audience"
+            }
+          ]
+        },
+        {
+          "id": "AUDIENCES_LIST_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "AUDIENCES_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#logo-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AUDIENCE_DETAIL",
+      "signature_schema": {
+        "selected_audience_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "AUDIENCE_DETAIL_SET_FROM_LIST",
+          "name": "click",
+          "is_navigation": false,
+          "from": "AUDIENCE_DETAIL",
+          "to": "AUDIENCE_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.selected_audience_id",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_audience_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#audience-header"
+            }
+          ]
+        },
+        {
+          "id": "AUDIENCE_DETAIL_GO_TO_EDIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "AUDIENCE_DETAIL",
+          "to": "AUDIENCE_CREATE",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_audience_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-edit-audience"
+            }
+          ]
+        },
+        {
+          "id": "AUDIENCE_DETAIL_BACK_TO_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "AUDIENCE_DETAIL",
+          "to": "AUDIENCES_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-to-audiences"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AUDIENCE_CREATE",
+      "signature_schema": {
+        "audience_name": "string|null",
+        "audience_condition": "string|null",
+        "audience_membership_slider_set": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "AUDIENCE_CREATE_SET_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "AUDIENCE_CREATE",
+          "to": "AUDIENCE_CREATE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.audience_name",
+              "value": "High value visitors"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#input-audience-name"
+            },
+            {
+              "op": "type_text",
+              "selector": "#input-audience-name",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "AUDIENCE_CREATE_SET_CONDITION",
+          "name": "type",
+          "is_navigation": false,
+          "from": "AUDIENCE_CREATE",
+          "to": "AUDIENCE_CREATE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.audience_condition",
+              "value": "Visited pricing page"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#input-audience-condition"
+            },
+            {
+              "op": "type_text",
+              "selector": "#input-audience-condition",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "AUDIENCE_CREATE_MEMBERSHIP_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "AUDIENCE_CREATE",
+          "to": "AUDIENCE_CREATE",
+          "parameters": {
+            "widget": "slider"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.audience_membership_slider_set",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#audience-membership-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#audience-membership-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "AUDIENCE_CREATE_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "AUDIENCE_CREATE",
+          "to": "AUDIENCE_SAVED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.audience_name",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.audience_condition",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.audience_membership_slider_set",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-save-audience"
+            }
+          ]
+        },
+        {
+          "id": "AUDIENCE_CREATE_BACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "AUDIENCE_CREATE",
+          "to": "AUDIENCES_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-audience-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AUDIENCE_SAVED_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "AUDIENCE_SAVED_GO_TO_AUDIENCES",
+          "name": "click",
+          "is_navigation": true,
+          "from": "AUDIENCE_SAVED_SUCCESS",
+          "to": "AUDIENCES_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Audience saved successfully"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-view-audiences"
+            }
+          ]
+        },
+        {
+          "id": "AUDIENCE_SAVED_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "AUDIENCE_SAVED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FEATURE_FLAGS_LIST",
+      "signature_schema": {
+        "feature_flags": "array<object>|null",
+        "feature_flags_list_viewport_anchor_id": "string|null",
+        "feature_flags_list_selected_item_id": "string|null",
+        "feature_flags_list_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "FEATURE_FLAGS_LIST_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "FEATURE_FLAGS_LIST",
+          "to": "FEATURE_FLAGS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.feature_flags_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#feature-flags-filter-active-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "FEATURE_FLAGS_LIST_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "FEATURE_FLAGS_LIST",
+          "to": "FEATURE_FLAGS_LIST",
+          "parameters": {
+            "widget": "slider"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.feature_flags_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#feature-flags-rollout-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#feature-flags-rollout-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "FEATURE_FLAGS_LIST_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "FEATURE_FLAGS_LIST",
+          "to": "FEATURE_FLAGS_LIST",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.feature_flags_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#feature-flags-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#feature-flags-sort-option-name",
+              "ui_elements": {
+                "container": "#feature-flags-sort-dropdown",
+                "options": [
+                  {
+                    "value": "name",
+                    "selector": "#feature-flags-sort-option-name"
+                  },
+                  {
+                    "value": "created",
+                    "selector": "#feature-flags-sort-option-created"
+                  },
+                  {
+                    "value": "status",
+                    "selector": "#feature-flags-sort-option-status"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "FEATURE_FLAGS_LIST_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "FEATURE_FLAGS_LIST",
+          "to": "FEATURE_FLAGS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.feature_flags_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#feature-flags-table"
+            },
+            {
+              "op": "drag",
+              "selector": "#feature-flags-table",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "FEATURE_FLAGS_LIST_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FEATURE_FLAGS_LIST",
+          "to": "FEATURE_FLAG_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.feature_flags_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.feature_flags_list_selected_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.feature_flags_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#feature-flags-table .row-visible"
+            }
+          ]
+        },
+        {
+          "id": "FEATURE_FLAGS_LIST_OPEN_FILTERED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FEATURE_FLAGS_LIST",
+          "to": "FEATURE_FLAG_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.feature_flags_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.feature_flags_list_selected_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.feature_flags_list_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#feature-flags-table .row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "FEATURE_FLAGS_LIST_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FEATURE_FLAGS_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#logo-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FEATURE_FLAG_DETAIL",
+      "signature_schema": {
+        "selected_feature_flag_id": "string|null",
+        "rollout_slider_set": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "FEATURE_FLAG_DETAIL_SET_FROM_LIST",
+          "name": "click",
+          "is_navigation": false,
+          "from": "FEATURE_FLAG_DETAIL",
+          "to": "FEATURE_FLAG_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.selected_feature_flag_id",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_feature_flag_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#feature-flag-header"
+            }
+          ]
+        },
+        {
+          "id": "FEATURE_FLAG_DETAIL_SET_ROLLOUT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "FEATURE_FLAG_DETAIL",
+          "to": "FEATURE_FLAG_DETAIL",
+          "parameters": {
+            "widget": "slider"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.rollout_slider_set",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#feature-flag-rollout-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#feature-flag-rollout-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "FEATURE_FLAG_DETAIL_SAVE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FEATURE_FLAG_DETAIL",
+          "to": "EXPERIMENT_LAUNCHED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_feature_flag_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.rollout_slider_set",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-save-rollout"
+            }
+          ]
+        },
+        {
+          "id": "FEATURE_FLAG_DETAIL_BACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FEATURE_FLAG_DETAIL",
+          "to": "FEATURE_FLAGS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-to-feature-flags"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RESULTS_OVERVIEW",
+      "signature_schema": {
+        "experiments": "array<object>|null",
+        "results_viewport_anchor_id": "string|null",
+        "results_selected_item_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "RESULTS_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "RESULTS_OVERVIEW",
+          "to": "RESULTS_OVERVIEW",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.results_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#results-table"
+            },
+            {
+              "op": "drag",
+              "selector": "#results-table",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "RESULTS_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "RESULTS_OVERVIEW",
+          "to": "EXPERIMENT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.results_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.results_selected_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.results_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#results-table .row-visible"
+            }
+          ]
+        },
+        {
+          "id": "RESULTS_BACK_DASHBOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "RESULTS_OVERVIEW",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-to-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ACCOUNT_SETTINGS",
+      "signature_schema": {
+        "account_name": "string|null",
+        "notification_checkbox": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACCOUNT_SETTINGS_SET_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "ACCOUNT_SETTINGS",
+          "to": "ACCOUNT_SETTINGS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.account_name",
+              "value": "Optimizely User"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#input-account-name"
+            },
+            {
+              "op": "type_text",
+              "selector": "#input-account-name",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACCOUNT_SETTINGS_TOGGLE_NOTIFICATIONS",
+          "name": "click",
+          "is_navigation": false,
+          "from": "ACCOUNT_SETTINGS",
+          "to": "ACCOUNT_SETTINGS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.notification_checkbox",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#notifications-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACCOUNT_SETTINGS_GO_TO_BILLING",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_SETTINGS",
+          "to": "BILLING_SETTINGS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.account_name",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#tab-billing"
+            }
+          ]
+        },
+        {
+          "id": "ACCOUNT_SETTINGS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_SETTINGS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#logo-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BILLING_SETTINGS",
+      "signature_schema": {
+        "card_number_set": "boolean|null",
+        "card_expiry_set": "boolean|null",
+        "billing_country_selected": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "BILLING_SET_CARD_NUMBER",
+          "name": "type",
+          "is_navigation": false,
+          "from": "BILLING_SETTINGS",
+          "to": "BILLING_SETTINGS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.card_number_set",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#input-card-number"
+            },
+            {
+              "op": "type_text",
+              "selector": "#input-card-number",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "BILLING_SET_EXPIRY",
+          "name": "type",
+          "is_navigation": false,
+          "from": "BILLING_SETTINGS",
+          "to": "BILLING_SETTINGS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.card_expiry_set",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#input-card-expiry"
+            },
+            {
+              "op": "type_text",
+              "selector": "#input-card-expiry",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "BILLING_SELECT_COUNTRY",
+          "name": "select",
+          "is_navigation": false,
+          "from": "BILLING_SETTINGS",
+          "to": "BILLING_SETTINGS",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.billing_country_selected",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#billing-country-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#billing-country-us",
+              "ui_elements": {
+                "container": "#billing-country-dropdown",
+                "options": [
+                  {
+                    "value": "us",
+                    "selector": "#billing-country-us"
+                  },
+                  {
+                    "value": "uk",
+                    "selector": "#billing-country-uk"
+                  },
+                  {
+                    "value": "de",
+                    "selector": "#billing-country-de"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "BILLING_SAVE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BILLING_SETTINGS",
+          "to": "ACCOUNT_BILLING_UPDATED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.card_number_set",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.card_expiry_set",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.billing_country_selected",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-save-billing"
+            }
+          ]
+        },
+        {
+          "id": "BILLING_BACK_TO_ACCOUNT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BILLING_SETTINGS",
+          "to": "ACCOUNT_SETTINGS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-billing-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ACCOUNT_BILLING_UPDATED_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "BILLING_SUCCESS_BACK_ACCOUNT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_BILLING_UPDATED_SUCCESS",
+          "to": "ACCOUNT_SETTINGS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Billing updated successfully"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-back-account-settings"
+            }
+          ]
+        },
+        {
+          "id": "BILLING_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_BILLING_UPDATED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-home"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

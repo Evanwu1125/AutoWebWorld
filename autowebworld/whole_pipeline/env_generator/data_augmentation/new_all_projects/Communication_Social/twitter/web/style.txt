@@ -1,0 +1,63 @@
+# Visual Style Guide - X (Twitter) Clone
+
+## Theme Overview
+- **Type:** Microblogging / Social Network
+- **Aesthetic:** Modern, Minimalist, Content-First, "Dark Mode" Default
+- **Inspiration:** X (formerly Twitter)
+
+## Color Palette
+- **Backgrounds:**
+  - Main: `#000000` (Pure Black)
+  - Secondary/Cards: `#16181C` (Dark Gray)
+  - Borders: `#2F3336` (Subtle Gray)
+- **Text:**
+  - Primary: `#E7E9EA` (Off-White)
+  - Secondary: `#71767B` (Muted Gray)
+- **Accents:**
+  - Brand Color: `#1D9BF0` (Twitter Blue) - Used for primary buttons, links, active states.
+  - Success: `#00BA7C` (Green)
+  - Error: `#F4212E` (Red)
+
+## Typography
+- **Font Family:** System UI, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif.
+- **Sizes:**
+  - Headings: Bold, 20px-24px
+  - Body: 15px
+  - Small/Meta: 13px
+- **Weights:**
+  - Regular (400) for body
+  - Bold (700) for names, headlines, buttons
+
+## Layout & Components
+- **Container:**
+  - Centered max-width layout (max-w-7xl).
+  - 3-Column Grid on Desktop: Navigation (Left), Feed (Center), Sidebar/Widgets (Right).
+  - 1-Column on Mobile with Bottom Navigation.
+- **Navigation:**
+  - Desktop: Left vertical sidebar with icon + label.
+  - Mobile: Fixed bottom bar with icons only.
+- **Cards (Tweets/Users):**
+  - Full width within the feed column.
+  - Border-bottom separator (`border-slate-800`).
+  - Hover effects: `hover:bg-white/5` (subtle lighten).
+- **Buttons:**
+  - Primary (Post/Follow): Rounded-full, Solid Blue (`bg-sky-500`), White Text, Bold.
+  - Secondary (Edit/Back): Rounded-full, Outline (`border border-slate-600`), White Text.
+- **Images:**
+  - Avatars: `rounded-full`, object-cover.
+  - Media Attachments: `rounded-2xl`, border (`border-slate-800`).
+
+## Interactive Elements
+- **Hover Effects:** Smooth transitions (`transition-colors duration-200`).
+- **Feedback:** Visual cues on click/tap.
+- **Z-Index Strategy:**
+  - Modals: `z-50`
+  - Dropdowns: `z-40`
+  - Sticky Headers: `z-30`
+
+## Imagery
+- Use high-quality realistic images for:
+  - User Avatars (diverse faces).
+  - Tweet Media (landscapes, tech, events).
+  - Trend Thumbnails.
+- Avoid generic placeholders; use `ImageGetter` populated paths.

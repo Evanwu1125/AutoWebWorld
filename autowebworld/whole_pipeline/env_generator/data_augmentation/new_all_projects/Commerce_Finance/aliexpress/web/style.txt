@@ -1,0 +1,42 @@
+# Visual Style Guide - AliExpress Clone
+
+## Theme Overview
+- **Reference App**: AliExpress
+- **Target Audience**: Value-conscious shoppers looking for variety and deals.
+- **Visual Tone**: Vibrant, busy, urgent (deals), exciting, global.
+
+## Color Palette
+- **Primary**: #FF4747 (AliExpress Red) - Used for primary buttons, prices, sale badges, branding.
+- **Secondary**: #FFD100 (Gold/Yellow) - Used for "Buy Now", coupons, star ratings.
+- **Accent**: #FF8C00 (Orange) - Gradients for buttons.
+- **Background**: #F5F5F5 (Light Gray) - Page background to make white cards pop.
+- **Surface**: #FFFFFF (White) - Cards, navigation bars.
+- **Text**: #222222 (Primary), #666666 (Secondary), #999999 (Tertiary/Placeholder).
+
+## Typography
+- **Font Family**: Inter, system-ui, sans-serif.
+- **Scale**:
+  - Headings: Bold, tight tracking.
+  - Prices: Extra Bold, larger size (e.g., text-xl or text-2xl).
+  - Body: Regular, legible (14px standard).
+
+## Layout & Spacing
+- **Density**: High. Show multiple items per row (2 on mobile, 4-6 on desktop).
+- **Grid**: Standard 12-column system.
+- **Cards**: Rounded-lg (8px), subtle shadow (shadow-sm), hover lift effect (hover:shadow-md).
+- **Navigation**: Sticky bottom bar (mobile) or top header (desktop) with distinct icons.
+
+## UI Components
+- **Buttons**:
+  - Primary: Red background, white text, rounded-full or rounded-md.
+  - Secondary: Light gray background, dark text.
+  - Action: "Add to Cart" (Red/Orange Gradient), "Buy Now" (Yellow/Orange Gradient).
+- **Badges**: "Free Shipping" (Green text/bg), "X% Off" (Red badge).
+- **Inputs**: Outlined with focus ring in primary color.
+- **Modals**: Center-aligned, backdrop blur, rounded-xl.
+
+## Image Usage Strategy
+- **Product Images**: Critical. Must use ImageGetter to fetch real product photos matching descriptions (electronics, fashion, home).
+- **Aspect Ratio**: Square (1:1) for products, Banner (3:1) for promotions.
+- **Avatars**: Circular user profile images.
+- **Flags**: Country flags for shipping (optional, use text if images unavailable).

@@ -1,0 +1,51 @@
+# Visual Style Guide - Microsoft Teams Theme
+
+## 1. Application Theme
+- **Identity**: Microsoft Teams inspired collaboration platform.
+- **Target Audience**: Business professionals, remote teams, enterprise users.
+- **Visual Tone**: Professional, clean, organized, trustworthy, and efficient.
+- **Key Characteristics**: Left sidebar navigation, card-based content, clear hierarchy, modern flat design with subtle shadows.
+
+## 2. Color Palette
+- **Primary**: #6264A7 (Teams Purple) - Used for primary buttons, active states, key icons.
+- **Secondary**: #464775 (Darker Purple) - Hover states, headers.
+- **Background**: #F5F5F5 (Light Gray) - Main application background.
+- **Surface**: #FFFFFF (White) - Cards, sidebars, modal backgrounds.
+- **Text Primary**: #242424 (Almost Black) - Headings, main text.
+- **Text Secondary**: #616161 (Dark Gray) - Subtitles, metadata, timestamps.
+- **Accent**: #D1D1D1 (Light Border) - Separators, inactive icons.
+- **Success**: #107C10 (Green) - Success messages, online status.
+- **Error**: #C4314B (Red) - Error messages, urgent notifications.
+
+## 3. Typography
+- **Font Family**: 'Segoe UI', system-ui, sans-serif.
+- **Weights**: Regular (400), Semibold (600), Bold (700).
+- **Sizes**:
+  - H1: 24px (Page Titles)
+  - H2: 20px (Section Headers)
+  - H3: 16px (Card Titles, Navigation Items)
+  - Body: 14px (Message content, list items)
+  - Small: 12px (Timestamps, captions)
+
+## 4. Layout & Spacing
+- **Grid System**: Responsive grid using Tailwind CSS (grid-cols-*).
+- **Navigation**: Fixed left sidebar (w-64) for main navigation (Activity, Chat, Teams, Calendar, Calls).
+- **Content Area**: Fluid width main content area with padding (p-6).
+- **Spacing**: Consistent use of 4px grid (p-2, p-4, m-4).
+- **Cards**: White background, rounded corners (rounded-md), subtle shadow (shadow-sm).
+
+## 5. UI Components
+- **Buttons**:
+  - Primary: Purple background, white text, rounded-md, hover darken.
+  - Secondary: White background, border, dark text, rounded-md.
+- **Inputs**: Light gray border, rounded-md, focus ring purple.
+- **Avatars**: Circular images, varying sizes (w-8 to w-16).
+- **Badges**: Rounded-full, used for unread counts (red) or status.
+- **Lists**: Clean rows with hover effects (bg-gray-100), avatar + text + meta structure.
+- **Modals**: Centered, white card, backdrop blur, distinct header/footer.
+
+## 6. Image Strategy
+- **Avatars**: Real portraits for users (via ImageGetter).
+- **Teams/Groups**: Abstract or office-related thumbnails.
+- **Meeting Backgrounds**: Video call screenshots or placeholder visuals.
+- **Empty States**: Simple illustrations matching the professional tone.

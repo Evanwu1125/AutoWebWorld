@@ -1,0 +1,2809 @@
+{
+  "meta": {
+    "app": "Microblogging-Tumblr_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "POST_PUBLISH_SUCCESS",
+      "POST_SCHEDULE_SUCCESS",
+      "FOLLOW_BLOG_SUCCESS",
+      "MESSAGE_SEND_SUCCESS",
+      "ACCOUNT_SETTINGS_SAVE_SUCCESS"
+    ],
+    "global_signature_schema": {
+      "posts": "array<object>|null",
+      "blogs": "array<object>|null",
+      "messages": "array<object>|null"
+    },
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 25,
+        "max": 35
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover",
+        "menu"
+      ],
+      "home_nav_coverage": "any",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 4,
+        "two_step_parity": false,
+        "allowed_shapes": [
+          "checkboxes",
+          "sliders",
+          "sort"
+        ]
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "current_user_id": "string|null",
+        "cookie_consent_given": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "HOME_ACCEPT_COOKIES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cookie_consent_given",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_TO_DASHBOARD_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "DASHBOARD_FEED",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-dashboard-direct"
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_TO_DASHBOARD_HOVER",
+          "name": "select",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "DASHBOARD_FEED",
+          "parameters": {
+            "widget": "hover_menu"
+          },
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#nav-main"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-main-dashboard",
+              "ui_elements": {
+                "container": "#nav-main",
+                "options": [
+                  {
+                    "value": "dashboard",
+                    "selector": "#nav-main-dashboard"
+                  },
+                  {
+                    "value": "explore",
+                    "selector": "#nav-main-explore"
+                  },
+                  {
+                    "value": "messages",
+                    "selector": "#nav-main-messages"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_TO_DASHBOARD_MENU",
+          "name": "select",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "DASHBOARD_FEED",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-menu-toggle"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-menu-dashboard",
+              "ui_elements": {
+                "container": "#nav-menu",
+                "options": [
+                  {
+                    "value": "dashboard",
+                    "selector": "#nav-menu-dashboard"
+                  },
+                  {
+                    "value": "explore",
+                    "selector": "#nav-menu-explore"
+                  },
+                  {
+                    "value": "account",
+                    "selector": "#nav-menu-account"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_TO_SIGNUP",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "SIGNUP",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-signup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SIGNUP",
+      "signature_schema": {
+        "signup_email": "string|null",
+        "signup_password": "string|null",
+        "signup_blogname": "string|null"
+      },
+      "actions": [
+        {
+          "id": "SIGNUP_TYPE_EMAIL",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SIGNUP",
+          "to": "SIGNUP",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.signup_email",
+              "value_expr": "\"{input_text}\""
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#signup-email"
+            },
+            {
+              "op": "type_text",
+              "selector": "#signup-email",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "SIGNUP_TYPE_PASSWORD",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SIGNUP",
+          "to": "SIGNUP",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.signup_password",
+              "value_expr": "\"{input_text}\""
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#signup-password"
+            },
+            {
+              "op": "type_text",
+              "selector": "#signup-password",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "SIGNUP_TYPE_BLOGNAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SIGNUP",
+          "to": "SIGNUP",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.signup_blogname",
+              "value_expr": "\"{input_text}\""
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#signup-blogname"
+            },
+            {
+              "op": "type_text",
+              "selector": "#signup-blogname",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "SIGNUP_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SIGNUP",
+          "to": "DASHBOARD_FEED",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.signup_email",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.signup_password",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.signup_blogname",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#signup-submit"
+            }
+          ]
+        },
+        {
+          "id": "SIGNUP_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SIGNUP",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#signup-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DASHBOARD_FEED",
+      "signature_schema": {
+        "posts": "array<object>|null",
+        "location_permission_granted": "boolean|null",
+        "dashboard_feed_filters_applied": "boolean|null",
+        "dashboard_feed_has_searched": "boolean|null",
+        "dashboard_feed_viewport_anchor_id": "string|null",
+        "matched_post_id": "string|null",
+        "selected_post_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "DASHBOARD_ALLOW_LOCATION",
+          "name": "click",
+          "is_navigation": false,
+          "from": "DASHBOARD_FEED",
+          "to": "DASHBOARD_FEED",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "DASHBOARD_FILTER_CHECKBOXES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "DASHBOARD_FEED",
+          "to": "DASHBOARD_FEED",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.dashboard_feed_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-following-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "DASHBOARD_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "DASHBOARD_FEED",
+          "to": "DASHBOARD_FEED",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.dashboard_feed_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-time-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#filter-time-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "DASHBOARD_FILTER_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "DASHBOARD_FEED",
+          "to": "DASHBOARD_FEED",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.dashboard_feed_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#sort-option-newest",
+              "ui_elements": {
+                "container": "#sort-dropdown",
+                "options": [
+                  {
+                    "value": "newest",
+                    "selector": "#sort-option-newest"
+                  },
+                  {
+                    "value": "oldest",
+                    "selector": "#sort-option-oldest"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "DASHBOARD_OPEN_FILTERED_POST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD_FEED",
+          "to": "POST_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.dashboard_feed_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.dashboard_feed_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_post_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#feed .post-card-filtered"
+            }
+          ]
+        },
+        {
+          "id": "DASHBOARD_SEARCH_POST",
+          "name": "search",
+          "is_navigation": false,
+          "from": "DASHBOARD_FEED",
+          "to": "DASHBOARD_FEED",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_post_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.dashboard_feed_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#feed-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#feed-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "DASHBOARD_OPEN_MATCHED_POST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD_FEED",
+          "to": "POST_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_post_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.dashboard_feed_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_post_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.dashboard_feed_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#feed .post-card-matched"
+            }
+          ]
+        },
+        {
+          "id": "DASHBOARD_SCROLL_POST_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "DASHBOARD_FEED",
+          "to": "DASHBOARD_FEED",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.dashboard_feed_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#feed-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#feed-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "DASHBOARD_OPEN_ANY_POST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD_FEED",
+          "to": "POST_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.dashboard_feed_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_post_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.dashboard_feed_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#feed .post-card-visible"
+            }
+          ]
+        },
+        {
+          "id": "DASHBOARD_GO_TO_COMPOSE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD_FEED",
+          "to": "COMPOSE_TEXT_POST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-post-text"
+            }
+          ]
+        },
+        {
+          "id": "DASHBOARD_GO_TO_EXPLORE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD_FEED",
+          "to": "EXPLORE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-explore"
+            }
+          ]
+        },
+        {
+          "id": "DASHBOARD_GO_TO_MESSAGES",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD_FEED",
+          "to": "MESSAGES_INBOX",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-messages"
+            }
+          ]
+        },
+        {
+          "id": "DASHBOARD_GO_TO_ACCOUNT_SETTINGS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD_FEED",
+          "to": "ACCOUNT_SETTINGS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-account-settings"
+            }
+          ]
+        },
+        {
+          "id": "DASHBOARD_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD_FEED",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EXPLORE",
+      "signature_schema": {
+        "blogs": "array<object>|null",
+        "explore_filters_applied": "boolean|null",
+        "explore_has_searched": "boolean|null",
+        "explore_viewport_anchor_id": "string|null",
+        "matched_blog_id": "string|null",
+        "selected_blog_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "EXPLORE_FILTER_CHECKBOXES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "EXPLORE",
+          "to": "EXPLORE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.explore_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-recommended-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "EXPLORE_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "EXPLORE",
+          "to": "EXPLORE",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.explore_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-popularity-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#filter-popularity-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "EXPLORE_FILTER_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "EXPLORE",
+          "to": "EXPLORE",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.explore_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#explore-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#explore-sort-option-trending",
+              "ui_elements": {
+                "container": "#explore-sort-dropdown",
+                "options": [
+                  {
+                    "value": "trending",
+                    "selector": "#explore-sort-option-trending"
+                  },
+                  {
+                    "value": "recent",
+                    "selector": "#explore-sort-option-recent"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "EXPLORE_OPEN_FILTERED_BLOG",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPLORE",
+          "to": "BLOG_OVERVIEW",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.explore_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.explore_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_blog_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#explore-grid .blog-card-filtered"
+            }
+          ]
+        },
+        {
+          "id": "EXPLORE_SEARCH_BLOG",
+          "name": "search",
+          "is_navigation": false,
+          "from": "EXPLORE",
+          "to": "EXPLORE",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_blog_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.explore_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#explore-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#explore-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "EXPLORE_OPEN_MATCHED_BLOG",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPLORE",
+          "to": "BLOG_OVERVIEW",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_blog_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.explore_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_blog_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.explore_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#explore-grid .blog-card-matched"
+            }
+          ]
+        },
+        {
+          "id": "EXPLORE_SCROLL_BLOG_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "EXPLORE",
+          "to": "EXPLORE",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.explore_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#explore-grid-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#explore-grid-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "EXPLORE_OPEN_ANY_BLOG",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPLORE",
+          "to": "BLOG_OVERVIEW",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.explore_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_blog_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.explore_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#explore-grid .blog-card-visible"
+            }
+          ]
+        },
+        {
+          "id": "EXPLORE_BACK_DASHBOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EXPLORE",
+          "to": "DASHBOARD_FEED",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#explore-back-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BLOG_OVERVIEW",
+      "signature_schema": {
+        "selected_blog_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "BLOG_OVERVIEW_GO_TO_POSTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BLOG_OVERVIEW",
+          "to": "BLOG_POSTS_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_blog_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#blog-overview-posts-link"
+            }
+          ]
+        },
+        {
+          "id": "BLOG_OVERVIEW_GO_TO_INFO",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BLOG_OVERVIEW",
+          "to": "BLOG_INFO",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_blog_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#blog-overview-info-link"
+            }
+          ]
+        },
+        {
+          "id": "BLOG_OVERVIEW_GO_TO_FOLLOW_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BLOG_OVERVIEW",
+          "to": "FOLLOW_BLOG_CONFIRM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_blog_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#blog-follow-button"
+            }
+          ]
+        },
+        {
+          "id": "BLOG_OVERVIEW_BACK_EXPLORE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BLOG_OVERVIEW",
+          "to": "EXPLORE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#blog-overview-back-explore"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BLOG_POSTS_LIST",
+      "signature_schema": {
+        "posts": "array<object>|null",
+        "blog_posts_list_filters_applied": "boolean|null",
+        "blog_posts_list_has_searched": "boolean|null",
+        "blog_posts_list_viewport_anchor_id": "string|null",
+        "matched_post_id": "string|null",
+        "selected_post_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "BLOG_POSTS_FILTER_CHECKBOXES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "BLOG_POSTS_LIST",
+          "to": "BLOG_POSTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.blog_posts_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-text-posts-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "BLOG_POSTS_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "BLOG_POSTS_LIST",
+          "to": "BLOG_POSTS_LIST",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.blog_posts_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-date-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#filter-date-slider",
+              "to_value": "left"
+            }
+          ]
+        },
+        {
+          "id": "BLOG_POSTS_FILTER_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "BLOG_POSTS_LIST",
+          "to": "BLOG_POSTS_LIST",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.blog_posts_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#blog-posts-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#blog-posts-sort-option-newest",
+              "ui_elements": {
+                "container": "#blog-posts-sort-dropdown",
+                "options": [
+                  {
+                    "value": "newest",
+                    "selector": "#blog-posts-sort-option-newest"
+                  },
+                  {
+                    "value": "oldest",
+                    "selector": "#blog-posts-sort-option-oldest"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "BLOG_POSTS_OPEN_FILTERED_POST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BLOG_POSTS_LIST",
+          "to": "POST_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.blog_posts_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.blog_posts_list_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_post_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#blog-posts-list .post-card-filtered"
+            }
+          ]
+        },
+        {
+          "id": "BLOG_POSTS_SEARCH_POST",
+          "name": "search",
+          "is_navigation": false,
+          "from": "BLOG_POSTS_LIST",
+          "to": "BLOG_POSTS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_post_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.blog_posts_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#blog-posts-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#blog-posts-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "BLOG_POSTS_OPEN_MATCHED_POST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BLOG_POSTS_LIST",
+          "to": "POST_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_post_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.blog_posts_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_post_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.blog_posts_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#blog-posts-list .post-card-matched"
+            }
+          ]
+        },
+        {
+          "id": "BLOG_POSTS_SCROLL_POST_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "BLOG_POSTS_LIST",
+          "to": "BLOG_POSTS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.blog_posts_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#blog-posts-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#blog-posts-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "BLOG_POSTS_OPEN_ANY_POST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BLOG_POSTS_LIST",
+          "to": "POST_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.blog_posts_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_post_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.blog_posts_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#blog-posts-list .post-card-visible"
+            }
+          ]
+        },
+        {
+          "id": "BLOG_POSTS_BACK_OVERVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BLOG_POSTS_LIST",
+          "to": "BLOG_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#blog-posts-back-overview"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BLOG_INFO",
+      "signature_schema": {
+        "selected_blog_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "BLOG_INFO_BACK_OVERVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BLOG_INFO",
+          "to": "BLOG_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#blog-info-back-overview"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FOLLOW_BLOG_CONFIRM",
+      "signature_schema": {
+        "selected_blog_id": "string|null",
+        "confirm_follow_notes": "string|null"
+      },
+      "actions": [
+        {
+          "id": "FOLLOW_CONFIRM_TYPE_NOTES",
+          "name": "type",
+          "is_navigation": false,
+          "from": "FOLLOW_BLOG_CONFIRM",
+          "to": "FOLLOW_BLOG_CONFIRM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.confirm_follow_notes",
+              "value_expr": "\"{input_text}\""
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#follow-notes-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#follow-notes-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "FOLLOW_CONFIRM_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FOLLOW_BLOG_CONFIRM",
+          "to": "FOLLOW_BLOG_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_blog_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#follow-confirm-submit"
+            }
+          ]
+        },
+        {
+          "id": "FOLLOW_CONFIRM_BACK_OVERVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FOLLOW_BLOG_CONFIRM",
+          "to": "BLOG_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#follow-confirm-back-overview"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FOLLOW_BLOG_SUCCESS",
+      "signature_schema": {
+        "selected_blog_id": "string|null",
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "FOLLOW_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FOLLOW_BLOG_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#follow-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "FOLLOW_SUCCESS_BACK_OVERVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FOLLOW_BLOG_SUCCESS",
+          "to": "BLOG_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#follow-success-back-overview"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "POST_DETAIL",
+      "signature_schema": {
+        "selected_post_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "POST_DETAIL_GO_TO_REBLOG",
+          "name": "click",
+          "is_navigation": true,
+          "from": "POST_DETAIL",
+          "to": "REBLOG_FORM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_post_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#post-reblog-button"
+            }
+          ]
+        },
+        {
+          "id": "POST_DETAIL_GO_TO_COMPOSE_REPLY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "POST_DETAIL",
+          "to": "COMPOSE_TEXT_POST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_post_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#post-reply-button"
+            }
+          ]
+        },
+        {
+          "id": "POST_DETAIL_BACK_DASHBOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "POST_DETAIL",
+          "to": "DASHBOARD_FEED",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#post-detail-back-dashboard"
+            }
+          ]
+        },
+        {
+          "id": "POST_DETAIL_BACK_BLOG_POSTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "POST_DETAIL",
+          "to": "BLOG_POSTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#post-detail-back-blog"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REBLOG_FORM",
+      "signature_schema": {
+        "selected_post_id": "string|null",
+        "reblog_text": "string|null",
+        "reblog_tags": "string|null"
+      },
+      "actions": [
+        {
+          "id": "REBLOG_TYPE_TEXT",
+          "name": "type",
+          "is_navigation": false,
+          "from": "REBLOG_FORM",
+          "to": "REBLOG_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.reblog_text",
+              "value_expr": "\"{input_text}\""
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#reblog-textarea"
+            },
+            {
+              "op": "type_text",
+              "selector": "#reblog-textarea",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "REBLOG_TYPE_TAGS",
+          "name": "type",
+          "is_navigation": false,
+          "from": "REBLOG_FORM",
+          "to": "REBLOG_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.reblog_tags",
+              "value_expr": "\"{input_text}\""
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#reblog-tags-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#reblog-tags-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "REBLOG_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REBLOG_FORM",
+          "to": "POST_PUBLISH_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_post_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#reblog-submit-button"
+            }
+          ]
+        },
+        {
+          "id": "REBLOG_BACK_POST_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REBLOG_FORM",
+          "to": "POST_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#reblog-back-post"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "COMPOSE_TEXT_POST",
+      "signature_schema": {
+        "compose_title": "string|null",
+        "compose_body": "string|null",
+        "compose_tags": "string|null",
+        "compose_visibility": "string|null"
+      },
+      "actions": [
+        {
+          "id": "COMPOSE_TYPE_TITLE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "COMPOSE_TEXT_POST",
+          "to": "COMPOSE_TEXT_POST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.compose_title",
+              "value_expr": "\"{input_text}\""
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#compose-title-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#compose-title-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "COMPOSE_TYPE_BODY",
+          "name": "type",
+          "is_navigation": false,
+          "from": "COMPOSE_TEXT_POST",
+          "to": "COMPOSE_TEXT_POST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.compose_body",
+              "value_expr": "\"{input_text}\""
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#compose-body-textarea"
+            },
+            {
+              "op": "type_text",
+              "selector": "#compose-body-textarea",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "COMPOSE_TYPE_TAGS",
+          "name": "type",
+          "is_navigation": false,
+          "from": "COMPOSE_TEXT_POST",
+          "to": "COMPOSE_TEXT_POST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.compose_tags",
+              "value_expr": "\"{input_text}\""
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#compose-tags-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#compose-tags-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "COMPOSE_SELECT_VISIBILITY",
+          "name": "select",
+          "is_navigation": false,
+          "from": "COMPOSE_TEXT_POST",
+          "to": "COMPOSE_TEXT_POST",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.compose_visibility",
+              "value_expr": "\"public\""
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#compose-visibility-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#visibility-option-public",
+              "ui_elements": {
+                "container": "#compose-visibility-dropdown",
+                "options": [
+                  {
+                    "value": "public",
+                    "selector": "#visibility-option-public"
+                  },
+                  {
+                    "value": "private",
+                    "selector": "#visibility-option-private"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "COMPOSE_PUBLISH_NOW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COMPOSE_TEXT_POST",
+          "to": "POST_PUBLISH_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.compose_body",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.compose_visibility",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#compose-publish-button"
+            }
+          ]
+        },
+        {
+          "id": "COMPOSE_GO_TO_SCHEDULE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COMPOSE_TEXT_POST",
+          "to": "SCHEDULE_POST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.compose_body",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#compose-schedule-button"
+            }
+          ]
+        },
+        {
+          "id": "COMPOSE_BACK_DASHBOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COMPOSE_TEXT_POST",
+          "to": "DASHBOARD_FEED",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#compose-back-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SCHEDULE_POST",
+      "signature_schema": {
+        "compose_body": "string|null",
+        "schedule_datetime": "string|null"
+      },
+      "actions": [
+        {
+          "id": "SCHEDULE_PICK_DATETIME",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SCHEDULE_POST",
+          "to": "SCHEDULE_POST",
+          "parameters": {
+            "widget": "date_picker",
+            "year": 2025,
+            "month": 10,
+            "day": 22,
+            "hour": 10,
+            "minute": 30
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.schedule_datetime",
+              "value_expr": "\"2025-10-22T10:30:00\""
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#date-picker"
+            },
+            {
+              "op": "click",
+              "selector": ".year-2025"
+            },
+            {
+              "op": "click",
+              "selector": ".month-10"
+            },
+            {
+              "op": "click",
+              "selector": ".day-22"
+            },
+            {
+              "op": "click",
+              "selector": ".hour-10"
+            },
+            {
+              "op": "click",
+              "selector": ".minute-30"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "SCHEDULE_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SCHEDULE_POST",
+          "to": "POST_SCHEDULE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.compose_body",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.schedule_datetime",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#schedule-submit-button"
+            }
+          ]
+        },
+        {
+          "id": "SCHEDULE_BACK_COMPOSE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SCHEDULE_POST",
+          "to": "COMPOSE_TEXT_POST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#schedule-back-compose"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "POST_PUBLISH_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "PUBLISH_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "POST_PUBLISH_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#publish-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "PUBLISH_SUCCESS_BACK_DASHBOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "POST_PUBLISH_SUCCESS",
+          "to": "DASHBOARD_FEED",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#publish-success-back-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "POST_SCHEDULE_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "SCHEDULE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "POST_SCHEDULE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#schedule-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "SCHEDULE_SUCCESS_BACK_DASHBOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "POST_SCHEDULE_SUCCESS",
+          "to": "DASHBOARD_FEED",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#schedule-success-back-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MESSAGES_INBOX",
+      "signature_schema": {
+        "messages": "array<object>|null",
+        "messages_inbox_filters_applied": "boolean|null",
+        "messages_inbox_has_searched": "boolean|null",
+        "messages_inbox_viewport_anchor_id": "string|null",
+        "matched_message_id": "string|null",
+        "selected_message_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "MESSAGES_FILTER_CHECKBOXES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MESSAGES_INBOX",
+          "to": "MESSAGES_INBOX",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.messages_inbox_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-unread-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "MESSAGES_FILTER_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "MESSAGES_INBOX",
+          "to": "MESSAGES_INBOX",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.messages_inbox_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#messages-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#messages-sort-option-newest",
+              "ui_elements": {
+                "container": "#messages-sort-dropdown",
+                "options": [
+                  {
+                    "value": "newest",
+                    "selector": "#messages-sort-option-newest"
+                  },
+                  {
+                    "value": "oldest",
+                    "selector": "#messages-sort-option-oldest"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "MESSAGES_OPEN_FILTERED_MESSAGE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGES_INBOX",
+          "to": "MESSAGE_THREAD",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.messages_inbox_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.messages_inbox_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_message_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#messages-list .message-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "MESSAGES_SEARCH_THREAD",
+          "name": "search",
+          "is_navigation": false,
+          "from": "MESSAGES_INBOX",
+          "to": "MESSAGES_INBOX",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_message_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.messages_inbox_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#messages-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#messages-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "MESSAGES_OPEN_MATCHED_THREAD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGES_INBOX",
+          "to": "MESSAGE_THREAD",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_message_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.messages_inbox_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_message_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.messages_inbox_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#messages-list .message-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "MESSAGES_SCROLL_THREAD_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MESSAGES_INBOX",
+          "to": "MESSAGES_INBOX",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.messages_inbox_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#messages-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#messages-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "MESSAGES_OPEN_ANY_THREAD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGES_INBOX",
+          "to": "MESSAGE_THREAD",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.messages_inbox_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_message_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.messages_inbox_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#messages-list .message-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "MESSAGES_GO_TO_COMPOSE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGES_INBOX",
+          "to": "MESSAGE_COMPOSE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#messages-compose-button"
+            }
+          ]
+        },
+        {
+          "id": "MESSAGES_BACK_DASHBOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGES_INBOX",
+          "to": "DASHBOARD_FEED",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#messages-back-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MESSAGE_THREAD",
+      "signature_schema": {
+        "selected_message_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "MESSAGE_THREAD_GO_TO_REPLY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGE_THREAD",
+          "to": "MESSAGE_COMPOSE",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_message_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#thread-reply-button"
+            }
+          ]
+        },
+        {
+          "id": "MESSAGE_THREAD_BACK_INBOX",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGE_THREAD",
+          "to": "MESSAGES_INBOX",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#thread-back-inbox"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MESSAGE_COMPOSE",
+      "signature_schema": {
+        "message_recipient": "string|null",
+        "message_body": "string|null"
+      },
+      "actions": [
+        {
+          "id": "MESSAGE_COMPOSE_TYPE_RECIPIENT",
+          "name": "type",
+          "is_navigation": false,
+          "from": "MESSAGE_COMPOSE",
+          "to": "MESSAGE_COMPOSE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.message_recipient",
+              "value_expr": "\"{input_text}\""
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-recipient-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#message-recipient-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "MESSAGE_COMPOSE_TYPE_BODY",
+          "name": "type",
+          "is_navigation": false,
+          "from": "MESSAGE_COMPOSE",
+          "to": "MESSAGE_COMPOSE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.message_body",
+              "value_expr": "\"{input_text}\""
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-body-textarea"
+            },
+            {
+              "op": "type_text",
+              "selector": "#message-body-textarea",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "MESSAGE_COMPOSE_SEND",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGE_COMPOSE",
+          "to": "MESSAGE_SEND_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.message_recipient",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.message_body",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-send-button"
+            }
+          ]
+        },
+        {
+          "id": "MESSAGE_COMPOSE_BACK_INBOX",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGE_COMPOSE",
+          "to": "MESSAGES_INBOX",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-compose-back-inbox"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MESSAGE_SEND_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "MESSAGE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGE_SEND_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "MESSAGE_SUCCESS_BACK_INBOX",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGE_SEND_SUCCESS",
+          "to": "MESSAGES_INBOX",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-success-back-inbox"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ACCOUNT_SETTINGS",
+      "signature_schema": {
+        "display_name": "string|null",
+        "bio": "string|null",
+        "theme_color": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACCOUNT_SETTINGS_TYPE_DISPLAY_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "ACCOUNT_SETTINGS",
+          "to": "ACCOUNT_SETTINGS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.display_name",
+              "value_expr": "\"{input_text}\""
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-display-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#settings-display-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACCOUNT_SETTINGS_TYPE_BIO",
+          "name": "type",
+          "is_navigation": false,
+          "from": "ACCOUNT_SETTINGS",
+          "to": "ACCOUNT_SETTINGS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.bio",
+              "value_expr": "\"{input_text}\""
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-bio-textarea"
+            },
+            {
+              "op": "type_text",
+              "selector": "#settings-bio-textarea",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACCOUNT_SETTINGS_SELECT_THEME_COLOR",
+          "name": "select",
+          "is_navigation": false,
+          "from": "ACCOUNT_SETTINGS",
+          "to": "ACCOUNT_SETTINGS",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.theme_color",
+              "value_expr": "\"blue\""
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-theme-color-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#theme-color-blue",
+              "ui_elements": {
+                "container": "#settings-theme-color-dropdown",
+                "options": [
+                  {
+                    "value": "blue",
+                    "selector": "#theme-color-blue"
+                  },
+                  {
+                    "value": "dark",
+                    "selector": "#theme-color-dark"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACCOUNT_SETTINGS_SAVE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_SETTINGS",
+          "to": "ACCOUNT_SETTINGS_SAVE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.display_name",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-save-button"
+            }
+          ]
+        },
+        {
+          "id": "ACCOUNT_SETTINGS_BACK_DASHBOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_SETTINGS",
+          "to": "DASHBOARD_FEED",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-back-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ACCOUNT_SETTINGS_SAVE_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "SETTINGS_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_SETTINGS_SAVE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "SETTINGS_SUCCESS_BACK_SETTINGS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_SETTINGS_SAVE_SUCCESS",
+          "to": "ACCOUNT_SETTINGS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-success-back-settings"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

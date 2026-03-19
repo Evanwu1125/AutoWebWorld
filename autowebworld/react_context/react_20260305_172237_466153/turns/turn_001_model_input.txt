@@ -1,0 +1,2290 @@
+You are the coding agent for an FSM-to-Web task.
+
+Input below is the authoritative FSM JSON. Build a runnable React/Vite frontend from it.
+Real web theme name: slack
+
+First step requirements (must do in project root, not in subdirectories):
+- Create `todo.md` first (highest priority before any code implementation).
+- In `todo.md`, include a complete page list for this FSM app (all pages that will be generated), then provide a concrete implementation checklist derived from FSM pages/actions.
+- Create `style.txt` in project root with concise design/style rules for this FSM app.
+
+Mandatory requirement:
+- When building the web frontend, use real web `slack` as the reference and align with its real overall style and page layout structure.
+
+Core requirements:
+- For every page in the FSM, create one separate frontend file under `src/pages` (one file per FSM page, no merging multiple pages into one file).
+- Implement one executable page/route for each FSM page.
+- Implement page actions so behavior matches FSM definitions (params, preconditions, effects, navigation).
+- Keep action mapping consistent with FSM page/action IDs.
+- If an action has a selector field in FSM, use the exact same selector value in generated frontend elements.
+- Keep selectors stable and directly executable for automation.
+- Before declaring completion, run `npm run build` and fix all errors.
+
+Completion protocol:
+- When all required implementation is complete and build is passing, include exact token `ALL_TASKS_DONE` in your submission.
+
+FSM JSON:
+{
+  "meta": {
+    "app": "Team_chat-Slack_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "SEND_MESSAGE_SUCCESS",
+      "SCHEDULE_MESSAGE_SUCCESS",
+      "CREATE_CHANNEL_SUCCESS",
+      "CREATE_DM_SUCCESS",
+      "UPDATE_PROFILE_SUCCESS"
+    ],
+    "global_signature_schema": {
+      "teams": "array<object>|null",
+      "channels": "array<object>|null",
+      "direct_messages": "array<object>|null",
+      "current_user_id": "string|null"
+    },
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 15,
+        "max": 25
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false,
+        "strict": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover"
+      ],
+      "home_nav_coverage": "each",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 3,
+        "two_step_parity": true,
+        "allowed_shapes": [
+          "text_inputs",
+          "checkboxes"
+        ],
+        "require_open_filtered": true
+      },
+      "policy": {
+        "home_policy": "navigation_first",
+        "back_policy": "recommended",
+        "interceptors": {
+          "cookie_placement": "home",
+          "permission_placement": "first_relevant_non_home"
+        }
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "cookie_consent_given": "boolean|null",
+        "workspace_list_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_HOME_ACCEPT_COOKIES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cookie_consent_given",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_WORKSPACE_LIST_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "WORKSPACE_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-workspaces"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_WORKSPACE_LIST_HOVER",
+          "name": "select",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "WORKSPACE_LIST",
+          "parameters": {
+            "widget": "hover_menu"
+          },
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#top-nav-workspaces"
+            },
+            {
+              "op": "click",
+              "selector": "#top-nav-workspaces .menu-all-workspaces",
+              "ui_elements": {
+                "container": "#top-nav-workspaces",
+                "options": [
+                  {
+                    "value": "all_workspaces",
+                    "selector": "#top-nav-workspaces .menu-all-workspaces"
+                  },
+                  {
+                    "value": "recent",
+                    "selector": "#top-nav-workspaces .menu-recent"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_PROFILE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "PROFILE_SETTINGS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-profile"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "WORKSPACE_LIST",
+      "signature_schema": {
+        "teams": "array<object>|null",
+        "workspace_list_filters_applied": "boolean|null",
+        "workspace_list_has_searched": "boolean|null",
+        "workspace_list_viewport_anchor_id": "string|null",
+        "matched_team_id": "string|null",
+        "selected_team_id": "string|null",
+        "location_permission_granted": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_WORKSPACE_LOCATION_PERMISSION_ALLOW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "WORKSPACE_LIST",
+          "to": "WORKSPACE_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "ACT_WORKSPACE_APPLY_FILTERS",
+          "name": "type",
+          "is_navigation": false,
+          "from": "WORKSPACE_LIST",
+          "to": "WORKSPACE_LIST",
+          "parameters": {
+            "filter_value": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.workspace_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#workspace-filter-text"
+            },
+            {
+              "op": "type_text",
+              "selector": "#workspace-filter-text",
+              "text": "{filter_value}"
+            },
+            {
+              "op": "click",
+              "selector": "#workspace-filter-include-joined"
+            }
+          ]
+        },
+        {
+          "id": "ACT_WORKSPACE_OPEN_FILTERED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "WORKSPACE_LIST",
+          "to": "CHANNEL_LIST",
+          "parameters": {
+            "team_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.workspace_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.workspace_list_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_team_id",
+              "value_ref": "{team_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#workspace-list .workspace-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_WORKSPACE_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "WORKSPACE_LIST",
+          "to": "WORKSPACE_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_team_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.workspace_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#workspace-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#workspace-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_WORKSPACE_OPEN_MATCHED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "WORKSPACE_LIST",
+          "to": "CHANNEL_LIST",
+          "parameters": {
+            "team_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_team_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.workspace_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_team_id",
+              "value_ref": "{team_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.workspace_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#workspace-list .workspace-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_WORKSPACE_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "WORKSPACE_LIST",
+          "to": "WORKSPACE_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.workspace_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#workspace-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#workspace-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_WORKSPACE_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "WORKSPACE_LIST",
+          "to": "CHANNEL_LIST",
+          "parameters": {
+            "team_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.workspace_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_team_id",
+              "value_ref": "{team_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.workspace_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#workspace-list .workspace-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_WORKSPACE_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "WORKSPACE_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHANNEL_LIST",
+      "signature_schema": {
+        "channels": "array<object>|null",
+        "direct_messages": "array<object>|null",
+        "selected_team_id": "string|null",
+        "channel_list_filters_applied": "boolean|null",
+        "channel_list_has_searched": "boolean|null",
+        "channel_list_viewport_anchor_id": "string|null",
+        "matched_channel_id": "string|null",
+        "selected_channel_id": "string|null",
+        "selected_dm_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CHANNEL_APPLY_FILTERS",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CHANNEL_LIST",
+          "to": "CHANNEL_LIST",
+          "parameters": {
+            "filter_value": "{filter_value}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.channel_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#channel-filter-text"
+            },
+            {
+              "op": "type_text",
+              "selector": "#channel-filter-text",
+              "text": "{filter_value}"
+            },
+            {
+              "op": "click",
+              "selector": "#channel-filter-include-muted"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNEL_OPEN_FILTERED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHANNEL_LIST",
+          "to": "CHANNEL_VIEW",
+          "parameters": {
+            "channel_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.channel_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.channel_list_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_channel_id",
+              "value_ref": "{channel_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#channel-list .channel-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNEL_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "CHANNEL_LIST",
+          "to": "CHANNEL_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_channel_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.channel_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#channel-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#channel-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNEL_OPEN_MATCHED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHANNEL_LIST",
+          "to": "CHANNEL_VIEW",
+          "parameters": {
+            "channel_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_channel_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.channel_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_channel_id",
+              "value_ref": "{channel_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.channel_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#channel-list .channel-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNEL_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CHANNEL_LIST",
+          "to": "CHANNEL_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.channel_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#channel-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#channel-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNEL_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHANNEL_LIST",
+          "to": "CHANNEL_VIEW",
+          "parameters": {
+            "channel_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.channel_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_channel_id",
+              "value_ref": "{channel_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.channel_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#channel-list .channel-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNEL_GO_NEW_CHANNEL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHANNEL_LIST",
+          "to": "CREATE_CHANNEL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#button-create-channel"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNEL_GO_DM_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHANNEL_LIST",
+          "to": "DM_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-dm"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNEL_BACK_WORKSPACE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHANNEL_LIST",
+          "to": "WORKSPACE_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-workspaces"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHANNEL_VIEW",
+      "signature_schema": {
+        "channels": "array<object>|null",
+        "selected_channel_id": "string|null",
+        "channel_view_has_searched": "boolean|null",
+        "channel_view_viewport_anchor_id": "string|null",
+        "matched_message_id": "string|null",
+        "selected_message_id": "string|null",
+        "compose_message_text": "string|null",
+        "compose_has_attachment": "boolean|null",
+        "compose_is_important": "boolean|null",
+        "scheduled_send_datetime": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CHANNEL_VIEW_SEARCH_MESSAGES",
+          "name": "search",
+          "is_navigation": false,
+          "from": "CHANNEL_VIEW",
+          "to": "CHANNEL_VIEW",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_message_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.channel_view_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#channel-search-messages-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#channel-search-messages-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNEL_VIEW_OPEN_MATCHED_MESSAGE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHANNEL_VIEW",
+          "to": "MESSAGE_THREAD",
+          "parameters": {
+            "message_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_message_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.channel_view_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_message_id",
+              "value_ref": "{message_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.channel_view_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-list .message-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNEL_VIEW_SCROLL_MESSAGE_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CHANNEL_VIEW",
+          "to": "CHANNEL_VIEW",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.channel_view_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#message-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNEL_VIEW_OPEN_ANY_MESSAGE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHANNEL_VIEW",
+          "to": "MESSAGE_THREAD",
+          "parameters": {
+            "message_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.channel_view_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_message_id",
+              "value_ref": "{message_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.channel_view_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-list .message-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNEL_VIEW_TYPE_MESSAGE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CHANNEL_VIEW",
+          "to": "CHANNEL_VIEW",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.compose_message_text",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-composer-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#message-composer-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNEL_VIEW_TOGGLE_IMPORTANT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CHANNEL_VIEW",
+          "to": "CHANNEL_VIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.compose_is_important",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#composer-toggle-important"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNEL_VIEW_ATTACH_FILE",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CHANNEL_VIEW",
+          "to": "CHANNEL_VIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.compose_has_attachment",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#composer-attach-file"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNEL_VIEW_OPEN_SCHEDULE_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHANNEL_VIEW",
+          "to": "SCHEDULE_MESSAGE_FORM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.compose_message_text",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#composer-schedule-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNEL_VIEW_SEND_MESSAGE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHANNEL_VIEW",
+          "to": "SEND_MESSAGE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.compose_message_text",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.compose_message_text"
+            },
+            {
+              "op": "clear",
+              "path": "$.compose_has_attachment"
+            },
+            {
+              "op": "clear",
+              "path": "$.compose_is_important"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#composer-send-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNEL_VIEW_BACK_CHANNEL_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHANNEL_VIEW",
+          "to": "CHANNEL_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-channel-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MESSAGE_THREAD",
+      "signature_schema": {
+        "selected_message_id": "string|null",
+        "reply_text": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_THREAD_TYPE_REPLY",
+          "name": "type",
+          "is_navigation": false,
+          "from": "MESSAGE_THREAD",
+          "to": "MESSAGE_THREAD",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.reply_text",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#thread-reply-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#thread-reply-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_THREAD_SEND_REPLY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGE_THREAD",
+          "to": "SEND_MESSAGE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.reply_text",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.reply_text"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#thread-send-reply"
+            }
+          ]
+        },
+        {
+          "id": "ACT_THREAD_BACK_CHANNEL_VIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGE_THREAD",
+          "to": "CHANNEL_VIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-channel-view"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SEND_MESSAGE_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SEND_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SEND_MESSAGE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SEND_SUCCESS_BACK_CHANNEL_VIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SEND_MESSAGE_SUCCESS",
+          "to": "CHANNEL_VIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-channel-view"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SCHEDULE_MESSAGE_FORM",
+      "signature_schema": {
+        "compose_message_text": "string|null",
+        "schedule_date_time": "string|null",
+        "schedule_timezone": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SCHEDULE_PICK_DATE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SCHEDULE_MESSAGE_FORM",
+          "to": "SCHEDULE_MESSAGE_FORM",
+          "parameters": {
+            "widget": "date_picker",
+            "year": 2025,
+            "month": 10,
+            "day": 22,
+            "hour": 10,
+            "minute": 30
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.schedule_date_time",
+              "value": "2025-10-22T10:30:00Z"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#date-picker1"
+            },
+            {
+              "op": "click",
+              "selector": ".ym-vertical"
+            },
+            {
+              "op": "click",
+              "selector": ".year-2025"
+            },
+            {
+              "op": "click",
+              "selector": ".month-10"
+            },
+            {
+              "op": "click",
+              "selector": ".day-22"
+            },
+            {
+              "op": "click",
+              "selector": "#date-picker-hour"
+            },
+            {
+              "op": "click",
+              "selector": ".hour-10"
+            },
+            {
+              "op": "click",
+              "selector": "#date-picker-minute"
+            },
+            {
+              "op": "click",
+              "selector": ".minute-30"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SCHEDULE_SELECT_TIMEZONE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SCHEDULE_MESSAGE_FORM",
+          "to": "SCHEDULE_MESSAGE_FORM",
+          "parameters": {
+            "widget": "dropdown",
+            "timezone": "UTC"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.schedule_timezone",
+              "value": "UTC"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#timezone-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#timezone-option-utc",
+              "ui_elements": {
+                "container": "#timezone-dropdown",
+                "options": [
+                  {
+                    "value": "UTC",
+                    "selector": "#timezone-option-utc"
+                  },
+                  {
+                    "value": "PST",
+                    "selector": "#timezone-option-pst"
+                  },
+                  {
+                    "value": "EST",
+                    "selector": "#timezone-option-est"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_SCHEDULE_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SCHEDULE_MESSAGE_FORM",
+          "to": "SCHEDULE_MESSAGE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.compose_message_text",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.schedule_date_time",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#schedule-submit-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SCHEDULE_BACK_CHANNEL_VIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SCHEDULE_MESSAGE_FORM",
+          "to": "CHANNEL_VIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-channel-view"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SCHEDULE_MESSAGE_SUCCESS",
+      "signature_schema": {
+        "scheduled_message_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SCHEDULE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SCHEDULE_MESSAGE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SCHEDULE_SUCCESS_BACK_CHANNEL_VIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SCHEDULE_MESSAGE_SUCCESS",
+          "to": "CHANNEL_VIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-channel-view"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_CHANNEL",
+      "signature_schema": {
+        "new_channel_name": "string|null",
+        "new_channel_description": "string|null",
+        "new_channel_privacy": "string|null",
+        "new_channel_invite_ids": "array<string>|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CREATE_CHANNEL_TYPE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CREATE_CHANNEL",
+          "to": "CREATE_CHANNEL",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_channel_name",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#channel-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#channel-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CREATE_CHANNEL_TYPE_DESCRIPTION",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CREATE_CHANNEL",
+          "to": "CREATE_CHANNEL",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_channel_description",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#channel-description-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#channel-description-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CREATE_CHANNEL_SELECT_PRIVACY",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CREATE_CHANNEL",
+          "to": "CREATE_CHANNEL",
+          "parameters": {
+            "widget": "dropdown",
+            "privacy": "public"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_channel_privacy",
+              "value": "public"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#channel-privacy-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#privacy-option-public",
+              "ui_elements": {
+                "container": "#channel-privacy-dropdown",
+                "options": [
+                  {
+                    "value": "public",
+                    "selector": "#privacy-option-public"
+                  },
+                  {
+                    "value": "private",
+                    "selector": "#privacy-option-private"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_CREATE_CHANNEL_ADD_INVITE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CREATE_CHANNEL",
+          "to": "CREATE_CHANNEL",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "append_unique",
+              "path": "$.new_channel_invite_ids",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#channel-invite-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#channel-invite-input",
+              "text": "{input_text}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CREATE_CHANNEL_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_CHANNEL",
+          "to": "CREATE_CHANNEL_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.new_channel_name",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-channel-submit"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CREATE_CHANNEL_BACK_CHANNEL_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_CHANNEL",
+          "to": "CHANNEL_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-channel-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_CHANNEL_SUCCESS",
+      "signature_schema": {
+        "created_channel_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CREATE_CHANNEL_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_CHANNEL_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CREATE_CHANNEL_SUCCESS_GO_CHANNEL_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_CHANNEL_SUCCESS",
+          "to": "CHANNEL_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-channel-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DM_LIST",
+      "signature_schema": {
+        "direct_messages": "array<object>|null",
+        "dm_list_filters_applied": "boolean|null",
+        "dm_list_has_searched": "boolean|null",
+        "dm_list_viewport_anchor_id": "string|null",
+        "matched_dm_id": "string|null",
+        "selected_dm_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_DM_APPLY_FILTERS",
+          "name": "type",
+          "is_navigation": false,
+          "from": "DM_LIST",
+          "to": "DM_LIST",
+          "parameters": {
+            "filter_value": "{filter_value}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.dm_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dm-filter-text"
+            },
+            {
+              "op": "type_text",
+              "selector": "#dm-filter-text",
+              "text": "{filter_value}"
+            },
+            {
+              "op": "click",
+              "selector": "#dm-filter-include-recent"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DM_OPEN_FILTERED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DM_LIST",
+          "to": "DM_VIEW",
+          "parameters": {
+            "dm_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.dm_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.dm_list_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_dm_id",
+              "value_ref": "{dm_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dm-list .dm-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DM_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "DM_LIST",
+          "to": "DM_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_dm_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.dm_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dm-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#dm-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DM_OPEN_MATCHED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DM_LIST",
+          "to": "DM_VIEW",
+          "parameters": {
+            "dm_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_dm_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.dm_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_dm_id",
+              "value_ref": "{dm_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.dm_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dm-list .dm-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DM_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "DM_LIST",
+          "to": "DM_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.dm_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dm-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#dm-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DM_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DM_LIST",
+          "to": "DM_VIEW",
+          "parameters": {
+            "dm_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.dm_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_dm_id",
+              "value_ref": "{dm_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.dm_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dm-list .dm-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DM_GO_CREATE_DM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DM_LIST",
+          "to": "CREATE_DM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#button-new-dm"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DM_BACK_CHANNEL_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DM_LIST",
+          "to": "CHANNEL_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-channel-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DM_VIEW",
+      "signature_schema": {
+        "selected_dm_id": "string|null",
+        "dm_compose_text": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_DM_VIEW_TYPE_MESSAGE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "DM_VIEW",
+          "to": "DM_VIEW",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.dm_compose_text",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dm-composer-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#dm-composer-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DM_VIEW_SEND_MESSAGE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DM_VIEW",
+          "to": "SEND_MESSAGE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.dm_compose_text",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.dm_compose_text"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dm-send-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DM_VIEW_BACK_DM_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DM_VIEW",
+          "to": "DM_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-dm-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_DM",
+      "signature_schema": {
+        "dm_recipient_ids": "array<string>|null",
+        "dm_initial_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CREATE_DM_ADD_RECIPIENT",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CREATE_DM",
+          "to": "CREATE_DM",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "append_unique",
+              "path": "$.dm_recipient_ids",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dm-recipient-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#dm-recipient-input",
+              "text": "{input_text}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CREATE_DM_TYPE_INITIAL_MESSAGE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CREATE_DM",
+          "to": "CREATE_DM",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.dm_initial_message",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dm-initial-message-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#dm-initial-message-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CREATE_DM_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_DM",
+          "to": "CREATE_DM_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.dm_initial_message",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-dm-submit"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CREATE_DM_BACK_DM_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_DM",
+          "to": "DM_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-dm-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_DM_SUCCESS",
+      "signature_schema": {
+        "created_dm_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CREATE_DM_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_DM_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CREATE_DM_SUCCESS_GO_DM_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_DM_SUCCESS",
+          "to": "DM_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-dm-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROFILE_SETTINGS",
+      "signature_schema": {
+        "profile_display_name": "string|null",
+        "profile_title": "string|null",
+        "profile_timezone": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PROFILE_TYPE_DISPLAY_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PROFILE_SETTINGS",
+          "to": "PROFILE_SETTINGS",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.profile_display_name",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-display-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#profile-display-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_TYPE_TITLE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PROFILE_SETTINGS",
+          "to": "PROFILE_SETTINGS",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.profile_title",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-title-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#profile-title-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_SELECT_TIMEZONE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PROFILE_SETTINGS",
+          "to": "PROFILE_SETTINGS",
+          "parameters": {
+            "widget": "dropdown",
+            "timezone": "UTC"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.profile_timezone",
+              "value": "UTC"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-timezone-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#profile-timezone-utc",
+              "ui_elements": {
+                "container": "#profile-timezone-dropdown",
+                "options": [
+                  {
+                    "value": "UTC",
+                    "selector": "#profile-timezone-utc"
+                  },
+                  {
+                    "value": "PST",
+                    "selector": "#profile-timezone-pst"
+                  },
+                  {
+                    "value": "EST",
+                    "selector": "#profile-timezone-est"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_SAVE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_SETTINGS",
+          "to": "UPDATE_PROFILE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.profile_display_name",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-save-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_SETTINGS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UPDATE_PROFILE_SUCCESS",
+      "signature_schema": {
+        "profile_updated": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_UPDATE_PROFILE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "UPDATE_PROFILE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.profile_updated",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_UPDATE_PROFILE_SUCCESS_BACK_PROFILE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "UPDATE_PROFILE_SUCCESS",
+          "to": "PROFILE_SETTINGS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-profile"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+

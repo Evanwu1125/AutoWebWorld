@@ -1,0 +1,40 @@
+# Visual Design Style Guide - GitHub Theme
+
+## Theme Overview
+- **Reference App**: GitHub
+- **Target Audience**: Developers, Engineers, Project Managers, Open Source Contributors.
+- **Visual Tone**: Professional, Clean, Functional, Developer-centric. Focus on information density and clarity.
+
+## Color Scheme
+- **Primary Brand**: #24292e (Dark Gray/Black - Navbar, Headings)
+- **Secondary Brand**: #0366d6 (GitHub Blue - Links, Primary Buttons sometimes)
+- **Action Green**: #2ea44f (Success, New Issue, New Repo, Merge PR)
+- **Background**: #ffffff (Card content), #f6f8fa (Page background)
+- **Text**: #24292e (Primary), #586069 (Secondary/Meta info)
+- **Border**: #e1e4e8 (Separators, Card borders)
+- **Danger**: #d73a49 (Close issue, Delete)
+
+## Typography
+- **Font Family**: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji".
+- **Monospace**: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace (for code snippets, commit hashes).
+- **Sizes**: 14px base, 16px headings, 32px hero text.
+
+## Layout & Components
+- **Navigation**: Dark top bar with white text/icons.
+- **Containers**: Centered max-width (e.g., 1280px) or fluid with sidebars.
+- **Cards**: White background, 1px solid #e1e4e8 border, rounded corners (6px).
+- **Buttons**:
+  - Primary: Green (#2ea44f) with white text, rounded.
+  - Secondary: Gray background (#fafbfc), border (#1b1f2326).
+- **Lists**: Separated by borders, hover effects on rows (#f6f8fa).
+- **Badges/Labels**: Rounded pills, varied colors (bug=red, enhancement=blue).
+
+## Image Usage
+- **Avatars**: Circular user images (essential for social coding feel).
+- **Repo Placeholders**: Identicons or tech logos if applicable.
+- **Hero**: On Home page, use a developer-focused background (code, abstract tech).
+
+## Interactive Elements
+- **Hover Effects**: Subtle background changes on list items.
+- **Transitions**: Fast, snappy (0.2s).
+- **Modals**: Clean, centered, backdrop blur for focus (Permissions/Cookies).

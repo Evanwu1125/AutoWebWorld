@@ -1,0 +1,3184 @@
+{
+  "meta": {
+    "app": "Code Hosting-Bitbucket_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "CREATE_REPO_SUCCESS",
+      "CREATE_PR_SUCCESS",
+      "MERGE_PR_SUCCESS",
+      "CREATE_PIPELINE_SUCCESS",
+      "INVITE_USER_SUCCESS"
+    ],
+    "global_signature_schema": {
+      "location_permission_granted": "boolean|null",
+      "current_user_id": "string|null",
+      "repositories": "array<object>|null",
+      "pull_requests": "array<object>|null",
+      "pipelines": "array<object>|null",
+      "workspace_members": "array<object>|null"
+    },
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 20,
+        "max": 35
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover",
+        "menu"
+      ],
+      "home_nav_coverage": "any",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 4,
+        "two_step_parity": false,
+        "allowed_shapes": [
+          "checkboxes",
+          "sliders",
+          "sort"
+        ]
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "cookie_consent_given": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_HOME_ACCEPT_COOKIES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cookie_consent_given",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ],
+          "interceptor_type": "cookie"
+        },
+        {
+          "id": "ACT_HOME_GO_TO_REPOS_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "REPO_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-repositories-direct"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_REPOS_HOVER",
+          "name": "select",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "REPO_LIST",
+          "parameters": {
+            "widget": "hover_menu"
+          },
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#topnav-workspace-menu"
+            },
+            {
+              "op": "click",
+              "selector": "#topnav-workspace-menu .menu-repositories",
+              "ui_elements": {
+                "container": "#topnav-workspace-menu",
+                "options": [
+                  {
+                    "value": "repositories",
+                    "selector": "#topnav-workspace-menu .menu-repositories"
+                  },
+                  {
+                    "value": "pull_requests",
+                    "selector": "#topnav-workspace-menu .menu-pull-requests"
+                  },
+                  {
+                    "value": "pipelines",
+                    "selector": "#topnav-workspace-menu .menu-pipelines"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_REPOS_MENU",
+          "name": "select",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "REPO_LIST",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#side-menu-toggle"
+            },
+            {
+              "op": "click",
+              "selector": "#side-menu-item-repositories",
+              "ui_elements": {
+                "container": "#side-menu",
+                "options": [
+                  {
+                    "value": "repositories",
+                    "selector": "#side-menu-item-repositories"
+                  },
+                  {
+                    "value": "pull_requests",
+                    "selector": "#side-menu-item-pull-requests"
+                  },
+                  {
+                    "value": "pipelines",
+                    "selector": "#side-menu-item-pipelines"
+                  },
+                  {
+                    "value": "workspace_members",
+                    "selector": "#side-menu-item-workspace-members"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_PR_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "PR_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-pull-requests-direct"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_PIPELINES",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "PIPELINE_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-pipelines-direct"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REPO_LIST",
+      "signature_schema": {
+        "location_permission_granted": "boolean|null",
+        "repo_list_has_searched": "boolean|null",
+        "matched_repo_id": "string|null",
+        "repo_list_viewport_anchor_id": "string|null",
+        "selected_repo_id": "string|null",
+        "repo_list_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_REPO_LIST_GRANT_LOCATION",
+          "name": "click",
+          "is_navigation": false,
+          "from": "REPO_LIST",
+          "to": "REPO_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ],
+          "interceptor_type": "permission",
+          "permission_scope": "location"
+        },
+        {
+          "id": "ACT_REPO_LIST_FILTER_OWNER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "REPO_LIST",
+          "to": "REPO_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.repo_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-own-repos-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REPO_LIST_FILTER_PRIVATE_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "REPO_LIST",
+          "to": "REPO_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.repo_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-private-repos-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REPO_LIST_FILTER_ACTIVITY_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "REPO_LIST",
+          "to": "REPO_LIST",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.repo_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#activity-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#activity-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REPO_LIST_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "REPO_LIST",
+          "to": "REPO_LIST",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.repo_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#repo-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#sort-option-recent",
+              "ui_elements": {
+                "container": "#repo-sort-dropdown",
+                "options": [
+                  {
+                    "value": "recent",
+                    "selector": "#sort-option-recent"
+                  },
+                  {
+                    "value": "name",
+                    "selector": "#sort-option-name"
+                  },
+                  {
+                    "value": "owner",
+                    "selector": "#sort-option-owner"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_REPO_LIST_OPEN_FILTERED_REPO",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REPO_LIST",
+          "to": "REPO_DETAIL",
+          "parameters": {
+            "repo_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.repo_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_repo_id",
+              "value_ref": "{repo_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.repo_list_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#repo-list .repo-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REPO_LIST_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "REPO_LIST",
+          "to": "REPO_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_repo_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.repo_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#repo-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#repo-search-input",
+              "text": "{ITEM_ANY}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REPO_LIST_OPEN_MATCHED_REPO",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REPO_LIST",
+          "to": "REPO_DETAIL",
+          "parameters": {
+            "repo_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_repo_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.repo_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_repo_id",
+              "value_ref": "{repo_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.repo_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#repo-list .repo-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REPO_LIST_SCROLL_REPO_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "REPO_LIST",
+          "to": "REPO_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.repo_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#repo-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#repo-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REPO_LIST_OPEN_ANY_REPO",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REPO_LIST",
+          "to": "REPO_DETAIL",
+          "parameters": {
+            "repo_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.repo_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_repo_id",
+              "value_ref": "{repo_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.repo_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#repo-list .repo-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REPO_LIST_GO_TO_CREATE_REPO",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REPO_LIST",
+          "to": "CREATE_REPO_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-repo-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REPO_LIST_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REPO_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#global-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REPO_DETAIL",
+      "signature_schema": {
+        "selected_repo_id": "string|null",
+        "selected_pipeline_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_REPO_DETAIL_GO_TO_PR_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REPO_DETAIL",
+          "to": "REPO_PR_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_repo_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#repo-nav-pull-requests"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REPO_DETAIL_GO_TO_PIPELINES",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REPO_DETAIL",
+          "to": "REPO_PIPELINES",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_repo_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#repo-nav-pipelines"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REPO_DETAIL_GO_TO_SETTINGS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REPO_DETAIL",
+          "to": "REPO_SETTINGS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_repo_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#repo-nav-settings"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REPO_DETAIL_BACK_TO_REPO_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REPO_DETAIL",
+          "to": "REPO_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#repo-detail-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_REPO_FORM",
+      "signature_schema": {
+        "repo_name": "string|null",
+        "repo_access_level": "string|null",
+        "repo_description": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CREATE_REPO_TYPE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CREATE_REPO_FORM",
+          "to": "CREATE_REPO_FORM",
+          "parameters": {
+            "input_text": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.repo_name",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#repo-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#repo-name-input",
+              "text": "{ITEM_ANY}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CREATE_REPO_TYPE_DESCRIPTION",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CREATE_REPO_FORM",
+          "to": "CREATE_REPO_FORM",
+          "parameters": {
+            "description_text": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.repo_description",
+              "value_ref": "{description_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#repo-description-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#repo-description-input",
+              "text": "{ITEM_ANY}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CREATE_REPO_SELECT_ACCESS",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CREATE_REPO_FORM",
+          "to": "CREATE_REPO_FORM",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.repo_access_level",
+              "value": "private"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#repo-access-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#repo-access-private",
+              "ui_elements": {
+                "container": "#repo-access-dropdown",
+                "options": [
+                  {
+                    "value": "private",
+                    "selector": "#repo-access-private"
+                  },
+                  {
+                    "value": "public",
+                    "selector": "#repo-access-public"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_CREATE_REPO_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_REPO_FORM",
+          "to": "CREATE_REPO_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.repo_name",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.repo_access_level",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-repo-submit"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CREATE_REPO_BACK_TO_REPO_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_REPO_FORM",
+          "to": "REPO_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-repo-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_REPO_REVIEW",
+      "signature_schema": {
+        "repo_name": "string|null",
+        "repo_access_level": "string|null",
+        "repo_description": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CREATE_REPO_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_REPO_REVIEW",
+          "to": "CREATE_REPO_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.repo_name",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-repo-confirm"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CREATE_REPO_REVIEW_BACK_TO_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_REPO_REVIEW",
+          "to": "CREATE_REPO_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-repo-review-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_REPO_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CREATE_REPO_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_REPO_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-repo-success-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PR_LIST",
+      "signature_schema": {
+        "pr_list_has_searched": "boolean|null",
+        "matched_pr_id": "string|null",
+        "pr_list_viewport_anchor_id": "string|null",
+        "selected_pr_id": "string|null",
+        "pr_list_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PR_LIST_FILTER_OPEN_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PR_LIST",
+          "to": "PR_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.pr_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-open-pr-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PR_LIST_FILTER_MINE_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PR_LIST",
+          "to": "PR_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.pr_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-my-pr-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PR_LIST_FILTER_UPDATED_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PR_LIST",
+          "to": "PR_LIST",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.pr_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pr-updated-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#pr-updated-slider",
+              "to_value": "left"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PR_LIST_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PR_LIST",
+          "to": "PR_LIST",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.pr_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pr-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#pr-sort-option-recent-desc",
+              "ui_elements": {
+                "container": "#pr-sort-dropdown",
+                "options": [
+                  {
+                    "value": "recent",
+                    "selector": "#pr-sort-option-recent-desc"
+                  },
+                  {
+                    "value": "oldest",
+                    "selector": "#pr-sort-option-oldest-inc"
+                  },
+                  {
+                    "value": "title",
+                    "selector": "#pr-sort-option-title-inc"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_PR_LIST_OPEN_FILTERED_PR",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PR_LIST",
+          "to": "PR_DETAIL",
+          "parameters": {
+            "pr_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.pr_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_pr_id",
+              "value_ref": "{pr_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.pr_list_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pr-list .pr-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PR_LIST_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "PR_LIST",
+          "to": "PR_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_pr_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.pr_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pr-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#pr-search-input",
+              "text": "{ITEM_ANY}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PR_LIST_OPEN_MATCHED_PR",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PR_LIST",
+          "to": "PR_DETAIL",
+          "parameters": {
+            "pr_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_pr_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.pr_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_pr_id",
+              "value_ref": "{pr_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.pr_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pr-list .pr-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PR_LIST_SCROLL_PR_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PR_LIST",
+          "to": "PR_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.pr_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pr-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#pr-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PR_LIST_OPEN_ANY_PR",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PR_LIST",
+          "to": "PR_DETAIL",
+          "parameters": {
+            "pr_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.pr_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_pr_id",
+              "value_ref": "{pr_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.pr_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pr-list .pr-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PR_LIST_GO_TO_CREATE_PR",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PR_LIST",
+          "to": "CREATE_PR_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-pr-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PR_LIST_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PR_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pr-list-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PR_DETAIL",
+      "signature_schema": {
+        "selected_pr_id": "string|null",
+        "merge_commit_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PR_DETAIL_GO_TO_MERGE_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PR_DETAIL",
+          "to": "MERGE_PR_FORM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_pr_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#merge-pr-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PR_DETAIL_BACK_TO_PR_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PR_DETAIL",
+          "to": "PR_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pr-detail-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_PR_FORM",
+      "signature_schema": {
+        "pr_title": "string|null",
+        "pr_description": "string|null",
+        "pr_source_branch": "string|null",
+        "pr_target_branch": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CREATE_PR_TYPE_TITLE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CREATE_PR_FORM",
+          "to": "CREATE_PR_FORM",
+          "parameters": {
+            "title_text": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.pr_title",
+              "value_ref": "{title_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pr-title-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#pr-title-input",
+              "text": "{ITEM_ANY}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CREATE_PR_TYPE_DESCRIPTION",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CREATE_PR_FORM",
+          "to": "CREATE_PR_FORM",
+          "parameters": {
+            "description_text": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.pr_description",
+              "value_ref": "{description_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pr-description-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#pr-description-input",
+              "text": "{ITEM_ANY}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CREATE_PR_SELECT_SOURCE_BRANCH",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CREATE_PR_FORM",
+          "to": "CREATE_PR_FORM",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.pr_source_branch",
+              "value": "feature"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pr-source-branch-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#branch-option-feature",
+              "ui_elements": {
+                "container": "#pr-source-branch-dropdown",
+                "options": [
+                  {
+                    "value": "main",
+                    "selector": "#branch-option-main"
+                  },
+                  {
+                    "value": "develop",
+                    "selector": "#branch-option-develop"
+                  },
+                  {
+                    "value": "feature",
+                    "selector": "#branch-option-feature"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_CREATE_PR_SELECT_TARGET_BRANCH",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CREATE_PR_FORM",
+          "to": "CREATE_PR_FORM",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.pr_target_branch",
+              "value": "main"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pr-target-branch-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#target-branch-main",
+              "ui_elements": {
+                "container": "#pr-target-branch-dropdown",
+                "options": [
+                  {
+                    "value": "main",
+                    "selector": "#target-branch-main"
+                  },
+                  {
+                    "value": "develop",
+                    "selector": "#target-branch-develop"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_CREATE_PR_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_PR_FORM",
+          "to": "CREATE_PR_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.pr_title",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.pr_source_branch",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.pr_target_branch",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-pr-submit"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CREATE_PR_BACK_TO_PR_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_PR_FORM",
+          "to": "PR_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-pr-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_PR_REVIEW",
+      "signature_schema": {
+        "pr_title": "string|null",
+        "pr_source_branch": "string|null",
+        "pr_target_branch": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CREATE_PR_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_PR_REVIEW",
+          "to": "CREATE_PR_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.pr_title",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-pr-confirm"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CREATE_PR_REVIEW_BACK_TO_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_PR_REVIEW",
+          "to": "CREATE_PR_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-pr-review-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_PR_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CREATE_PR_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_PR_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-pr-success-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MERGE_PR_FORM",
+      "signature_schema": {
+        "selected_pr_id": "string|null",
+        "merge_strategy": "string|null",
+        "merge_commit_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MERGE_PR_SELECT_STRATEGY",
+          "name": "select",
+          "is_navigation": false,
+          "from": "MERGE_PR_FORM",
+          "to": "MERGE_PR_FORM",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.merge_strategy",
+              "value": "squash"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#merge-strategy-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#merge-strategy-squash",
+              "ui_elements": {
+                "container": "#merge-strategy-dropdown",
+                "options": [
+                  {
+                    "value": "merge_commit",
+                    "selector": "#merge-strategy-merge"
+                  },
+                  {
+                    "value": "squash",
+                    "selector": "#merge-strategy-squash"
+                  },
+                  {
+                    "value": "fast_forward",
+                    "selector": "#merge-strategy-ff"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_MERGE_PR_TYPE_COMMIT_MESSAGE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "MERGE_PR_FORM",
+          "to": "MERGE_PR_FORM",
+          "parameters": {
+            "commit_message": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.merge_commit_message",
+              "value_ref": "{commit_message}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#merge-commit-message-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#merge-commit-message-input",
+              "text": "{ITEM_ANY}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MERGE_PR_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MERGE_PR_FORM",
+          "to": "MERGE_PR_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.merge_strategy",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.merge_commit_message",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.selected_pr_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#merge-pr-submit"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MERGE_PR_BACK_TO_PR_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MERGE_PR_FORM",
+          "to": "PR_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#merge-pr-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MERGE_PR_REVIEW",
+      "signature_schema": {
+        "selected_pr_id": "string|null",
+        "merge_strategy": "string|null",
+        "merge_commit_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MERGE_PR_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MERGE_PR_REVIEW",
+          "to": "MERGE_PR_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_pr_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#merge-pr-confirm"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MERGE_PR_REVIEW_BACK_TO_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MERGE_PR_REVIEW",
+          "to": "MERGE_PR_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#merge-pr-review-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MERGE_PR_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MERGE_PR_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MERGE_PR_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#merge-pr-success-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PIPELINE_LIST",
+      "signature_schema": {
+        "pipeline_list_filters_applied": "boolean|null",
+        "pipeline_list_has_searched": "boolean|null",
+        "matched_pipeline_id": "string|null",
+        "pipeline_list_viewport_anchor_id": "string|null",
+        "selected_pipeline_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PIPELINE_LIST_FILTER_FAILED_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PIPELINE_LIST",
+          "to": "PIPELINE_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.pipeline_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-failed-pipelines-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PIPELINE_LIST_FILTER_RECENT_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PIPELINE_LIST",
+          "to": "PIPELINE_LIST",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.pipeline_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pipeline-recent-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#pipeline-recent-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PIPELINE_LIST_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PIPELINE_LIST",
+          "to": "PIPELINE_LIST",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.pipeline_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pipeline-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#pipeline-sort-option-recent",
+              "ui_elements": {
+                "container": "#pipeline-sort-dropdown",
+                "options": [
+                  {
+                    "value": "recent",
+                    "selector": "#pipeline-sort-option-recent"
+                  },
+                  {
+                    "value": "status",
+                    "selector": "#pipeline-sort-option-status"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_PIPELINE_LIST_OPEN_FILTERED_PIPELINE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PIPELINE_LIST",
+          "to": "PIPELINE_DETAIL",
+          "parameters": {
+            "pipeline_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.pipeline_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_pipeline_id",
+              "value_ref": "{pipeline_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.pipeline_list_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pipeline-list .pipeline-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PIPELINE_LIST_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "PIPELINE_LIST",
+          "to": "PIPELINE_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_pipeline_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.pipeline_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pipeline-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#pipeline-search-input",
+              "text": "{ITEM_ANY}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PIPELINE_LIST_OPEN_MATCHED_PIPELINE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PIPELINE_LIST",
+          "to": "PIPELINE_DETAIL",
+          "parameters": {
+            "pipeline_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_pipeline_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.pipeline_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_pipeline_id",
+              "value_ref": "{pipeline_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.pipeline_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pipeline-list .pipeline-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PIPELINE_LIST_SCROLL_PIPELINE_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PIPELINE_LIST",
+          "to": "PIPELINE_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.pipeline_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pipeline-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#pipeline-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PIPELINE_LIST_OPEN_ANY_PIPELINE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PIPELINE_LIST",
+          "to": "PIPELINE_DETAIL",
+          "parameters": {
+            "pipeline_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.pipeline_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_pipeline_id",
+              "value_ref": "{pipeline_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.pipeline_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pipeline-list .pipeline-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PIPELINE_LIST_GO_TO_CONFIGURE_PIPELINE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PIPELINE_LIST",
+          "to": "PIPELINE_CONFIG_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#configure-pipeline-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PIPELINE_LIST_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PIPELINE_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pipeline-list-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PIPELINE_DETAIL",
+      "signature_schema": {
+        "selected_pipeline_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PIPELINE_DETAIL_BACK_TO_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PIPELINE_DETAIL",
+          "to": "PIPELINE_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pipeline-detail-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PIPELINE_CONFIG_FORM",
+      "signature_schema": {
+        "pipeline_name": "string|null",
+        "pipeline_trigger": "string|null",
+        "pipeline_branch": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PIPELINE_CONFIG_TYPE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PIPELINE_CONFIG_FORM",
+          "to": "PIPELINE_CONFIG_FORM",
+          "parameters": {
+            "pipeline_name": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.pipeline_name",
+              "value_ref": "{pipeline_name}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pipeline-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#pipeline-name-input",
+              "text": "{ITEM_ANY}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PIPELINE_CONFIG_SELECT_TRIGGER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PIPELINE_CONFIG_FORM",
+          "to": "PIPELINE_CONFIG_FORM",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.pipeline_trigger",
+              "value": "on_push"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pipeline-trigger-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#trigger-option-on-push",
+              "ui_elements": {
+                "container": "#pipeline-trigger-dropdown",
+                "options": [
+                  {
+                    "value": "on_push",
+                    "selector": "#trigger-option-on-push"
+                  },
+                  {
+                    "value": "manual",
+                    "selector": "#trigger-option-manual"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_PIPELINE_CONFIG_SELECT_BRANCH",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PIPELINE_CONFIG_FORM",
+          "to": "PIPELINE_CONFIG_FORM",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.pipeline_branch",
+              "value": "main"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pipeline-branch-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#pipeline-branch-main",
+              "ui_elements": {
+                "container": "#pipeline-branch-dropdown",
+                "options": [
+                  {
+                    "value": "main",
+                    "selector": "#pipeline-branch-main"
+                  },
+                  {
+                    "value": "develop",
+                    "selector": "#pipeline-branch-develop"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_PIPELINE_CONFIG_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PIPELINE_CONFIG_FORM",
+          "to": "PIPELINE_CONFIG_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.pipeline_name",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.pipeline_trigger",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.pipeline_branch",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pipeline-config-submit"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PIPELINE_CONFIG_BACK_TO_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PIPELINE_CONFIG_FORM",
+          "to": "PIPELINE_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pipeline-config-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PIPELINE_CONFIG_REVIEW",
+      "signature_schema": {
+        "pipeline_name": "string|null",
+        "pipeline_trigger": "string|null",
+        "pipeline_branch": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PIPELINE_CONFIG_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PIPELINE_CONFIG_REVIEW",
+          "to": "CREATE_PIPELINE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.pipeline_name",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pipeline-config-confirm"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PIPELINE_CONFIG_REVIEW_BACK_TO_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PIPELINE_CONFIG_REVIEW",
+          "to": "PIPELINE_CONFIG_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pipeline-config-review-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_PIPELINE_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PIPELINE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_PIPELINE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pipeline-success-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "WORKSPACE_MEMBERS",
+      "signature_schema": {
+        "members_filters_applied": "boolean|null",
+        "members_has_searched": "boolean|null",
+        "matched_member_id": "string|null",
+        "members_viewport_anchor_id": "string|null",
+        "selected_member_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MEMBERS_FILTER_ADMINS_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "WORKSPACE_MEMBERS",
+          "to": "WORKSPACE_MEMBERS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.members_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-admins-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEMBERS_FILTER_ACTIVE_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "WORKSPACE_MEMBERS",
+          "to": "WORKSPACE_MEMBERS",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.members_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#member-active-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#member-active-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEMBERS_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "WORKSPACE_MEMBERS",
+          "to": "WORKSPACE_MEMBERS",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.members_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#members-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#members-sort-option-name",
+              "ui_elements": {
+                "container": "#members-sort-dropdown",
+                "options": [
+                  {
+                    "value": "name",
+                    "selector": "#members-sort-option-name"
+                  },
+                  {
+                    "value": "recent",
+                    "selector": "#members-sort-option-recent"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEMBERS_OPEN_FILTERED_MEMBER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "WORKSPACE_MEMBERS",
+          "to": "INVITE_MEMBER_FORM",
+          "parameters": {
+            "member_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.members_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_member_id",
+              "value_ref": "{member_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.members_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#members-list .member-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEMBERS_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "WORKSPACE_MEMBERS",
+          "to": "WORKSPACE_MEMBERS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_member_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.members_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#members-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#members-search-input",
+              "text": "{ITEM_ANY}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEMBERS_SCROLL_MEMBER_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "WORKSPACE_MEMBERS",
+          "to": "WORKSPACE_MEMBERS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.members_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#members-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#members-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEMBERS_OPEN_ANY_MEMBER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "WORKSPACE_MEMBERS",
+          "to": "INVITE_MEMBER_FORM",
+          "parameters": {
+            "member_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.members_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_member_id",
+              "value_ref": "{member_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.members_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#members-list .member-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEMBERS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "WORKSPACE_MEMBERS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#members-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "INVITE_MEMBER_FORM",
+      "signature_schema": {
+        "invite_email": "string|null",
+        "invite_role": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_INVITE_MEMBER_TYPE_EMAIL",
+          "name": "type",
+          "is_navigation": false,
+          "from": "INVITE_MEMBER_FORM",
+          "to": "INVITE_MEMBER_FORM",
+          "parameters": {
+            "email_text": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.invite_email",
+              "value_ref": "{email_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#invite-email-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#invite-email-input",
+              "text": "{ITEM_ANY}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_INVITE_MEMBER_SELECT_ROLE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "INVITE_MEMBER_FORM",
+          "to": "INVITE_MEMBER_FORM",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.invite_role",
+              "value": "developer"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#invite-role-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#invite-role-developer",
+              "ui_elements": {
+                "container": "#invite-role-dropdown",
+                "options": [
+                  {
+                    "value": "admin",
+                    "selector": "#invite-role-admin"
+                  },
+                  {
+                    "value": "developer",
+                    "selector": "#invite-role-developer"
+                  },
+                  {
+                    "value": "viewer",
+                    "selector": "#invite-role-viewer"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_INVITE_MEMBER_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "INVITE_MEMBER_FORM",
+          "to": "INVITE_MEMBER_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.invite_email",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.invite_role",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#invite-member-submit"
+            }
+          ]
+        },
+        {
+          "id": "ACT_INVITE_MEMBER_BACK_TO_MEMBERS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "INVITE_MEMBER_FORM",
+          "to": "WORKSPACE_MEMBERS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#invite-member-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "INVITE_MEMBER_REVIEW",
+      "signature_schema": {
+        "invite_email": "string|null",
+        "invite_role": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_INVITE_MEMBER_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "INVITE_MEMBER_REVIEW",
+          "to": "INVITE_USER_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.invite_email",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#invite-member-confirm"
+            }
+          ]
+        },
+        {
+          "id": "ACT_INVITE_MEMBER_REVIEW_BACK_TO_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "INVITE_MEMBER_REVIEW",
+          "to": "INVITE_MEMBER_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#invite-member-review-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "INVITE_USER_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_INVITE_USER_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "INVITE_USER_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#invite-user-success-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REPO_PR_LIST",
+      "signature_schema": {
+        "selected_repo_id": "string|null",
+        "repo_pr_list_has_searched": "boolean|null",
+        "matched_repo_pr_id": "string|null",
+        "repo_pr_list_viewport_anchor_id": "string|null",
+        "selected_pr_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_REPO_PR_LIST_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "REPO_PR_LIST",
+          "to": "REPO_PR_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.selected_repo_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_repo_pr_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.repo_pr_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#repo-pr-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#repo-pr-search-input",
+              "text": "{ITEM_ANY}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REPO_PR_LIST_OPEN_MATCHED_PR",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REPO_PR_LIST",
+          "to": "PR_DETAIL",
+          "parameters": {
+            "pr_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_repo_pr_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.repo_pr_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_pr_id",
+              "value_ref": "{pr_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.repo_pr_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#repo-pr-list .pr-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REPO_PR_LIST_SCROLL_PR_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "REPO_PR_LIST",
+          "to": "REPO_PR_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.selected_repo_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.repo_pr_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#repo-pr-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#repo-pr-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REPO_PR_LIST_OPEN_ANY_PR",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REPO_PR_LIST",
+          "to": "PR_DETAIL",
+          "parameters": {
+            "pr_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.repo_pr_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_pr_id",
+              "value_ref": "{pr_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.repo_pr_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#repo-pr-list .pr-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REPO_PR_LIST_BACK_TO_REPO_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REPO_PR_LIST",
+          "to": "REPO_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#repo-pr-list-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REPO_PIPELINES",
+      "signature_schema": {
+        "selected_repo_id": "string|null",
+        "repo_pipelines_viewport_anchor_id": "string|null",
+        "selected_pipeline_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_REPO_PIPELINES_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "REPO_PIPELINES",
+          "to": "REPO_PIPELINES",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.selected_repo_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.repo_pipelines_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#repo-pipelines-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#repo-pipelines-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REPO_PIPELINES_OPEN_ANY_PIPELINE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REPO_PIPELINES",
+          "to": "PIPELINE_DETAIL",
+          "parameters": {
+            "pipeline_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.repo_pipelines_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_pipeline_id",
+              "value_ref": "{pipeline_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.repo_pipelines_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#repo-pipelines-list .pipeline-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REPO_PIPELINES_BACK_TO_REPO_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REPO_PIPELINES",
+          "to": "REPO_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#repo-pipelines-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REPO_SETTINGS",
+      "signature_schema": {
+        "selected_repo_id": "string|null",
+        "default_branch": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_REPO_SETTINGS_SELECT_DEFAULT_BRANCH",
+          "name": "select",
+          "is_navigation": false,
+          "from": "REPO_SETTINGS",
+          "to": "REPO_SETTINGS",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [
+            {
+              "path": "$.selected_repo_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.default_branch",
+              "value": "main"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#default-branch-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#default-branch-main",
+              "ui_elements": {
+                "container": "#default-branch-dropdown",
+                "options": [
+                  {
+                    "value": "main",
+                    "selector": "#default-branch-main"
+                  },
+                  {
+                    "value": "develop",
+                    "selector": "#default-branch-develop"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_REPO_SETTINGS_BACK_TO_REPO_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REPO_SETTINGS",
+          "to": "REPO_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#repo-settings-back"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

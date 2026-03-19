@@ -1,0 +1,50 @@
+# Walmart Clone - Visual Design Style Guide
+
+## Theme & Target Audience
+- **Reference Application**: Walmart (Retail/E-commerce)
+- **Target Audience**: General consumers, families, value-conscious shoppers.
+- **Visual Tone**: Friendly, accessible, clean, trustworthy, energetic (spark of yellow).
+
+## Color Scheme
+- **Primary**: Walmart Blue (`#0071DC`) - Used for header, primary buttons, links, active states.
+- **Secondary**: Spark Yellow (`#FFC220`) - Used for accents, "Add to Cart" highlights, special offers.
+- **Background**: White (`#FFFFFF`) for main content, Light Gray (`#F3F4F6`) for section backgrounds.
+- **Text**: Dark Gray (`#2E2F32`) for headings, Medium Gray (`#46474A`) for body text.
+- **Error**: Red (`#DE1C24`)
+- **Success**: Green (`#2A8703`)
+
+## Typography
+- **Font Family**: 'Inter', system-ui, sans-serif.
+- **Headings**: Bold, tight tracking.
+  - H1: 2.25rem (36px), Bold
+  - H2: 1.5rem (24px), SemiBold
+  - H3: 1.25rem (20px), Medium
+- **Body**: 1rem (16px) base size, readable line height (1.5).
+
+## Layout & Component Styling
+- **Global**: Full-width header, centered container for main content (max-w-7xl).
+- **Cards**:
+  - White background, rounded-lg (0.5rem).
+  - Subtle shadow (`shadow-sm`) on rest, elevated shadow (`shadow-md`) on hover.
+  - Product images are focal points.
+- **Buttons**:
+  - Primary: Blue background, white text, rounded-full or rounded-md.
+  - Secondary: White background, blue border/text.
+  - Ghost: Transparent background, underlined text on hover.
+- **Forms**:
+  - Input fields with rounded corners, gray borders (`border-gray-300`).
+  - Focus state: Blue ring (`ring-blue-500`).
+- **Navigation**:
+  - Top bar with Logo, Search, Account, Cart.
+  - Mega-menu or dropdowns for departments.
+
+## Image Usage Strategy
+- **Hero Images**: High-quality lifestyle shots for Home (families, shopping, seasonal).
+- **Product Images**: Clean product shots on white/transparent backgrounds.
+- **Thumbnails**: Consistent aspect ratio (square or 4:3).
+- **Icons**: Simple, outlined icons (using SVG or simulated via CSS shapes if necessary, or emoji for simplicity in rapid prototyping, but preferring SVG).
+
+## Interactive Elements
+- Hover effects on product cards (lift up).
+- Smooth transitions for dropdowns and modals.
+- Ripples on button clicks.

@@ -1,0 +1,3069 @@
+{
+  "meta": {
+    "app": "Meditation_Mindfulness-headspace_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "SESSION_COMPLETED_SUCCESS",
+      "COURSE_ENROLLED_SUCCESS",
+      "SLEEP_SESSION_COMPLETED_SUCCESS",
+      "FOCUS_SESSION_COMPLETED_SUCCESS",
+      "REMINDER_SET_SUCCESS"
+    ],
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 25,
+        "max": 35
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover",
+        "menu"
+      ],
+      "home_nav_coverage": "any",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 4,
+        "two_step_parity": false,
+        "allowed_shapes": [
+          "checkboxes",
+          "sliders",
+          "sort"
+        ]
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "current_user_id": "string|null",
+        "cookie_consent_given": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_HOME_ACCEPT_COOKIES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cookie_consent_given",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_BROWSE_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "BROWSE",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-browse-direct"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_COURSES_HOVER",
+          "name": "select",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "COURSES_LIST",
+          "parameters": {
+            "widget": "hover_menu"
+          },
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#nav-explore-menu"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-explore-menu .option-courses",
+              "ui_elements": {
+                "container": "#nav-explore-menu",
+                "options": [
+                  {
+                    "value": "meditations",
+                    "selector": "#nav-explore-menu .option-meditations"
+                  },
+                  {
+                    "value": "courses",
+                    "selector": "#nav-explore-menu .option-courses"
+                  },
+                  {
+                    "value": "sleep",
+                    "selector": "#nav-explore-menu .option-sleep"
+                  },
+                  {
+                    "value": "focus",
+                    "selector": "#nav-explore-menu .option-focus"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_SLEEP_MENU",
+          "name": "select",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "SLEEP_LIST",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-more-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-more-sleep",
+              "ui_elements": {
+                "container": "#nav-more-dropdown",
+                "options": [
+                  {
+                    "value": "sleep",
+                    "selector": "#nav-more-sleep"
+                  },
+                  {
+                    "value": "focus",
+                    "selector": "#nav-more-focus"
+                  },
+                  {
+                    "value": "profile",
+                    "selector": "#nav-more-profile"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_FOCUS_MENU",
+          "name": "select",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "FOCUS_LIST",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-more-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-more-focus",
+              "ui_elements": {
+                "container": "#nav-more-dropdown",
+                "options": [
+                  {
+                    "value": "sleep",
+                    "selector": "#nav-more-sleep"
+                  },
+                  {
+                    "value": "focus",
+                    "selector": "#nav-more-focus"
+                  },
+                  {
+                    "value": "profile",
+                    "selector": "#nav-more-profile"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BROWSE",
+      "signature_schema": {
+        "location_permission_granted": "boolean|null",
+        "browse_sessions": "array<object>|null",
+        "browse_filters_applied": "boolean|null",
+        "browse_has_searched": "boolean|null",
+        "browse_viewport_anchor_id": "string|null",
+        "matched_session_id": "string|null",
+        "selected_session_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_BROWSE_LOCATION_PERMISSION_ALLOW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "BROWSE",
+          "to": "BROWSE",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BROWSE_FILTER_DIFFICULTY_CHECKBOX",
+          "name": "select",
+          "is_navigation": false,
+          "from": "BROWSE",
+          "to": "BROWSE",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.browse_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-difficulty-beginner-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BROWSE_FILTER_DURATION_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "BROWSE",
+          "to": "BROWSE",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.browse_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-duration-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#filter-duration-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BROWSE_SORT_SESSIONS",
+          "name": "select",
+          "is_navigation": false,
+          "from": "BROWSE",
+          "to": "BROWSE",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.browse_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#browse-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#browse-sort-newest-desc",
+              "ui_elements": {
+                "container": "#browse-sort-dropdown",
+                "options": [
+                  {
+                    "value": "newest",
+                    "selector": "#browse-sort-newest-desc"
+                  },
+                  {
+                    "value": "shortest",
+                    "selector": "#browse-sort-shortest"
+                  },
+                  {
+                    "value": "popular",
+                    "selector": "#browse-sort-popular"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_BROWSE_OPEN_FILTERED_SESSION",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BROWSE",
+          "to": "SESSION_DETAIL",
+          "parameters": {
+            "session_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.browse_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.browse_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_session_id",
+              "value_ref": "{session_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#browse-session-list .session-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BROWSE_SEARCH_SESSION",
+          "name": "search",
+          "is_navigation": false,
+          "from": "BROWSE",
+          "to": "BROWSE",
+          "parameters": {
+            "session_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_session_id",
+              "value_ref": "{session_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.browse_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#browse-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#browse-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BROWSE_OPEN_MATCHED_SESSION",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BROWSE",
+          "to": "SESSION_DETAIL",
+          "parameters": {
+            "session_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_session_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.browse_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_session_id",
+              "value_ref": "{session_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.browse_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#browse-session-list .session-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BROWSE_SCROLL_SESSION_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "BROWSE",
+          "to": "BROWSE",
+          "parameters": {
+            "session_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.browse_viewport_anchor_id",
+              "value_ref": "{session_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#browse-session-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#browse-session-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BROWSE_OPEN_ANY_SESSION",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BROWSE",
+          "to": "SESSION_DETAIL",
+          "parameters": {
+            "session_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.browse_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_session_id",
+              "value_ref": "{session_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.browse_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#browse-session-list .session-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BROWSE_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BROWSE",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#header-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SESSION_DETAIL",
+      "signature_schema": {
+        "selected_session_id": "string|null",
+        "chosen_duration_minutes": "number|null",
+        "session_notes": "string|null",
+        "session_reminder_time": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SESSION_DETAIL_SET_DURATION_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SESSION_DETAIL",
+          "to": "SESSION_DETAIL",
+          "parameters": {
+            "widget": "slider"
+          },
+          "preconditions": [
+            {
+              "path": "$.selected_session_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.chosen_duration_minutes",
+              "value": 10
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#duration-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#duration-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SESSION_DETAIL_TYPE_NOTES",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SESSION_DETAIL",
+          "to": "SESSION_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.session_notes",
+              "value": "note-entered"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#session-notes-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#session-notes-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SESSION_DETAIL_OPEN_START_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SESSION_DETAIL",
+          "to": "SESSION_START_FORM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_session_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#session-start-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SESSION_DETAIL_OPEN_REMINDER_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SESSION_DETAIL",
+          "to": "REMINDER_FORM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_session_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#set-reminder-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SESSION_DETAIL_BACK_BROWSE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SESSION_DETAIL",
+          "to": "BROWSE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#detail-back-browse"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SESSION_START_FORM",
+      "signature_schema": {
+        "selected_session_id": "string|null",
+        "chosen_duration_minutes": "number|null",
+        "session_intention_text": "string|null",
+        "session_environment_choice": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SESSION_START_TYPE_INTENTION",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SESSION_START_FORM",
+          "to": "SESSION_START_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.session_intention_text",
+              "value": "intention-entered"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#intention-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#intention-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SESSION_START_SELECT_ENVIRONMENT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SESSION_START_FORM",
+          "to": "SESSION_START_FORM",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.session_environment_choice",
+              "value": "indoors"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#environment-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#environment-indoors",
+              "ui_elements": {
+                "container": "#environment-dropdown",
+                "options": [
+                  {
+                    "value": "indoors",
+                    "selector": "#environment-indoors"
+                  },
+                  {
+                    "value": "outdoors",
+                    "selector": "#environment-outdoors"
+                  },
+                  {
+                    "value": "office",
+                    "selector": "#environment-office"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_SESSION_START_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SESSION_START_FORM",
+          "to": "SESSION_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.session_intention_text",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.session_environment_choice",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#session-review-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SESSION_START_BACK_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SESSION_START_FORM",
+          "to": "SESSION_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#start-form-back-detail"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SESSION_REVIEW",
+      "signature_schema": {
+        "selected_session_id": "string|null",
+        "chosen_duration_minutes": "number|null",
+        "session_intention_text": "string|null",
+        "session_environment_choice": "string|null",
+        "session_started": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SESSION_REVIEW_START_SESSION",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SESSION_REVIEW",
+          "to": "SESSION_COMPLETED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_session_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.session_intention_text",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.session_started",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#start-session-confirm"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SESSION_REVIEW_BACK_START_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SESSION_REVIEW",
+          "to": "SESSION_START_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#review-back-to-form"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SESSION_COMPLETED_SUCCESS",
+      "signature_schema": {
+        "selected_session_id": "string|null",
+        "session_started": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SESSION_COMPLETED_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SESSION_COMPLETED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.session_started",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#session-complete-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "COURSES_LIST",
+      "signature_schema": {
+        "courses": "array<object>|null",
+        "courses_filters_applied": "boolean|null",
+        "courses_has_searched": "boolean|null",
+        "courses_viewport_anchor_id": "string|null",
+        "matched_course_id": "string|null",
+        "selected_course_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_COURSES_FILTER_LEVEL_CHECKBOX",
+          "name": "select",
+          "is_navigation": false,
+          "from": "COURSES_LIST",
+          "to": "COURSES_LIST",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.courses_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#courses-filter-beginner-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COURSES_FILTER_LENGTH_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "COURSES_LIST",
+          "to": "COURSES_LIST",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.courses_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#courses-length-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#courses-length-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COURSES_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "COURSES_LIST",
+          "to": "COURSES_LIST",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.courses_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#courses-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#courses-sort-total_sessions-inc",
+              "ui_elements": {
+                "container": "#courses-sort-dropdown",
+                "options": [
+                  {
+                    "value": "popular",
+                    "selector": "#courses-sort-popular"
+                  },
+                  {
+                    "value": "new",
+                    "selector": "#courses-sort-new"
+                  },
+                  {
+                    "value": "total sessions",
+                    "selector": "#courses-sort-total_sessions-inc"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_COURSES_OPEN_FILTERED_COURSE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSES_LIST",
+          "to": "COURSE_DETAIL",
+          "parameters": {
+            "course_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.courses_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.courses_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_course_id",
+              "value_ref": "{course_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#courses-list .course-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COURSES_SEARCH_COURSE",
+          "name": "search",
+          "is_navigation": false,
+          "from": "COURSES_LIST",
+          "to": "COURSES_LIST",
+          "parameters": {
+            "course_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_course_id",
+              "value_ref": "{course_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.courses_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#courses-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#courses-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COURSES_OPEN_MATCHED_COURSE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSES_LIST",
+          "to": "COURSE_DETAIL",
+          "parameters": {
+            "course_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_course_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.courses_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_course_id",
+              "value_ref": "{course_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.courses_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#courses-list .course-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COURSES_SCROLL_COURSE_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "COURSES_LIST",
+          "to": "COURSES_LIST",
+          "parameters": {
+            "course_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.courses_viewport_anchor_id",
+              "value_ref": "{course_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#courses-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#courses-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COURSES_OPEN_ANY_COURSE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSES_LIST",
+          "to": "COURSE_DETAIL",
+          "parameters": {
+            "course_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.courses_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_course_id",
+              "value_ref": "{course_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.courses_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#courses-list .course-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COURSES_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSES_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#courses-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "COURSE_DETAIL",
+      "signature_schema": {
+        "selected_course_id": "string|null",
+        "course_progress_percent": "number|null",
+        "course_goal_text": "string|null",
+        "course_reminder_time": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_COURSE_DETAIL_TYPE_GOAL",
+          "name": "type",
+          "is_navigation": false,
+          "from": "COURSE_DETAIL",
+          "to": "COURSE_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.course_goal_text",
+              "value": "goal-entered"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#course-goal-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#course-goal-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COURSE_DETAIL_SET_PROGRESS_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "COURSE_DETAIL",
+          "to": "COURSE_DETAIL",
+          "parameters": {
+            "widget": "slider"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.course_progress_percent",
+              "value": 10
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#course-progress-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#course-progress-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COURSE_DETAIL_OPEN_ENROLL_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSE_DETAIL",
+          "to": "COURSE_ENROLL_FORM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_course_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#course-enroll-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COURSE_DETAIL_OPEN_REMINDER_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSE_DETAIL",
+          "to": "REMINDER_FORM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_course_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#course-reminder-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COURSE_DETAIL_BACK_COURSES_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSE_DETAIL",
+          "to": "COURSES_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#course-back-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "COURSE_ENROLL_FORM",
+      "signature_schema": {
+        "selected_course_id": "string|null",
+        "enroll_reason_text": "string|null",
+        "enroll_frequency_choice": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_COURSE_ENROLL_TYPE_REASON",
+          "name": "type",
+          "is_navigation": false,
+          "from": "COURSE_ENROLL_FORM",
+          "to": "COURSE_ENROLL_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.enroll_reason_text",
+              "value": "reason-entered"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#enroll-reason-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#enroll-reason-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COURSE_ENROLL_SELECT_FREQUENCY",
+          "name": "select",
+          "is_navigation": false,
+          "from": "COURSE_ENROLL_FORM",
+          "to": "COURSE_ENROLL_FORM",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.enroll_frequency_choice",
+              "value": "daily"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#enroll-frequency-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#enroll-frequency-daily",
+              "ui_elements": {
+                "container": "#enroll-frequency-dropdown",
+                "options": [
+                  {
+                    "value": "daily",
+                    "selector": "#enroll-frequency-daily"
+                  },
+                  {
+                    "value": "weekly",
+                    "selector": "#enroll-frequency-weekly"
+                  },
+                  {
+                    "value": "weekends",
+                    "selector": "#enroll-frequency-weekends"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_COURSE_ENROLL_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSE_ENROLL_FORM",
+          "to": "COURSE_ENROLL_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.enroll_reason_text",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.enroll_frequency_choice",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#enroll-review-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COURSE_ENROLL_BACK_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSE_ENROLL_FORM",
+          "to": "COURSE_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#enroll-back-detail"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "COURSE_ENROLL_REVIEW",
+      "signature_schema": {
+        "selected_course_id": "string|null",
+        "enroll_reason_text": "string|null",
+        "enroll_frequency_choice": "string|null",
+        "course_enrolled": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_COURSE_ENROLL_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSE_ENROLL_REVIEW",
+          "to": "COURSE_ENROLLED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_course_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.enroll_reason_text",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.course_enrolled",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#enroll-confirm-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COURSE_ENROLL_REVIEW_BACK_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSE_ENROLL_REVIEW",
+          "to": "COURSE_ENROLL_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#enroll-review-back-form"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "COURSE_ENROLLED_SUCCESS",
+      "signature_schema": {
+        "selected_course_id": "string|null",
+        "course_enrolled": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_COURSE_ENROLLED_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSE_ENROLLED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.course_enrolled",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#course-enrolled-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SLEEP_LIST",
+      "signature_schema": {
+        "sleep_tracks": "array<object>|null",
+        "sleep_filters_applied": "boolean|null",
+        "sleep_has_searched": "boolean|null",
+        "sleep_viewport_anchor_id": "string|null",
+        "matched_sleep_id": "string|null",
+        "selected_sleep_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SLEEP_FILTER_LENGTH_CHECKBOX",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SLEEP_LIST",
+          "to": "SLEEP_LIST",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.sleep_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sleep-filter-long-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SLEEP_FILTER_INTENSITY_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SLEEP_LIST",
+          "to": "SLEEP_LIST",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.sleep_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sleep-intensity-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#sleep-intensity-slider",
+              "to_value": "left"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SLEEP_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SLEEP_LIST",
+          "to": "SLEEP_LIST",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.sleep_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sleep-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#sleep-sort-length-desc",
+              "ui_elements": {
+                "container": "#sleep-sort-dropdown",
+                "options": [
+                  {
+                    "value": "popular",
+                    "selector": "#sleep-sort-popular"
+                  },
+                  {
+                    "value": "new",
+                    "selector": "#sleep-sort-new"
+                  },
+                  {
+                    "value": "length",
+                    "selector": "#sleep-sort-length-desc"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_SLEEP_OPEN_FILTERED_TRACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SLEEP_LIST",
+          "to": "SLEEP_DETAIL",
+          "parameters": {
+            "sleep_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.sleep_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.sleep_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_sleep_id",
+              "value_ref": "{sleep_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sleep-list .sleep-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SLEEP_SEARCH_TRACK",
+          "name": "search",
+          "is_navigation": false,
+          "from": "SLEEP_LIST",
+          "to": "SLEEP_LIST",
+          "parameters": {
+            "sleep_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_sleep_id",
+              "value_ref": "{sleep_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.sleep_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sleep-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#sleep-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SLEEP_OPEN_MATCHED_TRACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SLEEP_LIST",
+          "to": "SLEEP_DETAIL",
+          "parameters": {
+            "sleep_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_sleep_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.sleep_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_sleep_id",
+              "value_ref": "{sleep_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.sleep_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sleep-list .sleep-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SLEEP_SCROLL_TRACK_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SLEEP_LIST",
+          "to": "SLEEP_LIST",
+          "parameters": {
+            "sleep_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.sleep_viewport_anchor_id",
+              "value_ref": "{sleep_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sleep-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#sleep-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SLEEP_OPEN_ANY_TRACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SLEEP_LIST",
+          "to": "SLEEP_DETAIL",
+          "parameters": {
+            "sleep_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.sleep_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_sleep_id",
+              "value_ref": "{sleep_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.sleep_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sleep-list .sleep-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SLEEP_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SLEEP_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sleep-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SLEEP_DETAIL",
+      "signature_schema": {
+        "selected_sleep_id": "string|null",
+        "sleep_volume_level": "number|null",
+        "sleep_notes": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SLEEP_DETAIL_SET_VOLUME_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SLEEP_DETAIL",
+          "to": "SLEEP_DETAIL",
+          "parameters": {
+            "widget": "slider"
+          },
+          "preconditions": [
+            {
+              "path": "$.selected_sleep_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.sleep_volume_level",
+              "value": 5
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sleep-volume-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#sleep-volume-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SLEEP_DETAIL_TYPE_NOTES",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SLEEP_DETAIL",
+          "to": "SLEEP_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.sleep_notes",
+              "value": "sleep-notes-entered"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sleep-notes-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#sleep-notes-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SLEEP_DETAIL_OPEN_START_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SLEEP_DETAIL",
+          "to": "SLEEP_START_FORM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_sleep_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sleep-start-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SLEEP_DETAIL_BACK_SLEEP_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SLEEP_DETAIL",
+          "to": "SLEEP_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sleep-detail-back-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SLEEP_START_FORM",
+      "signature_schema": {
+        "selected_sleep_id": "string|null",
+        "sleep_bedtime_text": "string|null",
+        "sleep_environment_choice": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SLEEP_START_TYPE_BEDTIME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SLEEP_START_FORM",
+          "to": "SLEEP_START_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.sleep_bedtime_text",
+              "value": "bedtime-entered"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sleep-bedtime-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#sleep-bedtime-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SLEEP_START_SELECT_ENVIRONMENT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SLEEP_START_FORM",
+          "to": "SLEEP_START_FORM",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.sleep_environment_choice",
+              "value": "dark"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sleep-environment-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#sleep-environment-dark",
+              "ui_elements": {
+                "container": "#sleep-environment-dropdown",
+                "options": [
+                  {
+                    "value": "dark",
+                    "selector": "#sleep-environment-dark"
+                  },
+                  {
+                    "value": "dim",
+                    "selector": "#sleep-environment-dim"
+                  },
+                  {
+                    "value": "light",
+                    "selector": "#sleep-environment-light"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_SLEEP_START_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SLEEP_START_FORM",
+          "to": "SLEEP_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.sleep_bedtime_text",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.sleep_environment_choice",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sleep-review-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SLEEP_START_BACK_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SLEEP_START_FORM",
+          "to": "SLEEP_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sleep-start-back-detail"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SLEEP_REVIEW",
+      "signature_schema": {
+        "selected_sleep_id": "string|null",
+        "sleep_bedtime_text": "string|null",
+        "sleep_environment_choice": "string|null",
+        "sleep_session_started": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SLEEP_REVIEW_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SLEEP_REVIEW",
+          "to": "SLEEP_SESSION_COMPLETED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_sleep_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.sleep_bedtime_text",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.sleep_session_started",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sleep-start-confirm"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SLEEP_REVIEW_BACK_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SLEEP_REVIEW",
+          "to": "SLEEP_START_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sleep-review-back-form"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SLEEP_SESSION_COMPLETED_SUCCESS",
+      "signature_schema": {
+        "selected_sleep_id": "string|null",
+        "sleep_session_started": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SLEEP_COMPLETED_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SLEEP_SESSION_COMPLETED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.sleep_session_started",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sleep-complete-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FOCUS_LIST",
+      "signature_schema": {
+        "focus_sessions": "array<object>|null",
+        "focus_filters_applied": "boolean|null",
+        "focus_has_searched": "boolean|null",
+        "focus_viewport_anchor_id": "string|null",
+        "matched_focus_id": "string|null",
+        "selected_focus_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_FOCUS_FILTER_MUSIC_CHECKBOX",
+          "name": "select",
+          "is_navigation": false,
+          "from": "FOCUS_LIST",
+          "to": "FOCUS_LIST",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.focus_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#focus-filter-music-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FOCUS_FILTER_LENGTH_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "FOCUS_LIST",
+          "to": "FOCUS_LIST",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.focus_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#focus-length-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#focus-length-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FOCUS_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "FOCUS_LIST",
+          "to": "FOCUS_LIST",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.focus_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#focus-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#focus-sort-time-desc",
+              "ui_elements": {
+                "container": "#focus-sort-dropdown",
+                "options": [
+                  {
+                    "value": "popular",
+                    "selector": "#focus-sort-time-desc"
+                  },
+                  {
+                    "value": "new",
+                    "selector": "#focus-sort-new"
+                  },
+                  {
+                    "value": "short",
+                    "selector": "#focus-sort-short"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_FOCUS_OPEN_FILTERED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FOCUS_LIST",
+          "to": "FOCUS_DETAIL",
+          "parameters": {
+            "focus_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.focus_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.focus_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_focus_id",
+              "value_ref": "{focus_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#focus-list .focus-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FOCUS_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "FOCUS_LIST",
+          "to": "FOCUS_LIST",
+          "parameters": {
+            "focus_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_focus_id",
+              "value_ref": "{focus_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.focus_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#focus-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#focus-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FOCUS_OPEN_MATCHED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FOCUS_LIST",
+          "to": "FOCUS_DETAIL",
+          "parameters": {
+            "focus_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_focus_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.focus_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_focus_id",
+              "value_ref": "{focus_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.focus_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#focus-list .focus-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FOCUS_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "FOCUS_LIST",
+          "to": "FOCUS_LIST",
+          "parameters": {
+            "focus_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.focus_viewport_anchor_id",
+              "value_ref": "{focus_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#focus-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#focus-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FOCUS_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FOCUS_LIST",
+          "to": "FOCUS_DETAIL",
+          "parameters": {
+            "focus_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.focus_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_focus_id",
+              "value_ref": "{focus_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.focus_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#focus-list .focus-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FOCUS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FOCUS_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#focus-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FOCUS_DETAIL",
+      "signature_schema": {
+        "selected_focus_id": "string|null",
+        "focus_volume_level": "number|null",
+        "focus_notes": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_FOCUS_DETAIL_SET_VOLUME_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "FOCUS_DETAIL",
+          "to": "FOCUS_DETAIL",
+          "parameters": {
+            "widget": "slider"
+          },
+          "preconditions": [
+            {
+              "path": "$.selected_focus_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.focus_volume_level",
+              "value": 7
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#focus-volume-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#focus-volume-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FOCUS_DETAIL_TYPE_NOTES",
+          "name": "type",
+          "is_navigation": false,
+          "from": "FOCUS_DETAIL",
+          "to": "FOCUS_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.focus_notes",
+              "value": "focus-notes-entered"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#focus-notes-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#focus-notes-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FOCUS_DETAIL_OPEN_START_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FOCUS_DETAIL",
+          "to": "FOCUS_START_FORM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_focus_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#focus-start-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FOCUS_DETAIL_BACK_FOCUS_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FOCUS_DETAIL",
+          "to": "FOCUS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#focus-detail-back-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FOCUS_START_FORM",
+      "signature_schema": {
+        "selected_focus_id": "string|null",
+        "focus_task_text": "string|null",
+        "focus_duration_choice": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_FOCUS_START_TYPE_TASK",
+          "name": "type",
+          "is_navigation": false,
+          "from": "FOCUS_START_FORM",
+          "to": "FOCUS_START_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.focus_task_text",
+              "value": "task-entered"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#focus-task-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#focus-task-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FOCUS_START_SELECT_DURATION",
+          "name": "select",
+          "is_navigation": false,
+          "from": "FOCUS_START_FORM",
+          "to": "FOCUS_START_FORM",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.focus_duration_choice",
+              "value": "25min"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#focus-duration-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#focus-duration-25",
+              "ui_elements": {
+                "container": "#focus-duration-dropdown",
+                "options": [
+                  {
+                    "value": "25min",
+                    "selector": "#focus-duration-25"
+                  },
+                  {
+                    "value": "45min",
+                    "selector": "#focus-duration-45"
+                  },
+                  {
+                    "value": "60min",
+                    "selector": "#focus-duration-60"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_FOCUS_START_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FOCUS_START_FORM",
+          "to": "FOCUS_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.focus_task_text",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.focus_duration_choice",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#focus-review-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FOCUS_START_BACK_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FOCUS_START_FORM",
+          "to": "FOCUS_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#focus-start-back-detail"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FOCUS_REVIEW",
+      "signature_schema": {
+        "selected_focus_id": "string|null",
+        "focus_task_text": "string|null",
+        "focus_duration_choice": "string|null",
+        "focus_session_started": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_FOCUS_REVIEW_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FOCUS_REVIEW",
+          "to": "FOCUS_SESSION_COMPLETED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_focus_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.focus_task_text",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.focus_session_started",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#focus-start-confirm"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FOCUS_REVIEW_BACK_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FOCUS_REVIEW",
+          "to": "FOCUS_START_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#focus-review-back-form"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FOCUS_SESSION_COMPLETED_SUCCESS",
+      "signature_schema": {
+        "selected_focus_id": "string|null",
+        "focus_session_started": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_FOCUS_COMPLETED_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FOCUS_SESSION_COMPLETED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.focus_session_started",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#focus-complete-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REMINDER_FORM",
+      "signature_schema": {
+        "selected_session_id": "string|null",
+        "selected_course_id": "string|null",
+        "reminder_label_text": "string|null",
+        "reminder_time_choice": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_REMINDER_TYPE_LABEL",
+          "name": "type",
+          "is_navigation": false,
+          "from": "REMINDER_FORM",
+          "to": "REMINDER_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.reminder_label_text",
+              "value": "reminder-label-entered"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#reminder-label-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#reminder-label-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REMINDER_SELECT_TIME",
+          "name": "select",
+          "is_navigation": false,
+          "from": "REMINDER_FORM",
+          "to": "REMINDER_FORM",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.reminder_time_choice",
+              "value": "8am"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#reminder-time-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#reminder-time-8am",
+              "ui_elements": {
+                "container": "#reminder-time-dropdown",
+                "options": [
+                  {
+                    "value": "8am",
+                    "selector": "#reminder-time-8am"
+                  },
+                  {
+                    "value": "12pm",
+                    "selector": "#reminder-time-12pm"
+                  },
+                  {
+                    "value": "6pm",
+                    "selector": "#reminder-time-6pm"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_REMINDER_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REMINDER_FORM",
+          "to": "REMINDER_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.reminder_label_text",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.reminder_time_choice",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#reminder-review-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REMINDER_BACK_SESSION_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REMINDER_FORM",
+          "to": "SESSION_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#reminder-back-session-detail"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REMINDER_BACK_COURSE_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REMINDER_FORM",
+          "to": "COURSE_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#reminder-back-course-detail"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REMINDER_REVIEW",
+      "signature_schema": {
+        "reminder_label_text": "string|null",
+        "reminder_time_choice": "string|null",
+        "reminder_set": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_REMINDER_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REMINDER_REVIEW",
+          "to": "REMINDER_SET_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.reminder_label_text",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.reminder_time_choice",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.reminder_set",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#reminder-confirm-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REMINDER_REVIEW_BACK_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REMINDER_REVIEW",
+          "to": "REMINDER_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#reminder-review-back-form"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REMINDER_SET_SUCCESS",
+      "signature_schema": {
+        "reminder_set": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_REMINDER_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REMINDER_SET_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.reminder_set",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#reminder-success-go-home"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

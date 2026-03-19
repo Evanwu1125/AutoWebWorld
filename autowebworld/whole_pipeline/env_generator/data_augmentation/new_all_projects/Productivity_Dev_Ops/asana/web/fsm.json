@@ -1,0 +1,1930 @@
+{
+  "meta": {
+    "app": "Project Management-Asana_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "TASK_CREATE_SUCCESS",
+      "TASK_COMPLETE_SUCCESS",
+      "PROJECT_CREATE_SUCCESS",
+      "SECTION_CREATE_SUCCESS",
+      "COMMENT_ADD_SUCCESS"
+    ],
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 20,
+        "max": 35
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover",
+        "menu"
+      ],
+      "home_nav_coverage": "any",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 4,
+        "two_step_parity": false,
+        "allowed_shapes": [
+          "checkboxes",
+          "sliders",
+          "sort"
+        ]
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "current_user_id": "string|null",
+        "cookie_consent_given": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "HOME_ACCEPT_COOKIES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cookie_consent_given",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_TO_PROJECTS_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "PROJECTS_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-projects-direct"
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_TO_PROJECTS_HOVER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "PROJECTS_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#nav-work-menu"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-work-menu-projects"
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_TO_PROJECTS_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "PROJECTS_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-menu-toggle"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-menu-projects"
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_TO_MY_TASKS_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "MY_TASKS_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-my-tasks-direct"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROJECTS_LIST",
+      "signature_schema": {
+        "projects": "array<object>|null",
+        "project_list_filters_applied": "boolean|null",
+        "project_list_has_searched": "boolean|null",
+        "project_list_viewport_anchor_id": "string|null",
+        "matched_project_id": "string|null",
+        "selected_project_id": "string|null",
+        "location_permission_granted": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "PROJECTS_GRANT_LOCATION_PERMISSION",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PROJECTS_LIST",
+          "to": "PROJECTS_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "PROJECTS_FILTER_BY_STATUS_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PROJECTS_LIST",
+          "to": "PROJECTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.project_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-project-status-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "PROJECTS_FILTER_BY_PRIORITY_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PROJECTS_LIST",
+          "to": "PROJECTS_LIST",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.project_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-project-priority-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#filter-project-priority-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "PROJECTS_SORT_DROPDOWN",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PROJECTS_LIST",
+          "to": "PROJECTS_LIST",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.project_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#projects-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#projects-sort-option-due-date-inc",
+              "ui_elements": {
+                "container": "#projects-sort-dropdown",
+                "options": [
+                  {
+                    "value": "recently",
+                    "selector": "#projects-sort-option-recently"
+                  },
+                  {
+                    "value": "alphabetical",
+                    "selector": "#projects-sort-option-alphabetical"
+                  },
+                  {
+                    "value": "due-date",
+                    "selector": "#projects-sort-option-due-date-inc"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "PROJECTS_OPEN_FILTERED_PROJECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROJECTS_LIST",
+          "to": "PROJECT_BOARD",
+          "parameters": {
+            "project_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.project_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_project_id",
+              "value_ref": "{project_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.project_list_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#projects-list .project-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "PROJECTS_SEARCH_PROJECT",
+          "name": "search",
+          "is_navigation": false,
+          "from": "PROJECTS_LIST",
+          "to": "PROJECTS_LIST",
+          "parameters": {
+            "project_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_project_id",
+              "value_ref": "{project_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.project_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#projects-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#projects-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "PROJECTS_OPEN_MATCHED_PROJECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROJECTS_LIST",
+          "to": "PROJECT_BOARD",
+          "parameters": {
+            "project_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_project_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.project_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_project_id",
+              "value_ref": "{project_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.project_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#projects-list .project-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "PROJECTS_SCROLL_PROJECT_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PROJECTS_LIST",
+          "to": "PROJECTS_LIST",
+          "parameters": {
+            "project_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.project_list_viewport_anchor_id",
+              "value_ref": "{project_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#projects-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#projects-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "PROJECTS_OPEN_ANY_PROJECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROJECTS_LIST",
+          "to": "PROJECT_BOARD",
+          "parameters": {
+            "project_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.project_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_project_id",
+              "value_ref": "{project_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.project_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#projects-list .project-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "PROJECTS_GO_TO_NEW_PROJECT_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROJECTS_LIST",
+          "to": "PROJECT_CREATE_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-project-button"
+            }
+          ]
+        },
+        {
+          "id": "PROJECTS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROJECTS_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-to-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROJECT_CREATE_FORM",
+      "signature_schema": {
+        "projects": "array<object>|null",
+        "new_project_name": "string|null",
+        "new_project_description": "string|null",
+        "new_project_due_date": "string|null"
+      },
+      "actions": [
+        {
+          "id": "PROJECT_CREATE_TYPE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PROJECT_CREATE_FORM",
+          "to": "PROJECT_CREATE_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_project_name",
+              "value_expr": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#project-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#project-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "PROJECT_CREATE_TYPE_DESCRIPTION",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PROJECT_CREATE_FORM",
+          "to": "PROJECT_CREATE_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_project_description",
+              "value_expr": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#project-description-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#project-description-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "PROJECT_CREATE_PICK_DUE_DATE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PROJECT_CREATE_FORM",
+          "to": "PROJECT_CREATE_FORM",
+          "parameters": {
+            "widget": "date_picker",
+            "year": 2025,
+            "month": 10,
+            "day": 22
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_project_due_date",
+              "value_expr": "now()"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#date-picker1"
+            },
+            {
+              "op": "click",
+              "selector": ".year-2025"
+            },
+            {
+              "op": "click",
+              "selector": ".month-10"
+            },
+            {
+              "op": "click",
+              "selector": ".day-22"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "PROJECT_CREATE_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROJECT_CREATE_FORM",
+          "to": "PROJECT_CREATE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.new_project_name",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.projects",
+              "value_expr": "append($.projects, {\"id\": gen_id(), \"name\": $.new_project_name})"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#project-create-submit"
+            }
+          ]
+        },
+        {
+          "id": "PROJECT_CREATE_BACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROJECT_CREATE_FORM",
+          "to": "PROJECTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#project-create-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROJECT_CREATE_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "PROJECT_CREATE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROJECT_CREATE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Project created successfully"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "PROJECT_CREATE_SUCCESS_BACK_TO_PROJECTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROJECT_CREATE_SUCCESS",
+          "to": "PROJECTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#success-back-projects"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROJECT_BOARD",
+      "signature_schema": {
+        "projects": "array<object>|null",
+        "tasks": "array<object>|null",
+        "selected_project_id": "string|null",
+        "board_filters_applied": "boolean|null",
+        "board_has_searched": "boolean|null",
+        "board_viewport_anchor_id": "string|null",
+        "matched_task_id": "string|null",
+        "selected_task_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "BOARD_FILTER_BY_ASSIGNEE_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PROJECT_BOARD",
+          "to": "PROJECT_BOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.board_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#board-filter-assignee-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "BOARD_FILTER_BY_PRIORITY_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PROJECT_BOARD",
+          "to": "PROJECT_BOARD",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.board_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#board-filter-priority-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#board-filter-priority-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "BOARD_SORT_TASKS",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PROJECT_BOARD",
+          "to": "PROJECT_BOARD",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.board_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#board-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#board-sort-option-due-date-inc",
+              "ui_elements": {
+                "container": "#board-sort-dropdown",
+                "options": [
+                  {
+                    "value": "due-date",
+                    "selector": "#board-sort-option-due-date-inc"
+                  },
+                  {
+                    "value": "priority",
+                    "selector": "#board-sort-option-priority"
+                  },
+                  {
+                    "value": "alphabetical",
+                    "selector": "#board-sort-option-alphabetical"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "BOARD_OPEN_FILTERED_TASK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROJECT_BOARD",
+          "to": "TASK_DETAIL",
+          "parameters": {
+            "task_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.board_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_task_id",
+              "value_ref": "{task_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.board_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": ".board-column .task-card-filtered"
+            }
+          ]
+        },
+        {
+          "id": "BOARD_SEARCH_TASK",
+          "name": "search",
+          "is_navigation": false,
+          "from": "PROJECT_BOARD",
+          "to": "PROJECT_BOARD",
+          "parameters": {
+            "task_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_task_id",
+              "value_ref": "{task_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.board_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#board-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#board-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "BOARD_OPEN_MATCHED_TASK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROJECT_BOARD",
+          "to": "TASK_DETAIL",
+          "parameters": {
+            "task_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_task_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.board_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_task_id",
+              "value_ref": "{task_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.board_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": ".board-column .task-card-matched"
+            }
+          ]
+        },
+        {
+          "id": "BOARD_SCROLL_TASK_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PROJECT_BOARD",
+          "to": "PROJECT_BOARD",
+          "parameters": {
+            "task_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.board_viewport_anchor_id",
+              "value_ref": "{task_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#board-columns-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#board-columns-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "BOARD_OPEN_ANY_TASK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROJECT_BOARD",
+          "to": "TASK_DETAIL",
+          "parameters": {
+            "task_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.board_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_task_id",
+              "value_ref": "{task_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.board_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": ".board-column .task-card-visible"
+            }
+          ]
+        },
+        {
+          "id": "BOARD_GO_TO_NEW_TASK_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROJECT_BOARD",
+          "to": "TASK_CREATE_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#add-task-button"
+            }
+          ]
+        },
+        {
+          "id": "BOARD_GO_TO_NEW_SECTION_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROJECT_BOARD",
+          "to": "SECTION_CREATE_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#add-section-button"
+            }
+          ]
+        },
+        {
+          "id": "BOARD_BACK_TO_PROJECTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROJECT_BOARD",
+          "to": "PROJECTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#board-back-to-projects"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TASK_CREATE_FORM",
+      "signature_schema": {
+        "tasks": "array<object>|null",
+        "new_task_name": "string|null",
+        "new_task_description": "string|null",
+        "new_task_due_date": "string|null",
+        "new_task_assignee": "string|null"
+      },
+      "actions": [
+        {
+          "id": "TASK_CREATE_TYPE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "TASK_CREATE_FORM",
+          "to": "TASK_CREATE_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_task_name",
+              "value_expr": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#task-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#task-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "TASK_CREATE_TYPE_DESCRIPTION",
+          "name": "type",
+          "is_navigation": false,
+          "from": "TASK_CREATE_FORM",
+          "to": "TASK_CREATE_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_task_description",
+              "value_expr": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#task-description-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#task-description-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "TASK_CREATE_PICK_DUE_DATE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "TASK_CREATE_FORM",
+          "to": "TASK_CREATE_FORM",
+          "parameters": {
+            "widget": "date_picker",
+            "year": 2025,
+            "month": 10,
+            "day": 22
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_task_due_date",
+              "value_expr": "now()"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#date-picker1"
+            },
+            {
+              "op": "click",
+              "selector": ".year-2025"
+            },
+            {
+              "op": "click",
+              "selector": ".month-10"
+            },
+            {
+              "op": "click",
+              "selector": ".day-22"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "TASK_CREATE_SELECT_ASSIGNEE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "TASK_CREATE_FORM",
+          "to": "TASK_CREATE_FORM",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_task_assignee",
+              "value_expr": "\"me\""
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#assignee-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#assignee-option-me",
+              "ui_elements": {
+                "container": "#assignee-dropdown",
+                "options": [
+                  {
+                    "value": "me",
+                    "selector": "#assignee-option-me"
+                  },
+                  {
+                    "value": "unassigned",
+                    "selector": "#assignee-option-unassigned"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "TASK_CREATE_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TASK_CREATE_FORM",
+          "to": "TASK_CREATE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.new_task_name",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.tasks",
+              "value_expr": "append($.tasks, {\"id\": gen_id(), \"name\": $.new_task_name})"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#task-create-submit"
+            }
+          ]
+        },
+        {
+          "id": "TASK_CREATE_BACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TASK_CREATE_FORM",
+          "to": "PROJECT_BOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#task-create-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TASK_CREATE_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "TASK_CREATE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TASK_CREATE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Task created successfully"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#task-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "TASK_CREATE_SUCCESS_BACK_TO_BOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TASK_CREATE_SUCCESS",
+          "to": "PROJECT_BOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#task-success-back-board"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SECTION_CREATE_FORM",
+      "signature_schema": {
+        "sections": "array<object>|null",
+        "new_section_name": "string|null"
+      },
+      "actions": [
+        {
+          "id": "SECTION_CREATE_TYPE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SECTION_CREATE_FORM",
+          "to": "SECTION_CREATE_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_section_name",
+              "value_expr": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#section-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#section-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "SECTION_CREATE_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SECTION_CREATE_FORM",
+          "to": "SECTION_CREATE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.new_section_name",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.sections",
+              "value_expr": "append($.sections, {\"id\": gen_id(), \"name\": $.new_section_name})"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#section-create-submit"
+            }
+          ]
+        },
+        {
+          "id": "SECTION_CREATE_BACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SECTION_CREATE_FORM",
+          "to": "PROJECT_BOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#section-create-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SECTION_CREATE_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "SECTION_CREATE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SECTION_CREATE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Section created successfully"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#section-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "SECTION_CREATE_SUCCESS_BACK_TO_BOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SECTION_CREATE_SUCCESS",
+          "to": "PROJECT_BOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#section-success-back-board"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TASK_DETAIL",
+      "signature_schema": {
+        "tasks": "array<object>|null",
+        "selected_task_id": "string|null",
+        "task_completed": "boolean|null",
+        "new_comment_text": "string|null"
+      },
+      "actions": [
+        {
+          "id": "TASK_DETAIL_MARK_COMPLETE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TASK_DETAIL",
+          "to": "TASK_COMPLETE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_task_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.task_completed",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#task-complete-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "TASK_DETAIL_TYPE_COMMENT",
+          "name": "type",
+          "is_navigation": false,
+          "from": "TASK_DETAIL",
+          "to": "TASK_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_comment_text",
+              "value_expr": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#task-comment-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#task-comment-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "TASK_DETAIL_SUBMIT_COMMENT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TASK_DETAIL",
+          "to": "COMMENT_ADD_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.new_comment_text",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#task-comment-submit"
+            }
+          ]
+        },
+        {
+          "id": "TASK_DETAIL_BACK_TO_BOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TASK_DETAIL",
+          "to": "PROJECT_BOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#task-detail-back-board"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TASK_COMPLETE_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "TASK_COMPLETE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TASK_COMPLETE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Task completed successfully"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#task-complete-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "TASK_COMPLETE_SUCCESS_BACK_TO_BOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TASK_COMPLETE_SUCCESS",
+          "to": "PROJECT_BOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#task-complete-success-back-board"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "COMMENT_ADD_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "COMMENT_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COMMENT_ADD_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Comment added successfully"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#comment-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "COMMENT_SUCCESS_BACK_TO_TASK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COMMENT_ADD_SUCCESS",
+          "to": "TASK_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#comment-success-back-task"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MY_TASKS_LIST",
+      "signature_schema": {
+        "tasks": "array<object>|null",
+        "my_tasks_filters_applied": "boolean|null",
+        "my_tasks_has_searched": "boolean|null",
+        "my_tasks_viewport_anchor_id": "string|null",
+        "matched_my_task_id": "string|null",
+        "selected_my_task_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "MY_TASKS_FILTER_BY_TODAY_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MY_TASKS_LIST",
+          "to": "MY_TASKS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.my_tasks_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#my-tasks-filter-today-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "MY_TASKS_FILTER_BY_PRIORITY_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "MY_TASKS_LIST",
+          "to": "MY_TASKS_LIST",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.my_tasks_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#my-tasks-priority-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#my-tasks-priority-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "MY_TASKS_SORT_BY_DUE_DATE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "MY_TASKS_LIST",
+          "to": "MY_TASKS_LIST",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.my_tasks_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#my-tasks-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#my-tasks-sort-option-due-date-inc",
+              "ui_elements": {
+                "container": "#my-tasks-sort-dropdown",
+                "options": [
+                  {
+                    "value": "due-date",
+                    "selector": "#my-tasks-sort-option-due-date-inc"
+                  },
+                  {
+                    "value": "priority",
+                    "selector": "#my-tasks-sort-option-priority"
+                  },
+                  {
+                    "value": "project",
+                    "selector": "#my-tasks-sort-option-project"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "MY_TASKS_OPEN_FILTERED_TASK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MY_TASKS_LIST",
+          "to": "TASK_DETAIL",
+          "parameters": {
+            "task_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.my_tasks_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_my_task_id",
+              "value_ref": "{task_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.my_tasks_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#my-tasks-list .task-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "MY_TASKS_SEARCH_TASK",
+          "name": "search",
+          "is_navigation": false,
+          "from": "MY_TASKS_LIST",
+          "to": "MY_TASKS_LIST",
+          "parameters": {
+            "task_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_my_task_id",
+              "value_ref": "{task_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.my_tasks_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#my-tasks-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#my-tasks-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "MY_TASKS_OPEN_MATCHED_TASK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MY_TASKS_LIST",
+          "to": "TASK_DETAIL",
+          "parameters": {
+            "task_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_my_task_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.my_tasks_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_my_task_id",
+              "value_ref": "{task_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.my_tasks_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#my-tasks-list .task-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "MY_TASKS_SCROLL_TASK_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MY_TASKS_LIST",
+          "to": "MY_TASKS_LIST",
+          "parameters": {
+            "task_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.my_tasks_viewport_anchor_id",
+              "value_ref": "{task_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#my-tasks-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#my-tasks-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "MY_TASKS_OPEN_ANY_TASK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MY_TASKS_LIST",
+          "to": "TASK_DETAIL",
+          "parameters": {
+            "task_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.my_tasks_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_my_task_id",
+              "value_ref": "{task_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.my_tasks_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#my-tasks-list .task-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "MY_TASKS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MY_TASKS_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#my-tasks-back-home"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -3,12 +3,13 @@ import json
 
 from typing import Dict, Any, Optional
 from .base_agent import BaseAgent
+from .utils import normalize_complexity_profile
 
 
 class FSMGeneratorAgent(BaseAgent):
     def __init__(self,
-                 system_prompt_path: str = "prompts/fsm_system_prompt_NEW.txt",
-                 instruction_prompt_path: str = "prompts/fsm_instruction_prompt_NEW.txt",
+                 system_prompt_path: str = "prompts/fsm_system_prompt.txt",
+                 instruction_prompt_path: str = "prompts/fsm_instruction_prompt.txt",
                  **kwargs):
 
         super().__init__(**kwargs)
@@ -30,8 +31,9 @@ class FSMGeneratorAgent(BaseAgent):
 
     def _build_instruction_prompt(self, theme: str, complexity_profile: Optional[Dict[str, Any]] = None) -> str:
         template = self._get_instruction_template()
-        profile_json_str = json.dumps(complexity_profile, ensure_ascii=False, indent=2) if complexity_profile is not None else "{}"
-        
+        normalized_profile = normalize_complexity_profile(complexity_profile)
+        profile_json_str = json.dumps(normalized_profile, ensure_ascii=False, indent=2)
+
         instruction = (
             template
             .replace("{theme}", theme)
@@ -42,11 +44,12 @@ class FSMGeneratorAgent(BaseAgent):
 
     async def call(self, theme: str, **kwargs) -> Dict[str, Any]:
 
-        print(f"🚀 FSMGeneratorAgent: 开始生成 FSM")
-        print(f"   主题: {theme}")
+        print(f"🚀 FSMGeneratorAgent: Starting FSM generation")
+        print(f"   Theme: {theme}")
 
+        normalized_profile = normalize_complexity_profile(kwargs.get('complexity_profile'))
         system_prompt = self._get_system_prompt()
-        instruction_prompt = self._build_instruction_prompt(theme, kwargs.get('complexity_profile'))
+        instruction_prompt = self._build_instruction_prompt(theme, normalized_profile)
 
         try:
             response = await self._call_llm(
@@ -58,10 +61,8 @@ class FSMGeneratorAgent(BaseAgent):
             fsm_data = self._force_json(response)
 
             process_id = kwargs.get('process_id')
-            cp = kwargs.get('complexity_profile')
-            if cp is not None:
-                meta = fsm_data.setdefault('meta', {})
-                meta['complexity_profile'] = cp
+            meta = fsm_data.setdefault('meta', {})
+            meta['complexity_profile'] = normalized_profile
 
             if process_id is not None:
                 output_dir = kwargs.get('output_dir', 'outputs')
@@ -76,11 +77,10 @@ class FSMGeneratorAgent(BaseAgent):
             return fsm_data
 
         except Exception as e:
-            print(f"❌ FSMGeneratorAgent: 生成失败: {e}")
-            print(f"完整错误信息: {traceback.format_exc()}")
+            print(f"❌ FSMGeneratorAgent: Generation failed: {e}")
+            print(f"Full error traceback: {traceback.format_exc()}")
             raise
 
 
     def __repr__(self) -> str:
         return f"FSMGeneratorAgent(model={self.model}, system_prompt={self.system_prompt_path})"
-

@@ -1,0 +1,37 @@
+# Visual Design Style Guide - Tumblr Inspired
+
+## Theme & Vibe
+- **Core Theme**: "Microblogging Energy" - Deep, immersive, artistic, and fluid.
+- **Reference**: Tumblr (Dark Mode default).
+- **Target Audience**: Creatives, fandoms, artists, Gen Z/Millennials.
+- **Visual Tone**: Expressive, eclectic, raw but polished, "cool" chaos.
+
+## Color Palette
+- **Primary Background**: #001935 (Deep Navy) or #121212 (Modern Dark). Let's go with a Modern Deep Navy/Black blend: `bg-slate-900` (#0f172a).
+- **Secondary Background** (Cards/Inputs): `bg-slate-800` or White `bg-white` (classic post style).
+- **Primary Accent**: #00B8FF (Electric Blue) - Buttons, Links, Active states.
+- **Secondary Accent**: #FF62CE (Hot Pink) - Likes, Highlights, Special actions.
+- **Text**: #FFFFFF (Primary), #9DA6AF (Secondary/Metadata).
+
+## Typography
+- **Headings**: 'Helvetica Neue', Arial, sans-serif. Bold, tight tracking.
+- **Body**: Readable sans-serif.
+- **Quotes**: Serif (Georgia) for quote posts to give that classic blog feel.
+
+## Layout Patterns
+- **Dashboard**: Central vertical feed, single column width (approx 540px-600px max width for posts), centered.
+- **Explore**: Masonry Grid (Waterfall layout) - critical for visual heavy content.
+- **Navigation**: Sticky sidebar (desktop) or Bottom bar (mobile).
+- **Modals**: Glassmorphism overlays (`backdrop-blur-md`).
+
+## Component Styling
+- **Buttons**: Pill-shaped (rounded-full) or slightly rounded (rounded-md). High contrast.
+- **Inputs**: Transparent background with bottom border OR filled pills.
+- **Post Cards**: Sharp corners or slightly rounded (`rounded-sm`). Distinct separation between posts.
+- **Images**: Full bleed where possible. High quality real images.
+
+## Image Usage Strategy
+- Extensive use of real photography via ImageGetter.
+- "Hero" headers for Blog Overview.
+- Avatars for every user interaction.
+- Masonry grid images for Explore page.

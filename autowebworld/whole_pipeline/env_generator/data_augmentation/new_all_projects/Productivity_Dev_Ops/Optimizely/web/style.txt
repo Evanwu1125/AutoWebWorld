@@ -1,0 +1,50 @@
+# Visual Design Style Guide - Optimizely Clone
+
+## Theme & Target Audience
+- **Theme**: Professional A/B Testing & Experimentation Platform.
+- **Reference**: Optimizely / Google Optimize.
+- **Target Audience**: Product Managers, Marketers, Developers, Data Scientists.
+- **Visual Tone**: Clean, Data-Driven, Trustworthy, Modern, Efficient.
+
+## Color Scheme
+- **Primary**: #0037FF (Optimizely Blue) - Used for primary buttons, active states, links.
+- **Secondary**: #002199 (Darker Blue) - Used for hover states, sidebars.
+- **Accent**: #33Cdf6 (Cyan/Light Blue) - Used for highlights, graphs.
+- **Background**: #F7F9FC (Very Light Gray) - Main content area.
+- **Surface**: #FFFFFF (White) - Cards, Modals, Dropdowns.
+- **Text**: 
+  - Primary: #1F2937 (Gray 900)
+  - Secondary: #6B7280 (Gray 500)
+- **Status Colors**:
+  - Success: #10B981 (Green)
+  - Warning: #F59E0B (Yellow/Orange)
+  - Error: #EF4444 (Red)
+
+## Typography
+- **Font Family**: Inter, system-ui, sans-serif.
+- **Weights**:
+  - Regular (400): Body text.
+  - Medium (500): Navigation, Buttons.
+  - Semibold (600): Section headers, Card titles.
+  - Bold (700): Main page titles.
+
+## Layout & Spacing
+- **Structure**: Dashboard layout with Sidebar Navigation (Desktop) or Top Navigation.
+- **Container**: Fluid width with max-width constraints for readability (max-w-7xl).
+- **Spacing**: Comfortable whitespace (p-6, gap-6) to separate data density.
+- **Grid**: 12-column grid system for dashboard widgets and lists.
+
+## Components
+- **Cards**: White background, subtle border (border-gray-200), light shadow (shadow-sm), rounded-lg (rounded-lg).
+- **Buttons**: 
+  - Primary: Solid Blue, rounded-md, px-4 py-2, font-medium, shadow-sm.
+  - Secondary: White with Gray Border, hover:bg-gray-50.
+- **Inputs**: White background, border-gray-300, focus:ring-blue-500, rounded-md.
+- **Lists/Tables**: Clean rows, hover effects (hover:bg-gray-50), distinct headers.
+- **Images**: Use realistic thumbnails for "Experiments" (e.g., screenshots of websites being tested) and user avatars.
+
+## Image Usage Strategy
+- **Hero**: Dashboard welcome banner or feature highlight.
+- **Thumbnails**: Each experiment item will have a website screenshot thumbnail.
+- **Avatars**: User profile pictures.
+- **Icons**: SVG icons for navigation and actions (using Lucide or Heroicons via simple SVGs if needed, or just text/emoji if icons aren't available, but prefer SVGs).

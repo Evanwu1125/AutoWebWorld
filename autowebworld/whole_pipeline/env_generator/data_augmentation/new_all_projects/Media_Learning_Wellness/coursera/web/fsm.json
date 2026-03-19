@@ -1,0 +1,2636 @@
+{
+  "meta": {
+    "app": "Online Courses (MOOCs)-Coursera_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "ENROLL_COURSE_SUCCESS",
+      "SPECIALIZATION_SUBSCRIBE_SUCCESS",
+      "AUDIT_COURSE_SUCCESS",
+      "ENROLL_PROFESSIONAL_CERT_SUCCESS",
+      "COURSE_RATING_SUBMITTED_SUCCESS"
+    ],
+    "global_signature_schema": {
+      "courses": "array<object>|null",
+      "specializations": "array<object>|null",
+      "professional_certs": "array<object>|null"
+    },
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 20,
+        "max": 35
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover",
+        "menu"
+      ],
+      "home_nav_coverage": "any",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 4,
+        "two_step_parity": false,
+        "allowed_shapes": [
+          "checkboxes",
+          "sliders",
+          "sort"
+        ]
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "current_user_id": "string|null",
+        "cookie_consent_given": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_HOME_ACCEPT_COOKIES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cookie_consent_given",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_COURSE_DISCOVERY_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "COURSE_DISCOVERY",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-explore-courses"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_CATALOG_HOVER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "COURSE_DISCOVERY",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#nav-browse"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-browse-courses"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_SPECIALIZATIONS_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "SPECIALIZATION_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-dropdown-learn"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-dropdown-specializations",
+              "ui_elements": {
+                "container": "#nav-dropdown-learn",
+                "options": [
+                  {
+                    "value": "courses",
+                    "selector": "#nav-dropdown-courses"
+                  },
+                  {
+                    "value": "specializations",
+                    "selector": "#nav-dropdown-specializations"
+                  },
+                  {
+                    "value": "professional_certs",
+                    "selector": "#nav-dropdown-professional-certs"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_LOGIN_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "LOGIN",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-account"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-account-log-in",
+              "ui_elements": {
+                "container": "#nav-account",
+                "options": [
+                  {
+                    "value": "log_in",
+                    "selector": "#nav-account-log-in"
+                  },
+                  {
+                    "value": "sign_up",
+                    "selector": "#nav-account-sign-up"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LOGIN",
+      "signature_schema": {
+        "login_email_filled": "boolean|null",
+        "login_password_filled": "boolean|null",
+        "login_can_submit": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_LOGIN_TYPE_EMAIL",
+          "name": "type",
+          "is_navigation": false,
+          "from": "LOGIN",
+          "to": "LOGIN",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.login_email_filled",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#login-email-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#login-email-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LOGIN_TYPE_PASSWORD",
+          "name": "type",
+          "is_navigation": false,
+          "from": "LOGIN",
+          "to": "LOGIN",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.login_password_filled",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#login-password-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#login-password-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LOGIN_COMPUTE_CAN_SUBMIT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "LOGIN",
+          "to": "LOGIN",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.login_can_submit",
+              "value_expr": "$.login_email_filled && $.login_password_filled"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#login-form"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LOGIN_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "LOGIN",
+          "to": "COURSE_DISCOVERY",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.login_email_filled",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.login_password_filled",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#login-submit-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LOGIN_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "LOGIN",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#header-logo-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "COURSE_DISCOVERY",
+      "signature_schema": {
+        "location_permission_granted": "boolean|null",
+        "course_list_filters_applied": "boolean|null",
+        "course_list_sort_applied": "boolean|null",
+        "course_list_has_searched": "boolean|null",
+        "course_list_viewport_anchor_id": "string|null",
+        "matched_course_id": "string|null",
+        "selected_course_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_DISCOVERY_GRANT_LOCATION",
+          "name": "click",
+          "is_navigation": false,
+          "from": "COURSE_DISCOVERY",
+          "to": "COURSE_DISCOVERY",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DISCOVERY_FILTER_LEVEL_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "COURSE_DISCOVERY",
+          "to": "COURSE_DISCOVERY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.course_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-level-beginner-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DISCOVERY_FILTER_DURATION_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "COURSE_DISCOVERY",
+          "to": "COURSE_DISCOVERY",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.course_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-duration-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#filter-duration-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DISCOVERY_SORT_BY",
+          "name": "select",
+          "is_navigation": false,
+          "from": "COURSE_DISCOVERY",
+          "to": "COURSE_DISCOVERY",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.course_list_sort_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#sort-option-highest-rated",
+              "ui_elements": {
+                "container": "#sort-dropdown",
+                "options": [
+                  {
+                    "value": "relevance",
+                    "selector": "#sort-option-relevance"
+                  },
+                  {
+                    "value": "newest",
+                    "selector": "#sort-option-newest"
+                  },
+                  {
+                    "value": "highest-rated",
+                    "selector": "#sort-option-highest-rated"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_DISCOVERY_OPEN_FILTERED_COURSE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSE_DISCOVERY",
+          "to": "COURSE_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.course_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.course_list_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_course_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#course-results .course-card-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DISCOVERY_SEARCH_COURSE",
+          "name": "search",
+          "is_navigation": false,
+          "from": "COURSE_DISCOVERY",
+          "to": "COURSE_DISCOVERY",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_course_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.course_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#course-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#course-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DISCOVERY_OPEN_MATCHED_COURSE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSE_DISCOVERY",
+          "to": "COURSE_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_course_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.course_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_course_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.course_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#course-results .course-card-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DISCOVERY_SCROLL_COURSE_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "COURSE_DISCOVERY",
+          "to": "COURSE_DISCOVERY",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.course_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#course-results-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#course-results-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DISCOVERY_OPEN_ANY_COURSE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSE_DISCOVERY",
+          "to": "COURSE_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.course_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_course_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.course_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#course-results .course-card-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DISCOVERY_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSE_DISCOVERY",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#header-logo-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "COURSE_DETAIL",
+      "signature_schema": {
+        "selected_course_id": "string|null",
+        "intended_enrollment_type": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_COURSE_DETAIL_CHOOSE_ENROLL_HOVER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "COURSE_DETAIL",
+          "to": "COURSE_DETAIL",
+          "parameters": {
+            "widget": "hover_menu"
+          },
+          "preconditions": [
+            {
+              "path": "$.selected_course_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.intended_enrollment_type",
+              "value": "purchase"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#enroll-button-menu"
+            },
+            {
+              "op": "click",
+              "selector": "#enroll-menu-purchase",
+              "ui_elements": {
+                "container": "#enroll-button-menu",
+                "options": [
+                  {
+                    "value": "purchase",
+                    "selector": "#enroll-menu-purchase"
+                  },
+                  {
+                    "value": "audit",
+                    "selector": "#enroll-menu-audit"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_COURSE_DETAIL_CHOOSE_AUDIT_HOVER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "COURSE_DETAIL",
+          "to": "COURSE_DETAIL",
+          "parameters": {
+            "widget": "hover_menu"
+          },
+          "preconditions": [
+            {
+              "path": "$.selected_course_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.intended_enrollment_type",
+              "value": "audit"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#enroll-button-menu"
+            },
+            {
+              "op": "click",
+              "selector": "#enroll-menu-audit",
+              "ui_elements": {
+                "container": "#enroll-button-menu",
+                "options": [
+                  {
+                    "value": "purchase",
+                    "selector": "#enroll-menu-purchase"
+                  },
+                  {
+                    "value": "audit",
+                    "selector": "#enroll-menu-audit"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_COURSE_DETAIL_GO_TO_ENROLL_FLOW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSE_DETAIL",
+          "to": "ENROLLMENT_OPTIONS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.intended_enrollment_type",
+              "cond": "eq",
+              "value": "purchase"
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#enroll-now-primary"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COURSE_DETAIL_GO_TO_AUDIT_FLOW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSE_DETAIL",
+          "to": "AUDIT_CONFIRM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.intended_enrollment_type",
+              "cond": "eq",
+              "value": "audit"
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#audit-this-course-link"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COURSE_DETAIL_VIEW_SYLLABUS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSE_DETAIL",
+          "to": "COURSE_SYLLABUS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_course_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#tab-syllabus"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COURSE_DETAIL_BACK_DISCOVERY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSE_DETAIL",
+          "to": "COURSE_DISCOVERY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#breadcrumb-back-to-catalog"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "COURSE_SYLLABUS",
+      "signature_schema": {
+        "selected_course_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SYLLABUS_BACK_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSE_SYLLABUS",
+          "to": "COURSE_DETAIL",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_course_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#tab-overview"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AUDIT_CONFIRM",
+      "signature_schema": {
+        "selected_course_id": "string|null",
+        "audit_terms_confirmed": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_AUDIT_CONFIRM_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "AUDIT_CONFIRM",
+          "to": "AUDIT_CONFIRM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.audit_terms_confirmed",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#audit-terms-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_AUDIT_CONFIRM_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "AUDIT_CONFIRM",
+          "to": "AUDIT_COURSE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.audit_terms_confirmed",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.selected_course_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#audit-confirm-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_AUDIT_CONFIRM_BACK_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "AUDIT_CONFIRM",
+          "to": "COURSE_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-to-course-link"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ENROLLMENT_OPTIONS",
+      "signature_schema": {
+        "selected_course_id": "string|null",
+        "selected_pricing_option": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ENROLL_OPTIONS_SELECT_PRICING",
+          "name": "select",
+          "is_navigation": false,
+          "from": "ENROLLMENT_OPTIONS",
+          "to": "ENROLLMENT_OPTIONS",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_pricing_option",
+              "value": "one-time"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pricing-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#pricing-option-one-time",
+              "ui_elements": {
+                "container": "#pricing-dropdown",
+                "options": [
+                  {
+                    "value": "one-time",
+                    "selector": "#pricing-option-one-time"
+                  },
+                  {
+                    "value": "subscription",
+                    "selector": "#pricing-option-subscription"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_ENROLL_OPTIONS_CONTINUE_PAYMENT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ENROLLMENT_OPTIONS",
+          "to": "PAYMENT_DETAILS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_pricing_option",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.selected_course_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#continue-to-payment-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ENROLL_OPTIONS_BACK_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ENROLLMENT_OPTIONS",
+          "to": "COURSE_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#enrollment-options-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PAYMENT_DETAILS",
+      "signature_schema": {
+        "card_number_filled": "boolean|null",
+        "card_name_filled": "boolean|null",
+        "card_cvv_filled": "boolean|null",
+        "billing_country_selected": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PAYMENT_TYPE_CARD_NUMBER",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PAYMENT_DETAILS",
+          "to": "PAYMENT_DETAILS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.card_number_filled",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#card-number-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#card-number-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENT_TYPE_CARD_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PAYMENT_DETAILS",
+          "to": "PAYMENT_DETAILS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.card_name_filled",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#card-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#card-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENT_TYPE_CARD_CVV",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PAYMENT_DETAILS",
+          "to": "PAYMENT_DETAILS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.card_cvv_filled",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#card-cvv-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#card-cvv-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENT_SELECT_BILLING_COUNTRY",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PAYMENT_DETAILS",
+          "to": "PAYMENT_DETAILS",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.billing_country_selected",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#billing-country-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#billing-country-us",
+              "ui_elements": {
+                "container": "#billing-country-dropdown",
+                "options": [
+                  {
+                    "value": "us",
+                    "selector": "#billing-country-us"
+                  },
+                  {
+                    "value": "uk",
+                    "selector": "#billing-country-uk"
+                  },
+                  {
+                    "value": "in",
+                    "selector": "#billing-country-in"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENT_CONTINUE_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PAYMENT_DETAILS",
+          "to": "ORDER_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.card_number_filled",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.card_name_filled",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.card_cvv_filled",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.billing_country_selected",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#payment-continue-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENT_BACK_ENROLL_OPTIONS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PAYMENT_DETAILS",
+          "to": "ENROLLMENT_OPTIONS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#payment-back-button"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ORDER_REVIEW",
+      "signature_schema": {
+        "selected_course_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ORDER_REVIEW_PLACE_ORDER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ORDER_REVIEW",
+          "to": "ENROLL_COURSE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_course_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#place-order-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ORDER_REVIEW_BACK_PAYMENT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ORDER_REVIEW",
+          "to": "PAYMENT_DETAILS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#order-review-back-button"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ENROLL_COURSE_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ENROLL_SUCCESS_GO_TO_COURSE_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ENROLL_COURSE_SUCCESS",
+          "to": "COURSE_HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Enrollment successful"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-to-course-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ENROLL_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ENROLL_COURSE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Enrollment successful"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#success-go-home-link"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AUDIT_COURSE_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_AUDIT_SUCCESS_GO_TO_COURSE_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "AUDIT_COURSE_SUCCESS",
+          "to": "COURSE_HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "You are now auditing this course"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-to-audit-course-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_AUDIT_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "AUDIT_COURSE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "You are now auditing this course"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#audit-success-go-home-link"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "COURSE_HOME",
+      "signature_schema": {
+        "selected_course_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_COURSE_HOME_OPEN_RATINGS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSE_HOME",
+          "to": "COURSE_RATING_FORM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_course_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#course-home-rate-this-course"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COURSE_HOME_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSE_HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#header-logo-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "COURSE_RATING_FORM",
+      "signature_schema": {
+        "selected_course_id": "string|null",
+        "rating_stars_selected": "boolean|null",
+        "rating_text_filled": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_RATING_SELECT_STARS",
+          "name": "click",
+          "is_navigation": false,
+          "from": "COURSE_RATING_FORM",
+          "to": "COURSE_RATING_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.rating_stars_selected",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#rating-stars-5"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RATING_TYPE_REVIEW",
+          "name": "type",
+          "is_navigation": false,
+          "from": "COURSE_RATING_FORM",
+          "to": "COURSE_RATING_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.rating_text_filled",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#rating-textarea"
+            },
+            {
+              "op": "type_text",
+              "selector": "#rating-textarea",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RATING_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSE_RATING_FORM",
+          "to": "COURSE_RATING_SUBMITTED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.rating_stars_selected",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.rating_text_filled",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.selected_course_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#rating-submit-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RATING_BACK_COURSE_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSE_RATING_FORM",
+          "to": "COURSE_HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#rating-cancel-button"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "COURSE_RATING_SUBMITTED_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_RATING_SUCCESS_GO_TO_COURSE_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSE_RATING_SUBMITTED_SUCCESS",
+          "to": "COURSE_HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Rating submitted"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#rating-success-back-to-course"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RATING_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COURSE_RATING_SUBMITTED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Rating submitted"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#rating-success-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SPECIALIZATION_LIST",
+      "signature_schema": {
+        "specialization_list_filters_applied": "boolean|null",
+        "specialization_list_has_searched": "boolean|null",
+        "specialization_list_viewport_anchor_id": "string|null",
+        "matched_specialization_id": "string|null",
+        "selected_specialization_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SPEC_LIST_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SPECIALIZATION_LIST",
+          "to": "SPECIALIZATION_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.specialization_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-beginner-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SPEC_LIST_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SPECIALIZATION_LIST",
+          "to": "SPECIALIZATION_LIST",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.specialization_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-duration-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#filter-duration-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SPEC_LIST_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SPECIALIZATION_LIST",
+          "to": "SPECIALIZATION_LIST",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#spec-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#spec-sort-option-popular",
+              "ui_elements": {
+                "container": "#spec-sort-dropdown",
+                "options": [
+                  {
+                    "value": "popular",
+                    "selector": "#spec-sort-option-popular"
+                  },
+                  {
+                    "value": "newest",
+                    "selector": "#spec-sort-option-newest"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_SPEC_LIST_OPEN_FILTERED_ITEM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SPECIALIZATION_LIST",
+          "to": "SPECIALIZATION_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.specialization_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.specialization_list_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_specialization_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#specialization-results .specialization-card-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SPEC_LIST_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "SPECIALIZATION_LIST",
+          "to": "SPECIALIZATION_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_specialization_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.specialization_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#specialization-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#specialization-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SPEC_LIST_OPEN_MATCHED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SPECIALIZATION_LIST",
+          "to": "SPECIALIZATION_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_specialization_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.specialization_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_specialization_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.specialization_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#specialization-results .specialization-card-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SPEC_LIST_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SPECIALIZATION_LIST",
+          "to": "SPECIALIZATION_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.specialization_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#specialization-results-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#specialization-results-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SPEC_LIST_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SPECIALIZATION_LIST",
+          "to": "SPECIALIZATION_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.specialization_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_specialization_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.specialization_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#specialization-results .specialization-card-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SPEC_LIST_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SPECIALIZATION_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#header-logo-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SPECIALIZATION_DETAIL",
+      "signature_schema": {
+        "selected_specialization_id": "string|null",
+        "specialization_enroll_type": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SPEC_DETAIL_SELECT_ENROLL",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SPECIALIZATION_DETAIL",
+          "to": "SPECIALIZATION_DETAIL",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [
+            {
+              "path": "$.selected_specialization_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.specialization_enroll_type",
+              "value": "subscribe"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#specialization-enroll-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#specialization-enroll-subscribe",
+              "ui_elements": {
+                "container": "#specialization-enroll-dropdown",
+                "options": [
+                  {
+                    "value": "subscribe",
+                    "selector": "#specialization-enroll-subscribe"
+                  },
+                  {
+                    "value": "audit-courses",
+                    "selector": "#specialization-enroll-audit"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_SPEC_DETAIL_CONTINUE_SUBSCRIBE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SPECIALIZATION_DETAIL",
+          "to": "SPECIALIZATION_SUBSCRIBE_PAYMENT",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.specialization_enroll_type",
+              "cond": "eq",
+              "value": "subscribe"
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#specialization-continue-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SPEC_DETAIL_BACK_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SPECIALIZATION_DETAIL",
+          "to": "SPECIALIZATION_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#specialization-back-to-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SPECIALIZATION_SUBSCRIBE_PAYMENT",
+      "signature_schema": {
+        "card_number_filled": "boolean|null",
+        "card_name_filled": "boolean|null",
+        "card_cvv_filled": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SPEC_PAY_TYPE_CARD_NUMBER",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SPECIALIZATION_SUBSCRIBE_PAYMENT",
+          "to": "SPECIALIZATION_SUBSCRIBE_PAYMENT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.card_number_filled",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#spec-card-number-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#spec-card-number-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SPEC_PAY_TYPE_CARD_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SPECIALIZATION_SUBSCRIBE_PAYMENT",
+          "to": "SPECIALIZATION_SUBSCRIBE_PAYMENT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.card_name_filled",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#spec-card-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#spec-card-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SPEC_PAY_TYPE_CARD_CVV",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SPECIALIZATION_SUBSCRIBE_PAYMENT",
+          "to": "SPECIALIZATION_SUBSCRIBE_PAYMENT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.card_cvv_filled",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#spec-card-cvv-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#spec-card-cvv-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SPEC_PAY_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SPECIALIZATION_SUBSCRIBE_PAYMENT",
+          "to": "SPECIALIZATION_SUBSCRIBE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.card_number_filled",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.card_name_filled",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.card_cvv_filled",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#spec-payment-submit-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SPEC_PAY_BACK_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SPECIALIZATION_SUBSCRIBE_PAYMENT",
+          "to": "SPECIALIZATION_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#spec-payment-back-button"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SPECIALIZATION_SUBSCRIBE_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SPEC_SUB_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SPECIALIZATION_SUBSCRIBE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Specialization subscription started"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#spec-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SPEC_SUB_SUCCESS_GO_TO_LEARNING",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SPECIALIZATION_SUBSCRIBE_SUCCESS",
+          "to": "SPECIALIZATION_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Specialization subscription started"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#spec-success-go-to-learning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROFESSIONAL_CERT_LIST",
+      "signature_schema": {
+        "pro_cert_list_has_searched": "boolean|null",
+        "pro_cert_list_viewport_anchor_id": "string|null",
+        "matched_pro_cert_id": "string|null",
+        "selected_pro_cert_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PRO_CERT_LIST_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "PROFESSIONAL_CERT_LIST",
+          "to": "PROFESSIONAL_CERT_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_pro_cert_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.pro_cert_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pro-cert-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#pro-cert-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRO_CERT_LIST_OPEN_MATCHED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFESSIONAL_CERT_LIST",
+          "to": "PROFESSIONAL_CERT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_pro_cert_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.pro_cert_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_pro_cert_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.pro_cert_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pro-cert-results .pro-cert-card-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRO_CERT_LIST_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PROFESSIONAL_CERT_LIST",
+          "to": "PROFESSIONAL_CERT_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.pro_cert_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pro-cert-results-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#pro-cert-results-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRO_CERT_LIST_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFESSIONAL_CERT_LIST",
+          "to": "PROFESSIONAL_CERT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.pro_cert_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_pro_cert_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.pro_cert_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pro-cert-results .pro-cert-card-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRO_CERT_LIST_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFESSIONAL_CERT_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#header-logo-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROFESSIONAL_CERT_DETAIL",
+      "signature_schema": {
+        "selected_pro_cert_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PRO_CERT_DETAIL_GO_TO_ENROLL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFESSIONAL_CERT_DETAIL",
+          "to": "PROFESSIONAL_CERT_ENROLL_PAYMENT",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_pro_cert_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pro-cert-enroll-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRO_CERT_DETAIL_BACK_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFESSIONAL_CERT_DETAIL",
+          "to": "PROFESSIONAL_CERT_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pro-cert-back-to-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROFESSIONAL_CERT_ENROLL_PAYMENT",
+      "signature_schema": {
+        "card_number_filled": "boolean|null",
+        "card_name_filled": "boolean|null",
+        "card_cvv_filled": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PRO_CERT_PAY_TYPE_CARD_NUMBER",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PROFESSIONAL_CERT_ENROLL_PAYMENT",
+          "to": "PROFESSIONAL_CERT_ENROLL_PAYMENT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.card_number_filled",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pro-cert-card-number-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#pro-cert-card-number-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRO_CERT_PAY_TYPE_CARD_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PROFESSIONAL_CERT_ENROLL_PAYMENT",
+          "to": "PROFESSIONAL_CERT_ENROLL_PAYMENT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.card_name_filled",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pro-cert-card-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#pro-cert-card-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRO_CERT_PAY_TYPE_CARD_CVV",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PROFESSIONAL_CERT_ENROLL_PAYMENT",
+          "to": "PROFESSIONAL_CERT_ENROLL_PAYMENT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.card_cvv_filled",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pro-cert-card-cvv-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#pro-cert-card-cvv-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRO_CERT_PAY_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFESSIONAL_CERT_ENROLL_PAYMENT",
+          "to": "ENROLL_PROFESSIONAL_CERT_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.card_number_filled",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.card_name_filled",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.card_cvv_filled",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pro-cert-payment-submit-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRO_CERT_PAY_BACK_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFESSIONAL_CERT_ENROLL_PAYMENT",
+          "to": "PROFESSIONAL_CERT_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pro-cert-payment-back-button"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ENROLL_PROFESSIONAL_CERT_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PRO_CERT_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ENROLL_PROFESSIONAL_CERT_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Professional Certificate enrollment complete"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pro-cert-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRO_CERT_SUCCESS_GO_TO_DASHBOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ENROLL_PROFESSIONAL_CERT_SUCCESS",
+          "to": "LEARNER_DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Professional Certificate enrollment complete"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#pro-cert-success-go-to-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LEARNER_DASHBOARD",
+      "signature_schema": {
+        "enrolled_courses": "array<object>|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_DASHBOARD_OPEN_COURSE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "LEARNER_DASHBOARD",
+          "to": "COURSE_HOME",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dashboard-enrolled-courses .course-card"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DASHBOARD_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "LEARNER_DASHBOARD",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#header-logo-home"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+exit_status: Submitted
+submission:
+(no submission text returned by agent)
+
+trajectory_file: /Users/evanwu/Desktop/autoguiworld/AutoWebWorld/autowebworld/react_context/react_20260305_124514_966018/turns/turn_001.traj.json

@@ -1,0 +1,2549 @@
+{
+  "meta": {
+    "app": "Blogging_Platform-Medium_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "PUBLISH_POST_SUCCESS",
+      "SCHEDULE_POST_SUCCESS",
+      "COMMENT_SUBMIT_SUCCESS",
+      "PROFILE_UPDATE_SUCCESS",
+      "SUBSCRIPTION_SUCCESS"
+    ],
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 25,
+        "max": 30
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover",
+        "menu"
+      ],
+      "home_nav_coverage": "each",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 4,
+        "two_step_parity": false,
+        "allowed_shapes": [
+          "checkboxes",
+          "sliders",
+          "sort"
+        ]
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "current_user_id": "string|null",
+        "home_feed_posts": "array<object>|null",
+        "home_selected_post_id": "string|null",
+        "home_viewport_anchor_id": "string|null",
+        "home_has_searched": "boolean|null",
+        "home_matched_post_id": "string|null",
+        "home_filters_applied": "boolean|null",
+        "cookie_consent_given": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_HOME_ACCEPT_COOKIES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "neq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cookie_consent_given",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ],
+          "interceptors": {
+            "type": "cookie"
+          }
+        },
+        {
+          "id": "ACT_HOME_OPEN_ANY_POST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "POST_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.home_selected_post_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.home_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#home-feed .post-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_POST_LIST_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "POST_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-stories"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_POST_LIST_HOVER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "POST_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#nav-stories"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-stories-hover"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_POST_LIST_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "POST_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-more"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-more-stories"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_NEW_STORY_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "NEW_STORY_EDITOR",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-write-direct"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_NEW_STORY_HOVER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "NEW_STORY_EDITOR",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#nav-write"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-write-new-story"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_NEW_STORY_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "NEW_STORY_EDITOR",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-profile-toggle"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-profile-write-story"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_PROFILE_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "PROFILE_OVERVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-profile-direct"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_PROFILE_HOVER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "PROFILE_OVERVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#nav-profile"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-profile-hover-view"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_PROFILE_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "PROFILE_OVERVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-profile-toggle"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-profile-view",
+              "ui_elements": {
+                "container": "#nav-profile-menu",
+                "options": [
+                  {
+                    "value": "profile",
+                    "selector": "#nav-profile-view"
+                  },
+                  {
+                    "value": "settings",
+                    "selector": "#nav-profile-settings"
+                  },
+                  {
+                    "value": "lists",
+                    "selector": "#nav-profile-lists"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "POST_LIST",
+      "signature_schema": {
+        "location_permission_granted": "boolean|null",
+        "posts": "array<object>|null",
+        "post_list_selected_post_id": "string|null",
+        "post_list_viewport_anchor_id": "string|null",
+        "post_list_has_searched": "boolean|null",
+        "post_list_matched_post_id": "string|null",
+        "post_list_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_POST_LIST_ALLOW_LOCATION",
+          "name": "click",
+          "is_navigation": false,
+          "from": "POST_LIST",
+          "to": "POST_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ],
+          "interceptors": {
+            "type": "location"
+          }
+        },
+        {
+          "id": "ACT_POST_LIST_SEARCH_POST",
+          "name": "search",
+          "is_navigation": false,
+          "from": "POST_LIST",
+          "to": "POST_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.post_list_matched_post_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.post_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#post-list-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#post-list-search-input",
+              "text": "{ITEM_ANY}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_POST_LIST_OPEN_MATCHED_POST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "POST_LIST",
+          "to": "POST_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.post_list_matched_post_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.post_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.post_list_selected_post_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.post_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#post-list .post-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_POST_LIST_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "POST_LIST",
+          "to": "POST_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.post_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#post-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#post-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_POST_LIST_OPEN_ANY_POST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "POST_LIST",
+          "to": "POST_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.post_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.post_list_selected_post_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.post_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#post-list .post-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_POST_LIST_FILTER_TAG_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "POST_LIST",
+          "to": "POST_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.post_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#post-list-filter-tag-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_POST_LIST_FILTER_LENGTH_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "POST_LIST",
+          "to": "POST_LIST",
+          "parameters": {
+            "widget": "slider"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.post_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#post-list-filter-length-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#post-list-filter-length-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_POST_LIST_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "POST_LIST",
+          "to": "POST_LIST",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.post_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#post-list-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#post-list-sort-option-latest-desc",
+              "ui_elements": {
+                "container": "#post-list-sort-dropdown",
+                "options": [
+                  {
+                    "value": "latest",
+                    "selector": "#post-list-sort-option-latest-desc"
+                  },
+                  {
+                    "value": "claps",
+                    "selector": "#post-list-sort-option-claps"
+                  },
+                  {
+                    "value": "responses",
+                    "selector": "#post-list-sort-option-responses"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_POST_LIST_OPEN_FILTERED_POST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "POST_LIST",
+          "to": "POST_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.post_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.post_list_selected_post_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.post_list_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#post-list .post-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_POST_LIST_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "POST_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "POST_DETAIL",
+      "signature_schema": {
+        "post_detail_post_id": "string|null",
+        "post_is_bookmarked": "boolean|null",
+        "post_clapped": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_POST_DETAIL_CLAP",
+          "name": "click",
+          "is_navigation": false,
+          "from": "POST_DETAIL",
+          "to": "POST_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.post_clapped",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#post-detail-clap-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_POST_DETAIL_BOOKMARK",
+          "name": "click",
+          "is_navigation": false,
+          "from": "POST_DETAIL",
+          "to": "POST_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.post_is_bookmarked",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#post-detail-bookmark-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_POST_DETAIL_OPEN_COMMENTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "POST_DETAIL",
+          "to": "COMMENT_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#post-detail-add-response"
+            }
+          ]
+        },
+        {
+          "id": "ACT_POST_DETAIL_OPEN_WRITER_PROFILE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "POST_DETAIL",
+          "to": "PROFILE_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#post-detail-author-link"
+            }
+          ]
+        },
+        {
+          "id": "ACT_POST_DETAIL_BACK_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "POST_DETAIL",
+          "to": "POST_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#post-detail-back"
+            }
+          ]
+        },
+        {
+          "id": "ACT_POST_DETAIL_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "POST_DETAIL",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#post-detail-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "COMMENT_FORM",
+      "signature_schema": {
+        "comment_text": "string|null",
+        "comment_preview_shown": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_COMMENT_FORM_TYPE_COMMENT",
+          "name": "type",
+          "is_navigation": false,
+          "from": "COMMENT_FORM",
+          "to": "COMMENT_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.comment_text",
+              "value": "typed"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#comment-editor"
+            },
+            {
+              "op": "type_text",
+              "selector": "#comment-editor",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COMMENT_FORM_PREVIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "COMMENT_FORM",
+          "to": "COMMENT_FORM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.comment_text",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.comment_preview_shown",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#comment-preview-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COMMENT_FORM_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COMMENT_FORM",
+          "to": "COMMENT_SUBMIT_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.comment_text",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#comment-submit-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COMMENT_FORM_BACK_POST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "COMMENT_FORM",
+          "to": "POST_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#comment-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "COMMENT_SUBMIT_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": []
+    },
+    {
+      "id": "NEW_STORY_EDITOR",
+      "signature_schema": {
+        "draft_title": "string|null",
+        "draft_subtitle": "string|null",
+        "draft_body": "string|null",
+        "draft_tag": "string|null",
+        "draft_can_publish": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_EDITOR_TYPE_TITLE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "NEW_STORY_EDITOR",
+          "to": "NEW_STORY_EDITOR",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.draft_title",
+              "value": "typed"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#editor-title"
+            },
+            {
+              "op": "type_text",
+              "selector": "#editor-title",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EDITOR_TYPE_SUBTITLE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "NEW_STORY_EDITOR",
+          "to": "NEW_STORY_EDITOR",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.draft_subtitle",
+              "value": "typed"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#editor-subtitle"
+            },
+            {
+              "op": "type_text",
+              "selector": "#editor-subtitle",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EDITOR_TYPE_BODY",
+          "name": "type",
+          "is_navigation": false,
+          "from": "NEW_STORY_EDITOR",
+          "to": "NEW_STORY_EDITOR",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.draft_body",
+              "value": "typed"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#editor-body"
+            },
+            {
+              "op": "type_text",
+              "selector": "#editor-body",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EDITOR_SELECT_TAG",
+          "name": "select",
+          "is_navigation": false,
+          "from": "NEW_STORY_EDITOR",
+          "to": "NEW_STORY_EDITOR",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.draft_tag",
+              "value": "selected"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#editor-tag-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#editor-tag-option-tech",
+              "ui_elements": {
+                "container": "#editor-tag-dropdown",
+                "options": [
+                  {
+                    "value": "technology",
+                    "selector": "#editor-tag-option-tech"
+                  },
+                  {
+                    "value": "culture",
+                    "selector": "#editor-tag-option-culture"
+                  },
+                  {
+                    "value": "productivity",
+                    "selector": "#editor-tag-option-productivity"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_EDITOR_ENABLE_PUBLISH",
+          "name": "click",
+          "is_navigation": false,
+          "from": "NEW_STORY_EDITOR",
+          "to": "NEW_STORY_EDITOR",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.draft_title",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.draft_body",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.draft_can_publish",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#editor-check-ready"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EDITOR_OPEN_PUBLISH_MODAL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NEW_STORY_EDITOR",
+          "to": "PUBLISH_OPTIONS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.draft_can_publish",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#editor-open-publish"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EDITOR_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NEW_STORY_EDITOR",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#editor-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PUBLISH_OPTIONS",
+      "signature_schema": {
+        "publish_to_publication": "boolean|null",
+        "allow_responses": "boolean|null",
+        "selected_publish_option": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PUBLISH_OPTIONS_TOGGLE_PUBLICATION",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PUBLISH_OPTIONS",
+          "to": "PUBLISH_OPTIONS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.publish_to_publication",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#publish-option-publication-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PUBLISH_OPTIONS_TOGGLE_RESPONSES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PUBLISH_OPTIONS",
+          "to": "PUBLISH_OPTIONS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.allow_responses",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#publish-option-responses-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PUBLISH_OPTIONS_CONTINUE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PUBLISH_OPTIONS",
+          "to": "PUBLISH_CONFIRM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_publish_option",
+              "value": "now"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#publish-options-continue"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PUBLISH_OPTIONS_BACK_EDITOR",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PUBLISH_OPTIONS",
+          "to": "NEW_STORY_EDITOR",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#publish-options-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PUBLISH_CONFIRM",
+      "signature_schema": {
+        "ready_to_publish": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PUBLISH_CONFIRM_REVIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PUBLISH_CONFIRM",
+          "to": "PUBLISH_CONFIRM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.ready_to_publish",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#publish-confirm-review"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PUBLISH_CONFIRM_PUBLISH_NOW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PUBLISH_CONFIRM",
+          "to": "PUBLISH_POST_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.ready_to_publish",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#publish-confirm-publish-now"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PUBLISH_CONFIRM_GO_SCHEDULE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PUBLISH_CONFIRM",
+          "to": "SCHEDULE_PICKER",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#publish-confirm-schedule"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PUBLISH_CONFIRM_BACK_OPTIONS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PUBLISH_CONFIRM",
+          "to": "PUBLISH_OPTIONS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#publish-confirm-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SCHEDULE_PICKER",
+      "signature_schema": {
+        "scheduled_datetime": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SCHEDULE_PICK_DATE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SCHEDULE_PICKER",
+          "to": "SCHEDULE_PICKER",
+          "parameters": {
+            "widget": "date_picker",
+            "year": 2025,
+            "month": 10,
+            "day": 22,
+            "hour": 10,
+            "minute": 30
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.scheduled_datetime",
+              "value": "2025-10-22T10:30"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#date-picker"
+            },
+            {
+              "op": "click",
+              "selector": ".year-2025"
+            },
+            {
+              "op": "click",
+              "selector": ".month-10"
+            },
+            {
+              "op": "click",
+              "selector": ".day-22"
+            },
+            {
+              "op": "click",
+              "selector": "#date-picker-hour"
+            },
+            {
+              "op": "click",
+              "selector": ".hour-10"
+            },
+            {
+              "op": "click",
+              "selector": "#date-picker-minute"
+            },
+            {
+              "op": "click",
+              "selector": ".minute-30"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SCHEDULE_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SCHEDULE_PICKER",
+          "to": "SCHEDULE_POST_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.scheduled_datetime",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#schedule-confirm-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SCHEDULE_BACK_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SCHEDULE_PICKER",
+          "to": "PUBLISH_CONFIRM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#schedule-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PUBLISH_POST_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": []
+    },
+    {
+      "id": "SCHEDULE_POST_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": []
+    },
+    {
+      "id": "PROFILE_OVERVIEW",
+      "signature_schema": {
+        "profile_username": "string|null",
+        "profile_bio": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PROFILE_GO_EDIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_OVERVIEW",
+          "to": "PROFILE_EDIT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-edit-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_OPEN_STORIES",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_OVERVIEW",
+          "to": "STORIES_DRAFTS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-stories-link"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_OPEN_SETTINGS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_OVERVIEW",
+          "to": "SETTINGS_PREFERENCES",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-settings-link"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_OVERVIEW",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROFILE_EDIT",
+      "signature_schema": {
+        "edit_name": "string|null",
+        "edit_bio": "string|null",
+        "edit_location": "string|null",
+        "profile_can_save": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PROFILE_EDIT_TYPE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PROFILE_EDIT",
+          "to": "PROFILE_EDIT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.edit_name",
+              "value": "typed"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#profile-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_EDIT_TYPE_BIO",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PROFILE_EDIT",
+          "to": "PROFILE_EDIT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.edit_bio",
+              "value": "typed"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-bio-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#profile-bio-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_EDIT_TYPE_LOCATION",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PROFILE_EDIT",
+          "to": "PROFILE_EDIT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.edit_location",
+              "value": "typed"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-location-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#profile-location-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_EDIT_ENABLE_SAVE",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PROFILE_EDIT",
+          "to": "PROFILE_EDIT",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.edit_name",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.profile_can_save",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-enable-save"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_EDIT_SAVE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_EDIT",
+          "to": "PROFILE_UPDATE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.profile_can_save",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-save-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_EDIT_BACK_OVERVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_EDIT",
+          "to": "PROFILE_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-edit-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROFILE_UPDATE_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": []
+    },
+    {
+      "id": "STORIES_DRAFTS",
+      "signature_schema": {
+        "drafts": "array<object>|null",
+        "stories_viewport_anchor_id": "string|null",
+        "stories_selected_draft_id": "string|null",
+        "stories_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_STORIES_FILTER_PUBLISHED_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "STORIES_DRAFTS",
+          "to": "STORIES_DRAFTS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.stories_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#stories-filter-published-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_STORIES_FILTER_LENGTH_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "STORIES_DRAFTS",
+          "to": "STORIES_DRAFTS",
+          "parameters": {
+            "widget": "slider"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.stories_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#stories-filter-length-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#stories-filter-length-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_STORIES_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "STORIES_DRAFTS",
+          "to": "STORIES_DRAFTS",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.stories_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#stories-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#stories-sort-option-newest",
+              "ui_elements": {
+                "container": "#stories-sort-dropdown",
+                "options": [
+                  {
+                    "value": "newest",
+                    "selector": "#stories-sort-option-newest"
+                  },
+                  {
+                    "value": "oldest",
+                    "selector": "#stories-sort-option-oldest"
+                  },
+                  {
+                    "value": "drafts",
+                    "selector": "#stories-sort-option-drafts"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_STORIES_OPEN_FILTERED_DRAFT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "STORIES_DRAFTS",
+          "to": "NEW_STORY_EDITOR",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.stories_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.stories_selected_draft_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.stories_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#stories-list .story-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_STORIES_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "STORIES_DRAFTS",
+          "to": "STORIES_DRAFTS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.stories_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#stories-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#stories-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_STORIES_OPEN_ANY_DRAFT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "STORIES_DRAFTS",
+          "to": "NEW_STORY_EDITOR",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.stories_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.stories_selected_draft_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.stories_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#stories-list .story-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_STORIES_BACK_PROFILE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "STORIES_DRAFTS",
+          "to": "PROFILE_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#stories-back-profile"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PUBLICATION_LIST",
+      "signature_schema": {
+        "publications": "array<object>|null",
+        "publication_viewport_anchor_id": "string|null",
+        "publication_selected_id": "string|null",
+        "publication_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PUBLICATION_FILTER_MEMBER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PUBLICATION_LIST",
+          "to": "PUBLICATION_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.publication_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#publication-filter-member-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PUBLICATION_FILTER_SIZE_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PUBLICATION_LIST",
+          "to": "PUBLICATION_LIST",
+          "parameters": {
+            "widget": "slider"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.publication_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#publication-filter-size-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#publication-filter-size-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PUBLICATION_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PUBLICATION_LIST",
+          "to": "PUBLICATION_LIST",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.publication_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#publication-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#publication-sort-option-featured",
+              "ui_elements": {
+                "container": "#publication-sort-dropdown",
+                "options": [
+                  {
+                    "value": "featured",
+                    "selector": "#publication-sort-option-featured"
+                  },
+                  {
+                    "value": "new",
+                    "selector": "#publication-sort-option-new"
+                  },
+                  {
+                    "value": "name",
+                    "selector": "#publication-sort-option-name"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_PUBLICATION_OPEN_FILTERED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PUBLICATION_LIST",
+          "to": "PUBLICATION_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.publication_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.publication_selected_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.publication_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#publication-list .publication-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PUBLICATION_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PUBLICATION_LIST",
+          "to": "PUBLICATION_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.publication_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#publication-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#publication-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PUBLICATION_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PUBLICATION_LIST",
+          "to": "PUBLICATION_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.publication_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.publication_selected_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.publication_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#publication-list .publication-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PUBLICATION_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PUBLICATION_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#publication-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PUBLICATION_DETAIL",
+      "signature_schema": {
+        "publication_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PUBLICATION_DETAIL_FOLLOW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PUBLICATION_DETAIL",
+          "to": "PUBLICATION_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#publication-follow-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PUBLICATION_DETAIL_SUBMIT_STORY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PUBLICATION_DETAIL",
+          "to": "NEW_STORY_EDITOR",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#publication-submit-story"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PUBLICATION_DETAIL_OPEN_STORIES",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PUBLICATION_DETAIL",
+          "to": "POST_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#publication-stories-link"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PUBLICATION_DETAIL_BACK_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PUBLICATION_DETAIL",
+          "to": "PUBLICATION_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#publication-back-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SETTINGS_PREFERENCES",
+      "signature_schema": {
+        "dark_mode_enabled": "boolean|null",
+        "email_notifications_enabled": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SETTINGS_TOGGLE_DARK_MODE",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SETTINGS_PREFERENCES",
+          "to": "SETTINGS_PREFERENCES",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.dark_mode_enabled",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-dark-mode-toggle"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_TOGGLE_EMAIL_NOTIFICATIONS",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SETTINGS_PREFERENCES",
+          "to": "SETTINGS_PREFERENCES",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.email_notifications_enabled",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-email-notifications-toggle"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_OPEN_MEMBERSHIP",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SETTINGS_PREFERENCES",
+          "to": "MEMBERSHIP_LANDING",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-membership-link"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_BACK_PROFILE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SETTINGS_PREFERENCES",
+          "to": "PROFILE_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-back-profile"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MEMBERSHIP_LANDING",
+      "signature_schema": {
+        "membership_plan_selected": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MEMBERSHIP_SELECT_MONTHLY",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MEMBERSHIP_LANDING",
+          "to": "MEMBERSHIP_LANDING",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.membership_plan_selected",
+              "value": "monthly"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#membership-plan-monthly"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEMBERSHIP_SELECT_YEARLY",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MEMBERSHIP_LANDING",
+          "to": "MEMBERSHIP_LANDING",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.membership_plan_selected",
+              "value": "yearly"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#membership-plan-yearly"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEMBERSHIP_CONTINUE_CHECKOUT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MEMBERSHIP_LANDING",
+          "to": "PAYMENT_DETAILS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.membership_plan_selected",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#membership-continue"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEMBERSHIP_BACK_SETTINGS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MEMBERSHIP_LANDING",
+          "to": "SETTINGS_PREFERENCES",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#membership-back-settings"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PAYMENT_DETAILS",
+      "signature_schema": {
+        "card_number_entered": "boolean|null",
+        "card_name_entered": "boolean|null",
+        "card_cvv_entered": "boolean|null",
+        "payment_ready": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PAYMENT_TYPE_CARD_NUMBER",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PAYMENT_DETAILS",
+          "to": "PAYMENT_DETAILS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.card_number_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#payment-card-number"
+            },
+            {
+              "op": "type_text",
+              "selector": "#payment-card-number",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENT_TYPE_CARD_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PAYMENT_DETAILS",
+          "to": "PAYMENT_DETAILS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.card_name_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#payment-card-name"
+            },
+            {
+              "op": "type_text",
+              "selector": "#payment-card-name",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENT_TYPE_CVV",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PAYMENT_DETAILS",
+          "to": "PAYMENT_DETAILS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.card_cvv_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#payment-card-cvv"
+            },
+            {
+              "op": "type_text",
+              "selector": "#payment-card-cvv",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENT_ENABLE_PAY",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PAYMENT_DETAILS",
+          "to": "PAYMENT_DETAILS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.card_number_entered",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.card_name_entered",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.card_cvv_entered",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.payment_ready",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#payment-enable-pay"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENT_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PAYMENT_DETAILS",
+          "to": "SUBSCRIPTION_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.payment_ready",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#payment-submit"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENT_BACK_MEMBERSHIP",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PAYMENT_DETAILS",
+          "to": "MEMBERSHIP_LANDING",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#payment-back-membership"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SUBSCRIPTION_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": []
+    }
+  ]
+}

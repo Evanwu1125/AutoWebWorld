@@ -1,0 +1,40 @@
+# Visual Style Guide - Email & SMS Marketing App (Klaviyo-inspired)
+
+## Theme & Tone
+- **Theme**: Professional Marketing Automation Platform. Clean, data-driven, trustworthy, yet modern and energetic.
+- **Reference**: Klaviyo.
+- **Tone**: "Wow factor" professional. Crisp typography, generous whitespace, subtle shadows, and high-quality imagery.
+
+## Color Palette
+- **Primary**: #2563EB (Royal Blue) - For primary actions, active states.
+- **Secondary**: #1E293B (Slate 800) - For navigation, headings.
+- **Background**: #F8FAFC (Slate 50) - Light, clean background.
+- **Surface**: #FFFFFF (White) - Cards, modals.
+- **Accent**: #10B981 (Emerald) - Success states, positive metrics.
+- **Text**: #334155 (Slate 700) - Body text.
+- **Muted**: #94A3B8 (Slate 400) - Secondary text, placeholders.
+
+## Typography
+- **Font Family**: Inter, system-ui, sans-serif.
+- **Headings**: Bold, tight tracking.
+- **Body**: Readable, comfortable line height (1.5).
+
+## Layout & Components
+- **Glassmorphism**: Subtle use on overlays/modals (backdrop-blur-md).
+- **Cards**: Rounded-xl, shadow-sm hover:shadow-md transition-all.
+- **Inputs**: Rounded-lg, border-slate-200, focus:ring-2 focus:ring-blue-500.
+- **Buttons**:
+    - Primary: Blue bg, white text, rounded-lg, hover:bg-blue-600.
+    - Secondary: White bg, border, slate text, hover:bg-slate-50.
+- **Images**: extensively used for "Wow" factor.
+    - Hero images on Home.
+    - Thumbnails for Campaigns/Flows/Forms.
+    - Avatars for user profiles.
+
+## Visual Details
+- **Micro-interactions**: Hover effects on cards (lift up), smooth transitions on buttons.
+- **Z-Index Strategy**:
+    - Modals: z-[10000]
+    - Dropdowns: z-50
+    - Sticky Headers: z-40
+    - Content: z-0

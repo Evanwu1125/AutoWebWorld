@@ -16,12 +16,14 @@ class BaseAgent(ABC):
                  model: str = "gpt-5",
                  temperature: float = 1,
                  max_tokens: int = 128000,
-                 base_url: str = "https://newapi.deepwisdom.ai/v1"):
+                 base_url: str = "https://newapi.deepwisdom.ai/v1",
+                 debug_output_dir: Optional[str] = None):
 
         self.model = model
         self.temperature = temperature
         self.max_tokens = max_tokens
         self.base_url = base_url
+        self.debug_output_dir = debug_output_dir
         self._client: Optional[AsyncOpenAI] = None
 
         self.total_input_tokens = 0
@@ -43,7 +45,7 @@ class BaseAgent(ABC):
         if self._client is None:
             api_key = os.getenv("OPENAI_API_KEY")
             if not api_key:
-                raise RuntimeError("缺少 OPENAI_API_KEY 环境变量")
+                raise RuntimeError("Missing OPENAI_API_KEY environment variable")
 
             self._client = AsyncOpenAI(
                 api_key=api_key,
@@ -91,7 +93,7 @@ class BaseAgent(ABC):
                                 except Exception:
                                     break
 
-                raise ValueError(f"无法从文本中提取有效的 JSON 对象: {text[:200]}...")
+                raise ValueError(f"Unable to extract a valid JSON object from text: {text[:200]}...")
 
     def _load_text(self, path: str) -> str:
         # If path is relative, resolve it relative to the env_generator directory
@@ -107,9 +109,9 @@ class BaseAgent(ABC):
             with open(path, "r", encoding="utf-8") as f:
                 return f.read().strip()
         except FileNotFoundError:
-            raise FileNotFoundError(f"找不到文件: {path}")
-        except UnicodeDecodeError:
-            raise UnicodeDecodeError(f"文件编码错误: {path}")
+            raise FileNotFoundError(f"File not found: {path}")
+        except UnicodeDecodeError as e:
+            raise ValueError(f"File encoding error: {path}") from e
 
     def _calculate_cost(self, input_tokens: int, output_tokens: int) -> float:
         model_key = self.model
@@ -119,7 +121,7 @@ class BaseAgent(ABC):
                     model_key = key
                     break
             else:
-                print(f"⚠️  模型 {self.model} 未在价格表中，使用默认价格")
+                print(f"⚠️  Model {self.model} not found in pricing table, using default price")
                 return (input_tokens / 1_000_000 * 3.0) + (output_tokens / 1_000_000 * 15.0)
 
         prices = self.pricing[model_key]
@@ -148,15 +150,15 @@ class BaseAgent(ABC):
     def print_usage_summary(self):
         summary = self.get_usage_summary()
         print("\n" + "=" * 60)
-        print(f"💰 {self.__class__.__name__} 使用统计")
+        print(f"💰 {self.__class__.__name__} Usage Statistics")
         print("=" * 60)
-        print(f"模型: {summary['model']}")
-        print(f"总调用次数: {summary['total_calls']}")
-        print(f"输入 tokens: {summary['total_input_tokens']:,}")
-        print(f"输出 tokens: {summary['total_output_tokens']:,}")
-        print(f"总 tokens: {summary['total_tokens']:,}")
-        print(f"总成本: ${summary['total_cost_usd']} (¥{summary['total_cost_cny']})")
-        print(f"平均每次调用成本: ${summary['average_cost_per_call_usd']}")
+        print(f"Model: {summary['model']}")
+        print(f"Total calls: {summary['total_calls']}")
+        print(f"Input tokens: {summary['total_input_tokens']:,}")
+        print(f"Output tokens: {summary['total_output_tokens']:,}")
+        print(f"Total tokens: {summary['total_tokens']:,}")
+        print(f"Total cost: ${summary['total_cost_usd']} (¥{summary['total_cost_cny']})")
+        print(f"Average cost per call: ${summary['average_cost_per_call_usd']}")
         print("=" * 60 + "\n")
 
     def reset_usage_stats(self):
@@ -195,7 +197,7 @@ class BaseAgent(ABC):
             }
 
         else:
-            # 默认使用 OpenAI 兼容格式（适用于 gemini 等其他模型）
+            # Default to OpenAI-compatible format (suitable for gemini and other models)
             request_params = {
                 "model": self.model,
                 "max_tokens": self.max_tokens,
@@ -219,19 +221,58 @@ class BaseAgent(ABC):
             cost = self._calculate_cost(input_tokens, output_tokens)
             self._update_usage_stats(input_tokens, output_tokens, cost)
 
-            print(f"🤖 {self.__class__.__name__}: LLM 调用完成")
-            print(f"   耗时: {duration:.2f}s")
-            print(f"   输入 tokens: {input_tokens:,}")
-            print(f"   输出 tokens: {output_tokens:,}")
-            print(f"   本次成本: ${cost:.4f} (¥{cost * 7.3:.2f})")
-            print(f"   累计成本: ${self.total_cost:.4f} (¥{self.total_cost * 7.3:.2f})")
+            print(f"🤖 {self.__class__.__name__}: LLM call completed")
+            print(f"   Duration: {duration:.2f}s")
+            print(f"   Input tokens: {input_tokens:,}")
+            print(f"   Output tokens: {output_tokens:,}")
+            print(f"   This call cost: ${cost:.4f} (¥{cost * 7.3:.2f})")
+            print(f"   Cumulative cost: ${self.total_cost:.4f} (¥{self.total_cost * 7.3:.2f})")
+
+            self._save_llm_debug_record({
+                "agent": self.__class__.__name__,
+                "model": self.model,
+                "base_url": self.base_url,
+                "duration_seconds": round(duration, 3),
+                "request": request_params,
+                "system_prompt": system_prompt,
+                "user_prompt": user_prompt,
+                "response_text": content,
+                "usage": {
+                    "input_tokens": input_tokens,
+                    "output_tokens": output_tokens,
+                    "cost_usd": round(cost, 6),
+                },
+            })
 
             return content
 
         except Exception as e:
-            print(f"❌ {self.__class__.__name__}: LLM 调用失败: {e}")
-            print(f"完整错误信息: {traceback.format_exc()}")
+            self._save_llm_debug_record({
+                "agent": self.__class__.__name__,
+                "model": self.model,
+                "base_url": self.base_url,
+                "request": request_params,
+                "system_prompt": system_prompt,
+                "user_prompt": user_prompt,
+                "error": str(e),
+                "traceback": traceback.format_exc(),
+            })
+            print(f"❌ {self.__class__.__name__}: LLM call failed: {e}")
+            print(f"Full error traceback: {traceback.format_exc()}")
             raise
+
+    def _save_llm_debug_record(self, payload: Dict[str, Any]) -> None:
+        if not self.debug_output_dir:
+            return
+        try:
+            os.makedirs(self.debug_output_dir, exist_ok=True)
+            ts = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+            filename = f"{ts}_{self.__class__.__name__.lower()}.json"
+            path = os.path.join(self.debug_output_dir, filename)
+            with open(path, "w", encoding="utf-8") as f:
+                json.dump(payload, f, ensure_ascii=False, indent=2)
+        except Exception as e:
+            print(f"⚠️  {self.__class__.__name__}: Failed to save LLM debug record: {e}")
 
     @abstractmethod
     async def call(self, **kwargs) -> Dict[str, Any]:
@@ -256,12 +297,12 @@ class BaseAgent(ABC):
             with open(file_path, "w", encoding="utf-8") as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
 
-            print(f"💾 {self.__class__.__name__}: 文件已保存到 {file_path}")
+            print(f"💾 {self.__class__.__name__}: File saved to {file_path}")
             return file_path
 
         except Exception as e:
-            print(f"❌ {self.__class__.__name__}: 文件保存失败: {e}")
-            raise OSError(f"无法保存文件到 {file_path}: {e}")
+            print(f"❌ {self.__class__.__name__}: File save failed: {e}")
+            raise OSError(f"Unable to save file to {file_path}: {e}")
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}(model={self.model}, temperature={self.temperature})"

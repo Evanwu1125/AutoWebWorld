@@ -1,0 +1,2518 @@
+{
+  "meta": {
+    "app": "E_Commerce_marketplace-JD.COM_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "CHECKOUT_FROM_CART_SUCCESS",
+      "CHECKOUT_BUY_NOW_SUCCESS",
+      "ORDER_SUBMITTED_SUCCESS",
+      "ACCOUNT_CREATED_SUCCESS",
+      "REVIEW_SUBMITTED_SUCCESS"
+    ],
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 25,
+        "max": 30
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover",
+        "menu"
+      ],
+      "home_nav_coverage": "each",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 4,
+        "two_step_parity": false,
+        "allowed_shapes": [
+          "checkboxes",
+          "sliders",
+          "sort"
+        ]
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "current_user_id": "string|null",
+        "home_cookie_accepted": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_HOME_ACCEPT_COOKIE",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.home_cookie_accepted",
+              "cond": "neq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.home_cookie_accepted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_ELECTRONICS_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "CATEGORY_ELECTRONICS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.home_cookie_accepted",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-electronics"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_SUPERMARKET_HOVER",
+          "name": "select",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "CATEGORY_SUPERMARKET",
+          "parameters": {
+            "widget": "hover_menu"
+          },
+          "preconditions": [
+            {
+              "path": "$.home_cookie_accepted",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#nav-categories"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-categories .option-supermarket",
+              "ui_elements": {
+                "container": "#nav-categories",
+                "options": [
+                  {
+                    "value": "electronics",
+                    "selector": "#nav-categories .option-electronics"
+                  },
+                  {
+                    "value": "supermarket",
+                    "selector": "#nav-categories .option-supermarket"
+                  },
+                  {
+                    "value": "fashion",
+                    "selector": "#nav-categories .option-fashion"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_CART_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "CART",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.home_cookie_accepted",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-menu-toggle"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-menu-cart",
+              "ui_elements": {
+                "container": "#nav-menu",
+                "options": [
+                  {
+                    "value": "home",
+                    "selector": "#nav-menu-home"
+                  },
+                  {
+                    "value": "cart",
+                    "selector": "#nav-menu-cart"
+                  },
+                  {
+                    "value": "orders",
+                    "selector": "#nav-menu-orders"
+                  },
+                  {
+                    "value": "profile",
+                    "selector": "#nav-menu-profile"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_LOGIN_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "LOGIN",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.home_cookie_accepted",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-login"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CATEGORY_ELECTRONICS",
+      "signature_schema": {
+        "products": "array<object>|null",
+        "electronics_matched_item_id": "string|null",
+        "electronics_selected_item_id": "string|null",
+        "electronics_list_has_searched": "boolean|null",
+        "electronics_list_viewport_anchor_id": "string|null",
+        "electronics_list_filters_applied": "boolean|null",
+        "global_location_permission_granted": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ELECTRONICS_ALLOW_LOCATION",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CATEGORY_ELECTRONICS",
+          "to": "CATEGORY_ELECTRONICS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.global_location_permission_granted",
+              "cond": "neq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.global_location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ELECTRONICS_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CATEGORY_ELECTRONICS",
+          "to": "CATEGORY_ELECTRONICS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.electronics_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-brand-jd"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ELECTRONICS_FILTER_PRICE_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CATEGORY_ELECTRONICS",
+          "to": "CATEGORY_ELECTRONICS",
+          "parameters": {
+            "widget": "slider"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.electronics_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#price-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#price-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ELECTRONICS_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CATEGORY_ELECTRONICS",
+          "to": "CATEGORY_ELECTRONICS",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.electronics_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#sort-option-sales",
+              "ui_elements": {
+                "container": "#sort-dropdown",
+                "options": [
+                  {
+                    "value": "sales",
+                    "selector": "#sort-option-sales"
+                  },
+                  {
+                    "value": "price_low_high",
+                    "selector": "#sort-option-price-low"
+                  },
+                  {
+                    "value": "price_high_low",
+                    "selector": "#sort-option-price-high"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_ELECTRONICS_OPEN_FILTERED_ITEM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CATEGORY_ELECTRONICS",
+          "to": "PRODUCT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.electronics_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.electronics_selected_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.electronics_list_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#electronics-list .row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ELECTRONICS_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "CATEGORY_ELECTRONICS",
+          "to": "CATEGORY_ELECTRONICS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.electronics_matched_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.electronics_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#electronics-search"
+            },
+            {
+              "op": "type_text",
+              "selector": "#electronics-search",
+              "text": "phone"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ELECTRONICS_OPEN_MATCHED_ITEM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CATEGORY_ELECTRONICS",
+          "to": "PRODUCT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.electronics_matched_item_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.electronics_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.electronics_selected_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.electronics_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#electronics-list .row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ELECTRONICS_SCROLL_ITEM_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CATEGORY_ELECTRONICS",
+          "to": "CATEGORY_ELECTRONICS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.electronics_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#electronics-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#electronics-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ELECTRONICS_OPEN_ANY_ITEM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CATEGORY_ELECTRONICS",
+          "to": "PRODUCT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.electronics_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.electronics_selected_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.electronics_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#electronics-list .row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ELECTRONICS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CATEGORY_ELECTRONICS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CATEGORY_SUPERMARKET",
+      "signature_schema": {
+        "products": "array<object>|null",
+        "supermarket_selected_item_id": "string|null",
+        "supermarket_list_viewport_anchor_id": "string|null",
+        "supermarket_list_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SUPERMARKET_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CATEGORY_SUPERMARKET",
+          "to": "CATEGORY_SUPERMARKET",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.supermarket_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-fresh-only"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SUPERMARKET_FILTER_PRICE_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CATEGORY_SUPERMARKET",
+          "to": "CATEGORY_SUPERMARKET",
+          "parameters": {
+            "widget": "slider"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.supermarket_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#supermarket-price-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#supermarket-price-slider",
+              "to_value": "left"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SUPERMARKET_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CATEGORY_SUPERMARKET",
+          "to": "CATEGORY_SUPERMARKET",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.supermarket_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#supermarket-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#supermarket-sort-option-rating-desc",
+              "ui_elements": {
+                "container": "#supermarket-sort-dropdown",
+                "options": [
+                  {
+                    "value": "time",
+                    "selector": "#supermarket-sort-option-time"
+                  },
+                  {
+                    "value": "price_low_high",
+                    "selector": "#supermarket-sort-option-price-low-inc"
+                  },
+                  {
+                    "value": "rating",
+                    "selector": "#supermarket-sort-option-rating-desc"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_SUPERMARKET_OPEN_FILTERED_ITEM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CATEGORY_SUPERMARKET",
+          "to": "PRODUCT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.supermarket_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.supermarket_selected_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.supermarket_list_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#supermarket-list .row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SUPERMARKET_SCROLL_ITEM_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CATEGORY_SUPERMARKET",
+          "to": "CATEGORY_SUPERMARKET",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.supermarket_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#supermarket-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#supermarket-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SUPERMARKET_OPEN_ANY_ITEM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CATEGORY_SUPERMARKET",
+          "to": "PRODUCT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.supermarket_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.supermarket_selected_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.supermarket_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#supermarket-list .row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SUPERMARKET_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CATEGORY_SUPERMARKET",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SEARCH_RESULTS",
+      "signature_schema": {
+        "products": "array<object>|null",
+        "search_matched_item_id": "string|null",
+        "search_selected_item_id": "string|null",
+        "search_list_has_searched": "boolean|null",
+        "search_list_viewport_anchor_id": "string|null",
+        "search_list_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SEARCH_RESULTS_SEARCH_AGAIN",
+          "name": "search",
+          "is_navigation": false,
+          "from": "SEARCH_RESULTS",
+          "to": "SEARCH_RESULTS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.search_matched_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.search_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#search-results-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#search-results-input",
+              "text": "laptop"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SEARCH_RESULTS_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SEARCH_RESULTS",
+          "to": "SEARCH_RESULTS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.search_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#search-filter-self-operated"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SEARCH_RESULTS_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SEARCH_RESULTS",
+          "to": "SEARCH_RESULTS",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.search_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#search-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#search-sort-option-comprehensive",
+              "ui_elements": {
+                "container": "#search-sort-dropdown",
+                "options": [
+                  {
+                    "value": "comprehensive",
+                    "selector": "#search-sort-option-comprehensive"
+                  },
+                  {
+                    "value": "price_low_high",
+                    "selector": "#search-sort-option-price-low"
+                  },
+                  {
+                    "value": "comment",
+                    "selector": "#search-sort-option-comment"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_SEARCH_RESULTS_OPEN_FILTERED_ITEM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SEARCH_RESULTS",
+          "to": "PRODUCT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.search_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.search_selected_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.search_list_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#search-results-list .row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SEARCH_RESULTS_OPEN_MATCHED_ITEM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SEARCH_RESULTS",
+          "to": "PRODUCT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.search_matched_item_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.search_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.search_selected_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.search_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#search-results-list .row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SEARCH_RESULTS_SCROLL_ITEM_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SEARCH_RESULTS",
+          "to": "SEARCH_RESULTS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.search_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#search-results-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#search-results-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SEARCH_RESULTS_OPEN_ANY_ITEM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SEARCH_RESULTS",
+          "to": "PRODUCT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.search_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.search_selected_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.search_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#search-results-list .row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SEARCH_RESULTS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SEARCH_RESULTS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PRODUCT_DETAIL",
+      "signature_schema": {
+        "product_selected_item_id": "string|null",
+        "product_selected_sku_id": "string|null",
+        "product_quantity": "number|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PRODUCT_SELECT_SKU",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PRODUCT_DETAIL",
+          "to": "PRODUCT_DETAIL",
+          "parameters": {
+            "sku_id": "{SKU_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.product_selected_sku_id",
+              "value_ref": "{sku_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sku-option-1"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRODUCT_SET_QUANTITY",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PRODUCT_DETAIL",
+          "to": "PRODUCT_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.product_quantity",
+              "value": 1
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#quantity-input"
+            },
+            {
+              "op": "key_press",
+              "key": "Ctrl+A"
+            },
+            {
+              "op": "key_press",
+              "key": "Delete"
+            },
+            {
+              "op": "type_text",
+              "selector": "#quantity-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRODUCT_ADD_TO_CART",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRODUCT_DETAIL",
+          "to": "CART",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.product_selected_sku_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.product_quantity",
+              "cond": "gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-add-to-cart"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRODUCT_BUY_NOW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRODUCT_DETAIL",
+          "to": "CHECKOUT_BUY_NOW_CONFIRM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.product_selected_sku_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.product_quantity",
+              "cond": "gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-buy-now"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRODUCT_GO_REVIEWS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRODUCT_DETAIL",
+          "to": "PRODUCT_REVIEWS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#tab-reviews"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRODUCT_BACK_CATEGORY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRODUCT_DETAIL",
+          "to": "CATEGORY_ELECTRONICS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PRODUCT_REVIEWS",
+      "signature_schema": {
+        "product_selected_item_id": "string|null",
+        "review_rating": "number|null",
+        "review_text_entered": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_REVIEWS_SELECT_RATING",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PRODUCT_REVIEWS",
+          "to": "PRODUCT_REVIEWS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.review_rating",
+              "value": 5
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#rating-star-5"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REVIEWS_TYPE_TEXT",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PRODUCT_REVIEWS",
+          "to": "PRODUCT_REVIEWS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.review_text_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#review-textarea"
+            },
+            {
+              "op": "type_text",
+              "selector": "#review-textarea",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REVIEWS_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRODUCT_REVIEWS",
+          "to": "REVIEW_SUBMITTED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.review_rating",
+              "cond": "gt",
+              "value": 0
+            },
+            {
+              "path": "$.review_text_entered",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-submit-review"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REVIEWS_BACK_PRODUCT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRODUCT_REVIEWS",
+          "to": "PRODUCT_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-product"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CART",
+      "signature_schema": {
+        "cart_items": "array<object>|null",
+        "cart_has_items": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CART_ADJUST_QUANTITY",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CART",
+          "to": "CART",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cart_has_items",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": ".cart-item-qty-input"
+            },
+            {
+              "op": "key_press",
+              "key": "Ctrl+A"
+            },
+            {
+              "op": "key_press",
+              "key": "Delete"
+            },
+            {
+              "op": "type_text",
+              "selector": ".cart-item-qty-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CART_CHECKOUT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CART",
+          "to": "CHECKOUT_CART_CONFIRM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cart_has_items",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-cart-checkout"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CART_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CART",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CART_GO_PRODUCT_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CART",
+          "to": "CATEGORY_ELECTRONICS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#continue-shopping"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHECKOUT_CART_CONFIRM",
+      "signature_schema": {
+        "checkout_address_selected": "boolean|null",
+        "checkout_payment_selected": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CHECKOUT_CART_SELECT_ADDRESS",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CHECKOUT_CART_CONFIRM",
+          "to": "CHECKOUT_CART_CONFIRM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.checkout_address_selected",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": ".address-item-default"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHECKOUT_CART_SELECT_PAYMENT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CHECKOUT_CART_CONFIRM",
+          "to": "CHECKOUT_CART_CONFIRM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.checkout_payment_selected",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": ".payment-option-online"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHECKOUT_CART_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHECKOUT_CART_CONFIRM",
+          "to": "CHECKOUT_FROM_CART_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.checkout_address_selected",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.checkout_payment_selected",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-submit-order"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHECKOUT_CART_BACK_CART",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHECKOUT_CART_CONFIRM",
+          "to": "CART",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-cart"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHECKOUT_BUY_NOW_CONFIRM",
+      "signature_schema": {
+        "checkout_bn_address_selected": "boolean|null",
+        "checkout_bn_payment_selected": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CHECKOUT_BN_SELECT_ADDRESS",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CHECKOUT_BUY_NOW_CONFIRM",
+          "to": "CHECKOUT_BUY_NOW_CONFIRM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.checkout_bn_address_selected",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": ".address-item-default"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHECKOUT_BN_SELECT_PAYMENT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CHECKOUT_BUY_NOW_CONFIRM",
+          "to": "CHECKOUT_BUY_NOW_CONFIRM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.checkout_bn_payment_selected",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": ".payment-option-cod"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHECKOUT_BN_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHECKOUT_BUY_NOW_CONFIRM",
+          "to": "CHECKOUT_BUY_NOW_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.checkout_bn_address_selected",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.checkout_bn_payment_selected",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-submit-order"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHECKOUT_BN_BACK_PRODUCT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHECKOUT_BUY_NOW_CONFIRM",
+          "to": "PRODUCT_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-product"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHECKOUT_FROM_CART_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CART_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHECKOUT_FROM_CART_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHECKOUT_BUY_NOW_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_BN_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHECKOUT_BUY_NOW_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ORDERS_LIST",
+      "signature_schema": {
+        "orders": "array<object>|null",
+        "orders_selected_item_id": "string|null",
+        "orders_list_viewport_anchor_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ORDERS_SCROLL_ORDER_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "ORDERS_LIST",
+          "to": "ORDERS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.orders_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#orders-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#orders-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ORDERS_OPEN_ANY_ORDER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ORDERS_LIST",
+          "to": "ORDER_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.orders_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.orders_selected_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.orders_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#orders-list .row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ORDERS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ORDERS_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ORDERS_GO_CART",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ORDERS_LIST",
+          "to": "CART",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-cart"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ORDER_DETAIL",
+      "signature_schema": {
+        "order_selected_item_id": "string|null",
+        "order_can_apply_service": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ORDER_APPLY_AFTER_SALE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ORDER_DETAIL",
+          "to": "AFTER_SALE_APPLY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.order_can_apply_service",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-apply-after-sale"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ORDER_BACK_ORDERS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ORDER_DETAIL",
+          "to": "ORDERS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-orders"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AFTER_SALE_APPLY",
+      "signature_schema": {
+        "after_sale_reason_selected": "boolean|null",
+        "after_sale_description_entered": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_AFTER_SALE_SELECT_REASON",
+          "name": "click",
+          "is_navigation": false,
+          "from": "AFTER_SALE_APPLY",
+          "to": "AFTER_SALE_APPLY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.after_sale_reason_selected",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": ".reason-option-quality"
+            }
+          ]
+        },
+        {
+          "id": "ACT_AFTER_SALE_TYPE_DESC",
+          "name": "type",
+          "is_navigation": false,
+          "from": "AFTER_SALE_APPLY",
+          "to": "AFTER_SALE_APPLY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.after_sale_description_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#after-sale-description"
+            },
+            {
+              "op": "type_text",
+              "selector": "#after-sale-description",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_AFTER_SALE_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "AFTER_SALE_APPLY",
+          "to": "ORDER_SUBMITTED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.after_sale_reason_selected",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.after_sale_description_entered",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-submit-after-sale"
+            }
+          ]
+        },
+        {
+          "id": "ACT_AFTER_SALE_BACK_ORDER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "AFTER_SALE_APPLY",
+          "to": "ORDER_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-order-detail"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ORDER_SUBMITTED_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_AFTER_SALE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ORDER_SUBMITTED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LOGIN",
+      "signature_schema": {
+        "login_username_entered": "boolean|null",
+        "login_password_entered": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_LOGIN_TYPE_USERNAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "LOGIN",
+          "to": "LOGIN",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.login_username_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#login-username"
+            },
+            {
+              "op": "type_text",
+              "selector": "#login-username",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LOGIN_TYPE_PASSWORD",
+          "name": "type",
+          "is_navigation": false,
+          "from": "LOGIN",
+          "to": "LOGIN",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.login_password_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#login-password"
+            },
+            {
+              "op": "type_text",
+              "selector": "#login-password",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LOGIN_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "LOGIN",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.login_username_entered",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.login_password_entered",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-login"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LOGIN_GO_REGISTER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "LOGIN",
+          "to": "REGISTER",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#link-register"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LOGIN_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "LOGIN",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REGISTER",
+      "signature_schema": {
+        "register_username_entered": "boolean|null",
+        "register_password_entered": "boolean|null",
+        "register_phone_entered": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_REGISTER_TYPE_USERNAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "REGISTER",
+          "to": "REGISTER",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.register_username_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#register-username"
+            },
+            {
+              "op": "type_text",
+              "selector": "#register-username",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REGISTER_TYPE_PASSWORD",
+          "name": "type",
+          "is_navigation": false,
+          "from": "REGISTER",
+          "to": "REGISTER",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.register_password_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#register-password"
+            },
+            {
+              "op": "type_text",
+              "selector": "#register-password",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REGISTER_TYPE_PHONE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "REGISTER",
+          "to": "REGISTER",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.register_phone_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#register-phone"
+            },
+            {
+              "op": "type_text",
+              "selector": "#register-phone",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REGISTER_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REGISTER",
+          "to": "ACCOUNT_CREATED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.register_username_entered",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.register_password_entered",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.register_phone_entered",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-register"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REGISTER_BACK_LOGIN",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REGISTER",
+          "to": "LOGIN",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-login"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ACCOUNT_CREATED_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ACCOUNT_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_CREATED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REVIEW_SUBMITTED_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_REVIEW_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REVIEW_SUBMITTED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "USER_CENTER",
+      "signature_schema": {
+        "user_name": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_USER_CENTER_GO_ORDERS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "USER_CENTER",
+          "to": "ORDERS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#menu-orders"
+            }
+          ]
+        },
+        {
+          "id": "ACT_USER_CENTER_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "USER_CENTER",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_USER_CENTER_GO_ADDRESS_BOOK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "USER_CENTER",
+          "to": "ADDRESS_BOOK",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#menu-address"
+            }
+          ]
+        },
+        {
+          "id": "ACT_USER_CENTER_GO_PAYMENT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "USER_CENTER",
+          "to": "PAYMENT_METHODS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#menu-payment"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ADDRESS_BOOK",
+      "signature_schema": {
+        "addresses": "array<object>|null",
+        "address_form_name_entered": "boolean|null",
+        "address_form_detail_entered": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ADDRESS_TYPE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "ADDRESS_BOOK",
+          "to": "ADDRESS_BOOK",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.address_form_name_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#address-name"
+            },
+            {
+              "op": "type_text",
+              "selector": "#address-name",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ADDRESS_TYPE_DETAIL",
+          "name": "type",
+          "is_navigation": false,
+          "from": "ADDRESS_BOOK",
+          "to": "ADDRESS_BOOK",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.address_form_detail_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#address-detail"
+            },
+            {
+              "op": "type_text",
+              "selector": "#address-detail",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ADDRESS_SAVE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ADDRESS_BOOK",
+          "to": "USER_CENTER",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.address_form_name_entered",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.address_form_detail_entered",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-save-address"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ADDRESS_BACK_USER_CENTER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ADDRESS_BOOK",
+          "to": "USER_CENTER",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-user-center"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PAYMENT_METHODS",
+      "signature_schema": {
+        "payment_card_number_entered": "boolean|null",
+        "payment_card_holder_entered": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PAYMENT_TYPE_CARD_NUMBER",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PAYMENT_METHODS",
+          "to": "PAYMENT_METHODS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.payment_card_number_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#card-number"
+            },
+            {
+              "op": "type_text",
+              "selector": "#card-number",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENT_TYPE_CARD_HOLDER",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PAYMENT_METHODS",
+          "to": "PAYMENT_METHODS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.payment_card_holder_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#card-holder"
+            },
+            {
+              "op": "type_text",
+              "selector": "#card-holder",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENT_SAVE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PAYMENT_METHODS",
+          "to": "USER_CENTER",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.payment_card_number_entered",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.payment_card_holder_entered",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-save-card"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENT_BACK_USER_CENTER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PAYMENT_METHODS",
+          "to": "USER_CENTER",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-user-center"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

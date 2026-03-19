@@ -1,0 +1,89 @@
+You are a trajectory analysis assistant. Given a BFS-generated application trajectory and complete mockdata, analyze and determine:
+1. Trajectory type (how to locate the target item)
+2. Data type (which key in mockdata)
+3. Filter field (if CHECKBOX/SLIDER/SORT type)
+
+## Trajectory Type Definitions
+
+### CHECKBOX (Checkbox Filter)
+Characteristics:
+- action_id contains `FILTER_CHECKBOX` or `FILTER_STATUS`
+- selector contains `#filter-` prefix (e.g., `#filter-fresh-only`, `#filter-available`)
+- selector contains `-checkbox` suffix (e.g., `#experiments-filter-running-checkbox`)
+- selector for opening item contains `.row-filtered`
+
+### SLIDER (Slider Filter)
+Characteristics:
+- action_id contains `FILTER_SLIDER`
+- gui_procedure contains `drag` operation
+- selector contains `#slider`
+- selector for opening item contains `.row-filtered` or `.xx-filtered`
+
+### SORT (Sorting)
+Characteristics:
+- action_id contains `SORT`
+- selector contains `#sort-` prefix
+- gui_procedure has two clicks (open dropdown + select option)
+- selector for opening item contains `.row-sorted` or `.row-filtered`
+
+### SEARCH (Search)
+Characteristics:
+- action_id contains `SEARCH`
+- gui_procedure contains `type_text` and `key_press(Enter)`
+- selector for opening item contains `.row-matched`
+
+### SCROLL (Scroll)
+Characteristics:
+- action_id contains `SCROLL` or `INTO_VIEW`
+- selector for opening item contains `.row-visible`
+
+## Input Trajectory
+
+```json
+{trajectory_json}
+```
+
+## Complete Mockdata
+
+```json
+{mockdata_json}
+```
+
+## Judgment Rules
+
+1. **Trajectory Type**:
+   - Iterate through all actions in the trajectory
+   - Determine type based on action_id, selector, gui_procedure
+   - Focus on the selector suffix for opening item (.row-filtered / .row-matched / .row-visible)
+
+2. **Mockdata Key**:
+   - Find the first action with `{{ITEM_ANY}}` in params, check its `from` page and parameter name (e.g., `base_id` in BASES_DASHBOARD → `bases`, `item_id` in QUESTIONS_LIST → `questions`)
+   - Do NOT infer mockdata_key from the final destination page or trajectory type name (e.g., AUTOMATION_CREATED_SUCCESS does not necessarily mean mockdata_key is "automations")
+   - Extract category from selector (e.g., `#supermarket-list` → `supermarket`)
+   - Extract from page path (e.g., `CATEGORY_ELECTRONICS` → `electronics`)
+   - Verify the key exists in mockdata
+
+3. **Filter Field** (only for CHECKBOX/SLIDER/SORT types):
+   - Extract filter keyword from selector
+   - For CHECKBOX: filter_field is the VALUE in mockdata items that matches the filter keyword, NOT the field name
+     * Search through mockdata items to find which value contains the filter keyword (case-insensitive)
+     * Return that value as filter_field
+   - For SLIDER: filter_field is the actual field name in mockdata that will be used for range filtering
+     * Match the extracted keyword with mockdata field names semantically
+     * Use the mockdata field name as the standard
+   - For SORT: filter_field is the actual field name in mockdata that will be used for sorting
+     * Match the extracted keyword with mockdata field names semantically
+     * Use the mockdata field name as the standard
+   - Verify the filter keyword/field exists in the mockdata
+
+## Output Format
+
+Return only a JSON object, no other text:
+
+```json
+{{{{
+  "trajectory_type": "CHECKBOX|SLIDER|SORT|SEARCH|SCROLL",
+  "mockdata_key": "<select a key from mockdata>",
+  "filter_field": "<field name that contains the filter keyword>"
+}}}}
+```

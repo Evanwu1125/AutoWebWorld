@@ -1,0 +1,2401 @@
+{
+  "meta": {
+    "app": "Collaboration & Meetings-Microsoft Teams_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "MEETING_SCHEDULED_SUCCESS",
+      "MEET_NOW_STARTED_SUCCESS",
+      "CHANNEL_POST_SENT_SUCCESS",
+      "CHAT_MESSAGE_SENT_SUCCESS",
+      "TEAM_CREATED_SUCCESS"
+    ],
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 20,
+        "max": 35
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover",
+        "menu"
+      ],
+      "home_nav_coverage": "any",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 4,
+        "two_step_parity": false,
+        "allowed_shapes": [
+          "checkboxes",
+          "sliders",
+          "sort"
+        ]
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "cookie_consent_given": "boolean|null",
+        "current_user_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_HOME_ACCEPT_COOKIES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cookie_consent_given",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TEAMS_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "TEAMS_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-teams-direct"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_CALENDAR_HOVER",
+          "name": "select",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "CALENDAR_VIEW",
+          "parameters": {
+            "widget": "hover_menu"
+          },
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#app-bar-calendar"
+            },
+            {
+              "op": "click",
+              "selector": "#app-bar-calendar .option-open-calendar",
+              "ui_elements": {
+                "container": "#app-bar-calendar",
+                "options": [
+                  {
+                    "value": "open_calendar",
+                    "selector": "#app-bar-calendar .option-open-calendar"
+                  },
+                  {
+                    "value": "open_meet_now",
+                    "selector": "#app-bar-calendar .option-open-meet-now"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_CHAT_MENU",
+          "name": "select",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "CHAT_LIST",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#left-rail-menu"
+            },
+            {
+              "op": "click",
+              "selector": "#left-rail-chat",
+              "ui_elements": {
+                "container": "#left-rail-menu",
+                "options": [
+                  {
+                    "value": "activity",
+                    "selector": "#left-rail-activity"
+                  },
+                  {
+                    "value": "chat",
+                    "selector": "#left-rail-chat"
+                  },
+                  {
+                    "value": "teams",
+                    "selector": "#left-rail-teams"
+                  },
+                  {
+                    "value": "calendar",
+                    "selector": "#left-rail-calendar"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_CALLS_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "CALLS_HUB",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-calls-direct"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TEAMS_LIST",
+      "signature_schema": {
+        "teams": "array<object>|null",
+        "location_permission_granted": "boolean|null",
+        "teams_list_filters_applied": "boolean|null",
+        "teams_list_has_searched": "boolean|null",
+        "teams_list_viewport_anchor_id": "string|null",
+        "matched_team_id": "string|null",
+        "selected_team_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_TEAMS_LOCATION_PERMISSION_ALLOW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "TEAMS_LIST",
+          "to": "TEAMS_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TEAMS_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "TEAMS_LIST",
+          "to": "TEAMS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.teams_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-favorites-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TEAMS_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "TEAMS_LIST",
+          "to": "TEAMS_LIST",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.teams_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-activity-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#filter-activity-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TEAMS_FILTER_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "TEAMS_LIST",
+          "to": "TEAMS_LIST",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.teams_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#teams-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#teams-sort-name-inc",
+              "ui_elements": {
+                "container": "#teams-sort-dropdown",
+                "options": [
+                  {
+                    "value": "recent",
+                    "selector": "#teams-sort-recent"
+                  },
+                  {
+                    "value": "name",
+                    "selector": "#teams-sort-name-inc"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_TEAMS_OPEN_FILTERED_TEAM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TEAMS_LIST",
+          "to": "CHANNELS_LIST",
+          "parameters": {
+            "team_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.teams_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.teams_list_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_team_id",
+              "value_ref": "{team_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#teams-list .team-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TEAMS_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "TEAMS_LIST",
+          "to": "TEAMS_LIST",
+          "parameters": {
+            "team_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_team_id",
+              "value_ref": "{team_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.teams_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#teams-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#teams-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TEAMS_OPEN_MATCHED_TEAM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TEAMS_LIST",
+          "to": "CHANNELS_LIST",
+          "parameters": {
+            "team_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_team_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.teams_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_team_id",
+              "value_ref": "{team_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.teams_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#teams-list .team-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TEAMS_SCROLL_TEAM_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "TEAMS_LIST",
+          "to": "TEAMS_LIST",
+          "parameters": {
+            "team_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.teams_list_viewport_anchor_id",
+              "value_ref": "{team_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#teams-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#teams-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TEAMS_OPEN_ANY_TEAM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TEAMS_LIST",
+          "to": "CHANNELS_LIST",
+          "parameters": {
+            "team_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.teams_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_team_id",
+              "value_ref": "{team_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.teams_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#teams-list .team-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TEAMS_NEW_TEAM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TEAMS_LIST",
+          "to": "CREATE_TEAM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-team-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TEAMS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TEAMS_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-to-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHANNELS_LIST",
+      "signature_schema": {
+        "teams": "array<object>|null",
+        "selected_team_id": "string|null",
+        "channels": "array<object>|null",
+        "channels_list_filters_applied": "boolean|null",
+        "channels_list_has_searched": "boolean|null",
+        "channels_list_viewport_anchor_id": "string|null",
+        "matched_channel_id": "string|null",
+        "selected_channel_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CHANNELS_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CHANNELS_LIST",
+          "to": "CHANNELS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.channels_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-show-private-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNELS_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CHANNELS_LIST",
+          "to": "CHANNELS_LIST",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.channels_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#channel-activity-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#channel-activity-slider",
+              "to_value": "left"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNELS_FILTER_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CHANNELS_LIST",
+          "to": "CHANNELS_LIST",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.channels_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#channels-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#channels-sort-unread-desc",
+              "ui_elements": {
+                "container": "#channels-sort-dropdown",
+                "options": [
+                  {
+                    "value": "unread",
+                    "selector": "#channels-sort-unread-desc"
+                  },
+                  {
+                    "value": "alphabetical",
+                    "selector": "#channels-sort-alpha"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNELS_OPEN_FILTERED_CHANNEL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHANNELS_LIST",
+          "to": "CHANNEL_POST_COMPOSE",
+          "parameters": {
+            "channel_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.channels_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.channels_list_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_channel_id",
+              "value_ref": "{channel_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#channels-list .channel-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNELS_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "CHANNELS_LIST",
+          "to": "CHANNELS_LIST",
+          "parameters": {
+            "channel_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_channel_id",
+              "value_ref": "{channel_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.channels_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#channels-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#channels-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNELS_OPEN_MATCHED_CHANNEL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHANNELS_LIST",
+          "to": "CHANNEL_POST_COMPOSE",
+          "parameters": {
+            "channel_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_channel_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.channels_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_channel_id",
+              "value_ref": "{channel_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.channels_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#channels-list .channel-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNELS_SCROLL_CHANNEL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CHANNELS_LIST",
+          "to": "CHANNELS_LIST",
+          "parameters": {
+            "channel_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.channels_list_viewport_anchor_id",
+              "value_ref": "{channel_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#channels-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#channels-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNELS_OPEN_ANY_CHANNEL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHANNELS_LIST",
+          "to": "CHANNEL_POST_COMPOSE",
+          "parameters": {
+            "channel_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.channels_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_channel_id",
+              "value_ref": "{channel_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.channels_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#channels-list .channel-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNELS_BACK_TEAMS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHANNELS_LIST",
+          "to": "TEAMS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-to-teams"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHANNEL_POST_COMPOSE",
+      "signature_schema": {
+        "selected_team_id": "string|null",
+        "selected_channel_id": "string|null",
+        "post_subject": "string|null",
+        "post_body": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CHANNEL_POST_TYPE_SUBJECT",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CHANNEL_POST_COMPOSE",
+          "to": "CHANNEL_POST_COMPOSE",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.post_subject",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#channel-post-subject-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#channel-post-subject-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNEL_POST_TYPE_BODY",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CHANNEL_POST_COMPOSE",
+          "to": "CHANNEL_POST_COMPOSE",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.post_body",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#channel-post-body-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#channel-post-body-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNEL_POST_SEND",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHANNEL_POST_COMPOSE",
+          "to": "CHANNEL_POST_SENT_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.post_subject",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.post_body",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#channel-post-send-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANNEL_POST_BACK_CHANNELS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHANNEL_POST_COMPOSE",
+          "to": "CHANNELS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-to-channels"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHANNEL_POST_SENT_SUCCESS",
+      "signature_schema": {
+        "post_subject": "string|null",
+        "post_body": "string|null",
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CHANNEL_POST_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHANNEL_POST_SENT_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Channel post sent"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#success-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_TEAM",
+      "signature_schema": {
+        "team_name": "string|null",
+        "team_description": "string|null",
+        "privacy_level": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CREATE_TEAM_TYPE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CREATE_TEAM",
+          "to": "CREATE_TEAM",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.team_name",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-team-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#create-team-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CREATE_TEAM_TYPE_DESCRIPTION",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CREATE_TEAM",
+          "to": "CREATE_TEAM",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.team_description",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-team-description-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#create-team-description-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CREATE_TEAM_SELECT_PRIVACY",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CREATE_TEAM",
+          "to": "CREATE_TEAM",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.privacy_level",
+              "value": "private"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-team-privacy-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#privacy-private-option",
+              "ui_elements": {
+                "container": "#create-team-privacy-dropdown",
+                "options": [
+                  {
+                    "value": "public",
+                    "selector": "#privacy-public-option"
+                  },
+                  {
+                    "value": "private",
+                    "selector": "#privacy-private-option"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_CREATE_TEAM_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_TEAM",
+          "to": "TEAM_CREATED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.team_name",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.privacy_level",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-team-submit-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CREATE_TEAM_BACK_TEAMS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_TEAM",
+          "to": "TEAMS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-to-teams-from-create"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TEAM_CREATED_SUCCESS",
+      "signature_schema": {
+        "team_name": "string|null",
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_TEAM_CREATED_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TEAM_CREATED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Team created successfully"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#team-created-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CALENDAR_VIEW",
+      "signature_schema": {
+        "location_permission_granted": "boolean|null",
+        "calendar_filters_applied": "boolean|null",
+        "calendar_selected_date": "string|null",
+        "calendar_selected_time": "string|null",
+        "calendar_selected_meeting_title": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CALENDAR_LOCATION_PERMISSION_ALLOW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CALENDAR_VIEW",
+          "to": "CALENDAR_VIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CALENDAR_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CALENDAR_VIEW",
+          "to": "CALENDAR_VIEW",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.calendar_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#calendar-range-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#calendar-range-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CALENDAR_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CALENDAR_VIEW",
+          "to": "CALENDAR_VIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.calendar_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-my-meetings-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CALENDAR_FILTER_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CALENDAR_VIEW",
+          "to": "CALENDAR_VIEW",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.calendar_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#calendar-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#calendar-sort-start-time-inc",
+              "ui_elements": {
+                "container": "#calendar-sort-dropdown",
+                "options": [
+                  {
+                    "value": "start_time",
+                    "selector": "#calendar-sort-start-time-inc"
+                  },
+                  {
+                    "value": "title",
+                    "selector": "#calendar-sort-title"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_CALENDAR_NEW_MEETING",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CALENDAR_VIEW",
+          "to": "MEETING_DETAILS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#new-meeting-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CALENDAR_MEET_NOW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CALENDAR_VIEW",
+          "to": "MEET_NOW_SETUP",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#meet-now-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CALENDAR_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CALENDAR_VIEW",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#calendar-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MEETING_DETAILS",
+      "signature_schema": {
+        "meeting_title": "string|null",
+        "meeting_description": "string|null",
+        "meeting_date": "string|null",
+        "meeting_time": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MEETING_DETAILS_TYPE_TITLE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "MEETING_DETAILS",
+          "to": "MEETING_DETAILS",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.meeting_title",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#meeting-title-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#meeting-title-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEETING_DETAILS_TYPE_DESCRIPTION",
+          "name": "type",
+          "is_navigation": false,
+          "from": "MEETING_DETAILS",
+          "to": "MEETING_DETAILS",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.meeting_description",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#meeting-description-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#meeting-description-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEETING_DETAILS_SELECT_DATETIME",
+          "name": "select",
+          "is_navigation": false,
+          "from": "MEETING_DETAILS",
+          "to": "MEETING_DETAILS",
+          "parameters": {
+            "widget": "date_picker",
+            "year": 2025,
+            "month": 10,
+            "day": 15,
+            "hour": 10,
+            "minute": 30
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.meeting_date",
+              "value": "2025-10-15"
+            },
+            {
+              "op": "set",
+              "path": "$.meeting_time",
+              "value": "10:30"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#date-picker"
+            },
+            {
+              "op": "click",
+              "selector": ".year-2025"
+            },
+            {
+              "op": "click",
+              "selector": ".month-10"
+            },
+            {
+              "op": "click",
+              "selector": ".day-15"
+            },
+            {
+              "op": "click",
+              "selector": ".hour-10"
+            },
+            {
+              "op": "click",
+              "selector": ".minute-30"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEETING_DETAILS_PROCEED_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MEETING_DETAILS",
+          "to": "MEETING_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.meeting_title",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.meeting_date",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.meeting_time",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#meeting-next-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEETING_DETAILS_BACK_CALENDAR",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MEETING_DETAILS",
+          "to": "CALENDAR_VIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#meeting-details-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MEETING_REVIEW",
+      "signature_schema": {
+        "meeting_title": "string|null",
+        "meeting_description": "string|null",
+        "meeting_date": "string|null",
+        "meeting_time": "string|null",
+        "invitees": "array<object>|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MEETING_REVIEW_ADD_INVITEE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "MEETING_REVIEW",
+          "to": "MEETING_REVIEW",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.invitees",
+              "value_expr": "append($.invitees, {\"id\": gen_id()})"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#meeting-invitees-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#meeting-invitees-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEETING_REVIEW_SCHEDULE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MEETING_REVIEW",
+          "to": "MEETING_SCHEDULED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.meeting_title",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.meeting_date",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.meeting_time",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#schedule-meeting-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEETING_REVIEW_BACK_DETAILS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MEETING_REVIEW",
+          "to": "MEETING_DETAILS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#meeting-review-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MEETING_SCHEDULED_SUCCESS",
+      "signature_schema": {
+        "meeting_title": "string|null",
+        "meeting_date": "string|null",
+        "meeting_time": "string|null",
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MEETING_SCHEDULED_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MEETING_SCHEDULED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Meeting scheduled"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#meeting-scheduled-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MEET_NOW_SETUP",
+      "signature_schema": {
+        "meet_now_subject": "string|null",
+        "camera_on": "boolean|null",
+        "microphone_on": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MEET_NOW_TYPE_SUBJECT",
+          "name": "type",
+          "is_navigation": false,
+          "from": "MEET_NOW_SETUP",
+          "to": "MEET_NOW_SETUP",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.meet_now_subject",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#meet-now-subject-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#meet-now-subject-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEET_NOW_TOGGLE_CAMERA",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MEET_NOW_SETUP",
+          "to": "MEET_NOW_SETUP",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.camera_on",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#toggle-camera"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEET_NOW_TOGGLE_MIC",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MEET_NOW_SETUP",
+          "to": "MEET_NOW_SETUP",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.microphone_on",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#toggle-mic"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEET_NOW_START",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MEET_NOW_SETUP",
+          "to": "MEET_NOW_STARTED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.meet_now_subject",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#start-meet-now-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEET_NOW_BACK_CALENDAR",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MEET_NOW_SETUP",
+          "to": "CALENDAR_VIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#meet-now-back-calendar"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MEET_NOW_STARTED_SUCCESS",
+      "signature_schema": {
+        "meet_now_subject": "string|null",
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MEET_NOW_STARTED_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MEET_NOW_STARTED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Meet now started"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#meet-now-success-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHAT_LIST",
+      "signature_schema": {
+        "location_permission_granted": "boolean|null",
+        "chats": "array<object>|null",
+        "chat_list_filters_applied": "boolean|null",
+        "chat_list_has_searched": "boolean|null",
+        "chat_list_viewport_anchor_id": "string|null",
+        "matched_chat_id": "string|null",
+        "selected_chat_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CHAT_LIST_LOCATION_PERMISSION_ALLOW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CHAT_LIST",
+          "to": "CHAT_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHAT_LIST_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CHAT_LIST",
+          "to": "CHAT_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.chat_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-unread-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHAT_LIST_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CHAT_LIST",
+          "to": "CHAT_LIST",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.chat_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#chat-activity-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#chat-activity-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHAT_LIST_FILTER_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CHAT_LIST",
+          "to": "CHAT_LIST",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.chat_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#chat-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#chat-sort-name-inc",
+              "ui_elements": {
+                "container": "#chat-sort-dropdown",
+                "options": [
+                  {
+                    "value": "recent",
+                    "selector": "#chat-sort-recent"
+                  },
+                  {
+                    "value": "name",
+                    "selector": "#chat-sort-name-inc"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHAT_LIST_OPEN_FILTERED_CHAT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHAT_LIST",
+          "to": "CHAT_THREAD",
+          "parameters": {
+            "chat_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.chat_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.chat_list_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_chat_id",
+              "value_ref": "{chat_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#chat-list .chat-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHAT_LIST_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "CHAT_LIST",
+          "to": "CHAT_LIST",
+          "parameters": {
+            "chat_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_chat_id",
+              "value_ref": "{chat_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.chat_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#chat-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#chat-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHAT_LIST_OPEN_MATCHED_CHAT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHAT_LIST",
+          "to": "CHAT_THREAD",
+          "parameters": {
+            "chat_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_chat_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.chat_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_chat_id",
+              "value_ref": "{chat_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.chat_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#chat-list .chat-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHAT_LIST_SCROLL_CHAT_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CHAT_LIST",
+          "to": "CHAT_LIST",
+          "parameters": {
+            "chat_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.chat_list_viewport_anchor_id",
+              "value_ref": "{chat_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#chat-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#chat-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHAT_LIST_OPEN_ANY_CHAT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHAT_LIST",
+          "to": "CHAT_THREAD",
+          "parameters": {
+            "chat_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.chat_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_chat_id",
+              "value_ref": "{chat_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.chat_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#chat-list .chat-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHAT_LIST_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHAT_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#chat-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHAT_THREAD",
+      "signature_schema": {
+        "selected_chat_id": "string|null",
+        "new_message_text": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CHAT_THREAD_TYPE_MESSAGE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CHAT_THREAD",
+          "to": "CHAT_THREAD",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_message_text",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#chat-message-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#chat-message-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHAT_THREAD_SEND_MESSAGE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHAT_THREAD",
+          "to": "CHAT_MESSAGE_SENT_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.new_message_text",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#chat-send-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHAT_THREAD_BACK_CHAT_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHAT_THREAD",
+          "to": "CHAT_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#chat-thread-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHAT_MESSAGE_SENT_SUCCESS",
+      "signature_schema": {
+        "new_message_text": "string|null",
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CHAT_MESSAGE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHAT_MESSAGE_SENT_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Message sent"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#chat-message-success-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CALLS_HUB",
+      "signature_schema": {
+        "location_permission_granted": "boolean|null",
+        "calls_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CALLS_LOCATION_PERMISSION_ALLOW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CALLS_HUB",
+          "to": "CALLS_HUB",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CALLS_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CALLS_HUB",
+          "to": "CALLS_HUB",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.calls_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-missed-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CALLS_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CALLS_HUB",
+          "to": "CALLS_HUB",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.calls_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#call-history-range-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#call-history-range-slider",
+              "to_value": "left"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CALLS_FILTER_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CALLS_HUB",
+          "to": "CALLS_HUB",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.calls_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#calls-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#calls-sort-duration-desc",
+              "ui_elements": {
+                "container": "#calls-sort-dropdown",
+                "options": [
+                  {
+                    "value": "recent",
+                    "selector": "#calls-sort-recent"
+                  },
+                  {
+                    "value": "duration",
+                    "selector": "#calls-sort-duration-desc"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_CALLS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CALLS_HUB",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#calls-back-home"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

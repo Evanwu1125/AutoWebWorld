@@ -1,0 +1,2058 @@
+{
+  "meta": {
+    "app": "Video_Conferencing-Zoom_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "SCHEDULE_MEETING_SUCCESS",
+      "START_INSTANT_MEETING_SUCCESS",
+      "JOIN_MEETING_SUCCESS",
+      "RENAME_PROFILE_SUCCESS",
+      "CHANGE_PASSWORD_SUCCESS"
+    ],
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 25,
+        "max": 30
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover",
+        "menu"
+      ],
+      "home_nav_coverage": "each",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 4,
+        "two_step_parity": false,
+        "allowed_shapes": [
+          "checkboxes",
+          "sliders",
+          "sort"
+        ]
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "current_user_id": "string|null",
+        "cookie_accepted": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_HOME_ACCEPT_COOKIE",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_accepted",
+              "cond": "neq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cookie_accepted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_DASHBOARD_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_accepted",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#home-start-zooming-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_DASHBOARD_HOVER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_accepted",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#top-nav-products"
+            },
+            {
+              "op": "click",
+              "selector": "#top-nav-products-zoom-client"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_DASHBOARD_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_accepted",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#home-profile-menu-toggle"
+            },
+            {
+              "op": "click",
+              "selector": "#home-profile-menu-my-account"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DASHBOARD",
+      "signature_schema": {
+        "location_permission_granted": "boolean|null",
+        "upcoming_meetings": "array<object>|null",
+        "past_meetings": "array<object>|null",
+        "dashboard_meetings_has_searched": "boolean|null",
+        "dashboard_meetings_matched_id": "string|null",
+        "dashboard_meetings_selected_id": "string|null",
+        "dashboard_meetings_viewport_anchor_id": "string|null",
+        "dashboard_meetings_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_DASHBOARD_ALLOW_LOCATION",
+          "name": "click",
+          "is_navigation": false,
+          "from": "DASHBOARD",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "neq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DASHBOARD_GO_TO_SCHEDULE_MEETING",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD",
+          "to": "SCHEDULE_MEETING_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dashboard-schedule-meeting"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DASHBOARD_GO_TO_JOIN_MEETING",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD",
+          "to": "JOIN_MEETING_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dashboard-join-meeting"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DASHBOARD_GO_TO_PROFILE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD",
+          "to": "PROFILE_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dashboard-profile-link"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DASHBOARD_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dashboard-home-logo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SCHEDULE_MEETING_FORM",
+      "signature_schema": {
+        "meeting_templates": "array<object>|null",
+        "selected_template_id": "string|null",
+        "meeting_topic": "string|null",
+        "meeting_description": "string|null",
+        "meeting_date_time": "string|null",
+        "meeting_duration_minutes": "number|null",
+        "meeting_password": "string|null",
+        "waiting_room_enabled": "boolean|null",
+        "host_video_on": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SCHEDULE_MEETING_PICK_TEMPLATE",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SCHEDULE_MEETING_FORM",
+          "to": "SCHEDULE_MEETING_FORM",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_template_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#schedule-template-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#schedule-template-recurring",
+              "ui_elements": {
+                "container": "#schedule-template-dropdown",
+                "options": [
+                  {
+                    "value": "none",
+                    "selector": "#schedule-template-none"
+                  },
+                  {
+                    "value": "recurring",
+                    "selector": "#schedule-template-recurring"
+                  },
+                  {
+                    "value": "webinar",
+                    "selector": "#schedule-template-webinar"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_SCHEDULE_MEETING_TYPE_TOPIC",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SCHEDULE_MEETING_FORM",
+          "to": "SCHEDULE_MEETING_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.meeting_topic",
+              "value": "Sample Zoom Meeting"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#schedule-topic-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#schedule-topic-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SCHEDULE_MEETING_TYPE_DESCRIPTION",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SCHEDULE_MEETING_FORM",
+          "to": "SCHEDULE_MEETING_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.meeting_description",
+              "value": "Description"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#schedule-description-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#schedule-description-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SCHEDULE_MEETING_PICK_DATETIME",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SCHEDULE_MEETING_FORM",
+          "to": "SCHEDULE_MEETING_FORM",
+          "parameters": {
+            "widget": "date_picker"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.meeting_date_time",
+              "value": "2025-10-22T10:30:00"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#date-picker"
+            },
+            {
+              "op": "click",
+              "selector": ".year-2025"
+            },
+            {
+              "op": "click",
+              "selector": ".month-10"
+            },
+            {
+              "op": "click",
+              "selector": ".day-22"
+            },
+            {
+              "op": "click",
+              "selector": "#date-picker-hour"
+            },
+            {
+              "op": "click",
+              "selector": ".hour-10"
+            },
+            {
+              "op": "click",
+              "selector": "#date-picker-minute"
+            },
+            {
+              "op": "click",
+              "selector": ".minute-30"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SCHEDULE_MEETING_SET_DURATION",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SCHEDULE_MEETING_FORM",
+          "to": "SCHEDULE_MEETING_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.meeting_duration_minutes",
+              "value": 30
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#schedule-duration-input"
+            },
+            {
+              "op": "key_press",
+              "key": "Ctrl+A"
+            },
+            {
+              "op": "key_press",
+              "key": "Delete"
+            },
+            {
+              "op": "type_text",
+              "selector": "#schedule-duration-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SCHEDULE_MEETING_CONTINUE_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SCHEDULE_MEETING_FORM",
+          "to": "SCHEDULE_MEETING_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.meeting_topic",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.meeting_date_time",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.meeting_duration_minutes",
+              "cond": "gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#schedule-continue-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SCHEDULE_MEETING_BACK_TO_DASHBOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SCHEDULE_MEETING_FORM",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#schedule-back-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SCHEDULE_MEETING_REVIEW",
+      "signature_schema": {
+        "meeting_topic": "string|null",
+        "meeting_date_time": "string|null",
+        "meeting_duration_minutes": "number|null",
+        "review_confirmed": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SCHEDULE_REVIEW_ENABLE_WAITING_ROOM",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SCHEDULE_MEETING_REVIEW",
+          "to": "SCHEDULE_MEETING_REVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#review-waiting-room-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SCHEDULE_REVIEW_TURN_HOST_VIDEO_ON",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SCHEDULE_MEETING_REVIEW",
+          "to": "SCHEDULE_MEETING_REVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#review-host-video-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SCHEDULE_REVIEW_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SCHEDULE_MEETING_REVIEW",
+          "to": "SCHEDULE_MEETING_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.meeting_topic",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.meeting_date_time",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.review_confirmed",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#review-schedule-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SCHEDULE_REVIEW_BACK_TO_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SCHEDULE_MEETING_REVIEW",
+          "to": "SCHEDULE_MEETING_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#review-back-button"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SCHEDULE_MEETING_SUCCESS",
+      "signature_schema": {
+        "scheduled_meeting_id": "string|null",
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SCHEDULE_SUCCESS_START_NOW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SCHEDULE_MEETING_SUCCESS",
+          "to": "INSTANT_MEETING_LOBBY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Meeting scheduled successfully"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#success-start-meeting-now"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SCHEDULE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SCHEDULE_MEETING_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SCHEDULE_SUCCESS_BACK_TO_DASHBOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SCHEDULE_MEETING_SUCCESS",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#success-back-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JOIN_MEETING_FORM",
+      "signature_schema": {
+        "meeting_id_input": "string|null",
+        "meeting_name_input": "string|null",
+        "remember_name": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_JOIN_MEETING_TYPE_MEETING_ID",
+          "name": "type",
+          "is_navigation": false,
+          "from": "JOIN_MEETING_FORM",
+          "to": "JOIN_MEETING_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.meeting_id_input",
+              "value": "123456789"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#join-meeting-id-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#join-meeting-id-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_JOIN_MEETING_TYPE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "JOIN_MEETING_FORM",
+          "to": "JOIN_MEETING_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.meeting_name_input",
+              "value": "Zoom User"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#join-meeting-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#join-meeting-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_JOIN_MEETING_TOGGLE_REMEMBER_NAME",
+          "name": "click",
+          "is_navigation": false,
+          "from": "JOIN_MEETING_FORM",
+          "to": "JOIN_MEETING_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#join-remember-name-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_JOIN_MEETING_CONTINUE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "JOIN_MEETING_FORM",
+          "to": "JOIN_MEETING_PREVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.meeting_id_input",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.meeting_name_input",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#join-meeting-continue-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_JOIN_MEETING_BACK_TO_DASHBOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "JOIN_MEETING_FORM",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#join-meeting-back-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JOIN_MEETING_PREVIEW",
+      "signature_schema": {
+        "meeting_id_input": "string|null",
+        "meeting_name_input": "string|null",
+        "audio_join_with_computer": "boolean|null",
+        "video_on": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_JOIN_PREVIEW_TOGGLE_VIDEO",
+          "name": "click",
+          "is_navigation": false,
+          "from": "JOIN_MEETING_PREVIEW",
+          "to": "JOIN_MEETING_PREVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#join-preview-video-toggle"
+            }
+          ]
+        },
+        {
+          "id": "ACT_JOIN_PREVIEW_TOGGLE_AUDIO",
+          "name": "click",
+          "is_navigation": false,
+          "from": "JOIN_MEETING_PREVIEW",
+          "to": "JOIN_MEETING_PREVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#join-preview-audio-toggle"
+            }
+          ]
+        },
+        {
+          "id": "ACT_JOIN_PREVIEW_JOIN",
+          "name": "click",
+          "is_navigation": true,
+          "from": "JOIN_MEETING_PREVIEW",
+          "to": "JOIN_MEETING_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.meeting_id_input",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#join-preview-join-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_JOIN_PREVIEW_BACK_TO_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "JOIN_MEETING_PREVIEW",
+          "to": "JOIN_MEETING_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#join-preview-back-button"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JOIN_MEETING_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_JOIN_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "JOIN_MEETING_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Joined meeting successfully"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#join-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_JOIN_SUCCESS_BACK_DASHBOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "JOIN_MEETING_SUCCESS",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#join-success-back-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "INSTANT_MEETING_LOBBY",
+      "signature_schema": {
+        "audio_option": "string|null",
+        "video_on": "boolean|null",
+        "screen_share_ready": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_INSTANT_SELECT_AUDIO",
+          "name": "select",
+          "is_navigation": false,
+          "from": "INSTANT_MEETING_LOBBY",
+          "to": "INSTANT_MEETING_LOBBY",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.audio_option",
+              "value": "computer_audio"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#instant-audio-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#instant-audio-computer",
+              "ui_elements": {
+                "container": "#instant-audio-dropdown",
+                "options": [
+                  {
+                    "value": "computer_audio",
+                    "selector": "#instant-audio-computer"
+                  },
+                  {
+                    "value": "phone_call",
+                    "selector": "#instant-audio-phone"
+                  },
+                  {
+                    "value": "no_audio",
+                    "selector": "#instant-audio-none"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_INSTANT_TOGGLE_VIDEO",
+          "name": "click",
+          "is_navigation": false,
+          "from": "INSTANT_MEETING_LOBBY",
+          "to": "INSTANT_MEETING_LOBBY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#instant-video-toggle"
+            }
+          ]
+        },
+        {
+          "id": "ACT_INSTANT_MEETING_START",
+          "name": "click",
+          "is_navigation": true,
+          "from": "INSTANT_MEETING_LOBBY",
+          "to": "START_INSTANT_MEETING_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.audio_option",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#instant-start-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_INSTANT_LOBBY_BACK_DASHBOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "INSTANT_MEETING_LOBBY",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#instant-back-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "START_INSTANT_MEETING_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_INSTANT_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "START_INSTANT_MEETING_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Instant meeting started"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#instant-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_INSTANT_SUCCESS_BACK_DASHBOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "START_INSTANT_MEETING_SUCCESS",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#instant-success-back-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROFILE_OVERVIEW",
+      "signature_schema": {
+        "display_name": "string|null",
+        "email": "string|null",
+        "profile_has_searched": "boolean|null",
+        "profile_matched_meeting_id": "string|null",
+        "profile_selected_meeting_id": "string|null",
+        "profile_viewport_anchor_id": "string|null",
+        "profile_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PROFILE_GO_TO_SETTINGS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_OVERVIEW",
+          "to": "SETTINGS_GENERAL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-settings-link"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_GO_TO_RENAME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_OVERVIEW",
+          "to": "PROFILE_RENAME_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-rename-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_GO_TO_CHANGE_PASSWORD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_OVERVIEW",
+          "to": "PROFILE_CHANGE_PASSWORD_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-change-password-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_BACK_DASHBOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_OVERVIEW",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-back-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROFILE_RENAME_FORM",
+      "signature_schema": {
+        "current_display_name": "string|null",
+        "new_display_name": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_RENAME_TYPE_NEW_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PROFILE_RENAME_FORM",
+          "to": "PROFILE_RENAME_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_display_name",
+              "value": "New Zoom Name"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#rename-name-input"
+            },
+            {
+              "op": "key_press",
+              "key": "Ctrl+A"
+            },
+            {
+              "op": "key_press",
+              "key": "Delete"
+            },
+            {
+              "op": "type_text",
+              "selector": "#rename-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RENAME_SAVE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_RENAME_FORM",
+          "to": "RENAME_PROFILE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.new_display_name",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#rename-save-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RENAME_BACK_PROFILE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_RENAME_FORM",
+          "to": "PROFILE_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#rename-back-profile"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RENAME_PROFILE_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_RENAME_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "RENAME_PROFILE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Profile name updated"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#rename-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RENAME_SUCCESS_BACK_PROFILE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "RENAME_PROFILE_SUCCESS",
+          "to": "PROFILE_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#rename-success-back-profile"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROFILE_CHANGE_PASSWORD_FORM",
+      "signature_schema": {
+        "old_password": "string|null",
+        "new_password": "string|null",
+        "confirm_password": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CHANGE_PASSWORD_TYPE_OLD",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PROFILE_CHANGE_PASSWORD_FORM",
+          "to": "PROFILE_CHANGE_PASSWORD_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.old_password",
+              "value": "old"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#change-old-password-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#change-old-password-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANGE_PASSWORD_TYPE_NEW",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PROFILE_CHANGE_PASSWORD_FORM",
+          "to": "PROFILE_CHANGE_PASSWORD_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_password",
+              "value": "new123"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#change-new-password-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#change-new-password-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANGE_PASSWORD_TYPE_CONFIRM",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PROFILE_CHANGE_PASSWORD_FORM",
+          "to": "PROFILE_CHANGE_PASSWORD_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.confirm_password",
+              "value": "new123"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#change-confirm-password-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#change-confirm-password-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANGE_PASSWORD_SAVE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_CHANGE_PASSWORD_FORM",
+          "to": "CHANGE_PASSWORD_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.old_password",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.new_password",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.confirm_password",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#change-password-save-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANGE_PASSWORD_BACK_PROFILE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_CHANGE_PASSWORD_FORM",
+          "to": "PROFILE_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#change-password-back-profile"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHANGE_PASSWORD_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CHANGE_PASSWORD_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHANGE_PASSWORD_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Password changed successfully"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#change-password-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CHANGE_PASSWORD_SUCCESS_BACK_PROFILE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHANGE_PASSWORD_SUCCESS",
+          "to": "PROFILE_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#change-password-success-back-profile"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SETTINGS_GENERAL",
+      "signature_schema": {
+        "language": "string|null",
+        "theme": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SETTINGS_SELECT_LANGUAGE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SETTINGS_GENERAL",
+          "to": "SETTINGS_GENERAL",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.language",
+              "value": "en"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-language-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#settings-language-english",
+              "ui_elements": {
+                "container": "#settings-language-dropdown",
+                "options": [
+                  {
+                    "value": "en",
+                    "selector": "#settings-language-english"
+                  },
+                  {
+                    "value": "es",
+                    "selector": "#settings-language-spanish"
+                  },
+                  {
+                    "value": "fr",
+                    "selector": "#settings-language-french"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_SELECT_THEME",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SETTINGS_GENERAL",
+          "to": "SETTINGS_GENERAL",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.theme",
+              "value": "light"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-theme-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#settings-theme-light",
+              "ui_elements": {
+                "container": "#settings-theme-dropdown",
+                "options": [
+                  {
+                    "value": "light",
+                    "selector": "#settings-theme-light"
+                  },
+                  {
+                    "value": "dark",
+                    "selector": "#settings-theme-dark"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_GO_VIDEO",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SETTINGS_GENERAL",
+          "to": "SETTINGS_VIDEO",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-video-tab"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_GENERAL_BACK_PROFILE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SETTINGS_GENERAL",
+          "to": "PROFILE_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-general-back-profile"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SETTINGS_VIDEO",
+      "signature_schema": {
+        "mirror_my_video": "boolean|null",
+        "touch_up_appearance": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SETTINGS_VIDEO_TOGGLE_MIRROR",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SETTINGS_VIDEO",
+          "to": "SETTINGS_VIDEO",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-video-mirror-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_VIDEO_TOGGLE_TOUCH_UP",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SETTINGS_VIDEO",
+          "to": "SETTINGS_VIDEO",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-video-touchup-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_VIDEO_BACK_GENERAL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SETTINGS_VIDEO",
+          "to": "SETTINGS_GENERAL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-video-back-general"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_VIDEO_BACK_PROFILE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SETTINGS_VIDEO",
+          "to": "PROFILE_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-video-back-profile"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MEETINGS_LIST",
+      "signature_schema": {
+        "meetings": "array<object>|null",
+        "meetings_matched_id": "string|null",
+        "meetings_selected_id": "string|null",
+        "meetings_list_has_searched": "boolean|null",
+        "meetings_list_viewport_anchor_id": "string|null",
+        "meetings_list_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MEETINGS_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "MEETINGS_LIST",
+          "to": "MEETINGS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.meetings_matched_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.meetings_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#meetings-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#meetings-search-input",
+              "text": "sample"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEETINGS_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MEETINGS_LIST",
+          "to": "MEETINGS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.meetings_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#meetings-filter-my-meetings-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEETINGS_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "MEETINGS_LIST",
+          "to": "MEETINGS_LIST",
+          "parameters": {
+            "widget": "slider"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.meetings_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#meetings-duration-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#meetings-duration-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEETINGS_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "MEETINGS_LIST",
+          "to": "MEETINGS_LIST",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.meetings_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#meetings-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#meetings-sort-upcoming",
+              "ui_elements": {
+                "container": "#meetings-sort-dropdown",
+                "options": [
+                  {
+                    "value": "upcoming",
+                    "selector": "#meetings-sort-upcoming"
+                  },
+                  {
+                    "value": "date",
+                    "selector": "#meetings-sort-date"
+                  },
+                  {
+                    "value": "host",
+                    "selector": "#meetings-sort-host"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEETINGS_OPEN_MATCHED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MEETINGS_LIST",
+          "to": "MEETING_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.meetings_matched_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.meetings_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.meetings_selected_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.meetings_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#meetings-list .row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEETINGS_OPEN_FILTERED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MEETINGS_LIST",
+          "to": "MEETING_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.meetings_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.meetings_selected_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.meetings_list_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#meetings-list .row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEETINGS_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MEETINGS_LIST",
+          "to": "MEETINGS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.meetings_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#meetings-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#meetings-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEETINGS_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MEETINGS_LIST",
+          "to": "MEETING_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.meetings_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.meetings_selected_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.meetings_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#meetings-list .row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEETINGS_BACK_DASHBOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MEETINGS_LIST",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#meetings-back-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MEETING_DETAIL",
+      "signature_schema": {
+        "meetings_selected_id": "string|null",
+        "start_from_detail_confirmed": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MEETING_DETAIL_EDIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MEETING_DETAIL",
+          "to": "SCHEDULE_MEETING_FORM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.meetings_selected_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#meeting-detail-edit-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEETING_DETAIL_START",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MEETING_DETAIL",
+          "to": "START_INSTANT_MEETING_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.meetings_selected_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.start_from_detail_confirmed",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#meeting-detail-start-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MEETING_DETAIL_BACK_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MEETING_DETAIL",
+          "to": "MEETINGS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#meeting-detail-back-list"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -63,9 +63,9 @@ Task: Use VALIDATION_REPORT to **minimally** patch ORIGINAL_FSM so it complies w
 - Ensure every non-initial page has a Back action (effects may be empty).
 - For **keyed search on child pages**: add minimal `preconditions` only if the search requires multiple fields (otherwise omit); keep `is_navigation=false`.
 - Navigation policy (REVISED): generate only the navigation actions necessary for reachability or HOME variant coverage; prefer non-navigation semantic actions elsewhere. Ignore any nav_ratio notion.
-- If the profile lists `home_nav_variants` with coverage="each": for every HOME target page, add missing navigation actions for each variant in {direct, hover, menu, scroll} with the correct GUI pattern, and update `nav_skeleton`.
-- If `list_filters.enabled=true`: use only allowed shapes {text_inputs, checkboxes, sliders, dropdown_plus_slider} (or the subset in `allowed_shapes`), and enforce two-step parity exactly: `APPLY_FILTERS` (non-navigation) → `OPEN_FILTERED_ITEM` (navigation).
-- Interceptors per profile: add cookie / permissions[] / gates as non-navigation actions on relevant pages (not `HOME`) and wire them as `preconditions` for critical actions.
+- If the profile lists `home_nav_variants` with coverage="each": for every HOME target page, add missing navigation actions for each variant in {direct, hover, menu, scroll} with the correct GUI pattern. Update `nav_skeleton` only if this field exists.
+- If `list_filters.enabled=true`: use only allowed shapes {text_inputs, checkboxes, sliders, sort} (or the subset in `allowed_shapes`), and enforce two-step parity exactly: `APPLY_FILTERS` (non-navigation) → `OPEN_FILTERED_ITEM` (navigation).
+- Interceptors per profile: add cookie / permissions[] / gates as non-navigation actions on profile-appropriate pages and wire them as `preconditions` for critical actions.
 - Respect profile targets for `terminals.count` and `path_length` (with `shortest_only` and `count_interceptors`), applying the smallest change needed.
 
 

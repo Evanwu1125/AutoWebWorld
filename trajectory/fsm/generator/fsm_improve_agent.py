@@ -1,6 +1,7 @@
 import json
 from typing import Dict, Any, Optional
 from .base_agent import BaseAgent
+from .utils import normalize_complexity_profile
 
 
 class FSMImproveAgent(BaseAgent):
@@ -32,7 +33,8 @@ class FSMImproveAgent(BaseAgent):
         original_fsm_str = json.dumps(original_fsm, ensure_ascii=False, indent=2)
         validation_report_str = json.dumps(validation_report, ensure_ascii=False, indent=2)
 
-        profile_json_str = json.dumps(complexity_profile, ensure_ascii=False, indent=2) if complexity_profile is not None else "{}"
+        normalized_profile = normalize_complexity_profile(complexity_profile)
+        profile_json_str = json.dumps(normalized_profile, ensure_ascii=False, indent=2)
         instruction = (
             template
             .replace("{ORIGINAL_FSM_JSON}", original_fsm_str)
@@ -45,20 +47,21 @@ class FSMImproveAgent(BaseAgent):
     async def call(self, original_fsm: Dict[str, Any], validation_report: Dict[str, Any], **kwargs) -> Dict[str, Any]:
 
         if not original_fsm or not isinstance(original_fsm, dict):
-            raise ValueError("original_fsm 必须是非空字典")
+            raise ValueError("original_fsm must be a non-empty dict")
 
         if not validation_report or not isinstance(validation_report, dict):
-            raise ValueError("validation_report 必须是非空字典")
+            raise ValueError("validation_report must be a non-empty dict")
 
         score = validation_report.get("score", 0)
         issues = validation_report.get("issues", [])
 
-        print(f"🔧 FSMImproveAgent: 开始改进 FSM")
-        print(f"   当前评分: {score}")
-        print(f"   问题数量: {len(issues)}")
+        print(f"🔧 FSMImproveAgent: Starting FSM improvement")
+        print(f"   Current score: {score}")
+        print(f"   Number of issues: {len(issues)}")
 
+        normalized_profile = normalize_complexity_profile(kwargs.get('complexity_profile'))
         system_prompt = self._get_system_prompt()
-        instruction_prompt = self._build_instruction_prompt(original_fsm, validation_report, kwargs.get('complexity_profile'))
+        instruction_prompt = self._build_instruction_prompt(original_fsm, validation_report, normalized_profile)
 
         try:
             response = await self._call_llm(
@@ -71,9 +74,9 @@ class FSMImproveAgent(BaseAgent):
 
             self._validate_improved_fsm(improved_fsm, original_fsm)
 
-            print(f"✅ FSMImproveAgent: FSM 改进完成")
-            print(f"   原始页面数: {len(original_fsm.get('pages', []))}")
-            print(f"   改进页面数: {len(improved_fsm.get('pages', []))}")
+            print(f"✅ FSMImproveAgent: FSM improvement complete")
+            print(f"   Original pages: {len(original_fsm.get('pages', []))}")
+            print(f"   Improved pages: {len(improved_fsm.get('pages', []))}")
 
             process_id = kwargs.get('process_id')
             if process_id is not None:
@@ -90,7 +93,7 @@ class FSMImproveAgent(BaseAgent):
             return improved_fsm
 
         except Exception as e:
-            print(f"❌ FSMImproveAgent: 改进失败: {e}")
+            print(f"❌ FSMImproveAgent: Improvement failed: {e}")
             raise
 
     def _validate_improved_fsm(self, improved_fsm: Dict[str, Any], original_fsm: Dict[str, Any]) -> None:
@@ -98,35 +101,34 @@ class FSMImproveAgent(BaseAgent):
         required_fields = ["meta", "pages"]
         for field in required_fields:
             if field not in improved_fsm:
-                raise ValueError(f"改进后的 FSM 缺少必要字段: {field}")
+                raise ValueError(f"Improved FSM is missing required field: {field}")
 
         meta = improved_fsm["meta"]
         required_meta_fields = ["app", "initial_page_id", "terminal_pages"]
         for field in required_meta_fields:
             if field not in meta:
-                raise ValueError(f"改进后的 FSM meta 缺少必要字段: {field}")
+                raise ValueError(f"Improved FSM meta is missing required field: {field}")
 
         pages = improved_fsm["pages"]
         if not isinstance(pages, list) or len(pages) == 0:
-            raise ValueError("改进后的 FSM pages 必须是非空列表")
+            raise ValueError("Improved FSM pages must be a non-empty list")
 
         original_page_count = len(original_fsm.get("pages", []))
         improved_page_count = len(pages)
 
         if improved_page_count < original_page_count * 0.5:
-            print(f"⚠️  警告: 改进后页面数量大幅减少 ({original_page_count} -> {improved_page_count})")
+            print(f"⚠️  Warning: Page count dropped significantly after improvement ({original_page_count} -> {improved_page_count})")
 
         for i, page in enumerate(pages):
             if not isinstance(page, dict):
-                raise ValueError(f"改进后页面 {i} 必须是字典对象")
+                raise ValueError(f"Improved page {i} must be a dict")
 
             required_page_fields = ["id", "signature_schema", "actions"]
             for field in required_page_fields:
                 if field not in page:
-                    raise ValueError(f"改进后页面 {i} 缺少必要字段: {field}")
+                    raise ValueError(f"Improved page {i} is missing required field: {field}")
 
-        print(f"✅ 改进后 FSM 基础结构验证通过")
+        print(f"✅ Improved FSM basic structure validation passed")
 
     def __repr__(self) -> str:
         return f"FSMImproveAgent(model={self.model}, system_prompt={self.system_prompt_path})"
-

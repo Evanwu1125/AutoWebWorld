@@ -1,0 +1,539 @@
+{
+  "info": {
+    "model_stats": {
+      "instance_cost": 0.0,
+      "api_calls": 6
+    },
+    "config": {
+      "agent": {
+        "system_template": "You are a helpful assistant that can interact with a computer.\n\nAdditional project policy:\nYou are a senior React + TypeScript coding agent working inside an existing Vite project.\n\nCore mission:\n- Build a user-usable web product, not a literal FSM viewer and not a mechanical page-by-page translation of the FSM.\n- Treat the FSM as the behavioral contract.\n- Treat the input web theme as the product reference.\n- Synthesize both into a realistic, coherent frontend that users can understand and operate smoothly.\n\nInput interpretation:\n- The FSM defines valid states, actions, transitions, preconditions, effects, and any required selectors.\n- The web theme defines the product shape: information architecture, layout patterns, interaction style, visual tone, and content presentation.\n- Do not expose raw FSM structure, page IDs, action IDs, or internal schema fields to end users unless they naturally belong in the UI.\n\nPriority order:\n1. FSM correctness\n2. Required selector correctness\n3. End-to-end usability of core product flows\n4. Visual polish and thematic consistency\n\nExecution policy:\n- Operate only within the current workspace.\n- Inspect `fsm.json` and the existing project before making changes.\n- Build incrementally; do not rewrite the whole project from scratch unless absolutely necessary.\n- Keep the implementation readable, production-oriented, and easy to audit.\n\nImplementation principles:\n- Translate FSM logic into natural user flows, not raw FSM-shaped screens.\n- Use routes, panels, dialogs, drawers, tabs, or other suitable UI structures as needed, as long as FSM behavior remains faithful.\n- Every actionable FSM operation must remain executable in the frontend with observable results.\n- Required selectors must match the FSM exactly where specified.\n- Keep state transitions explicit enough that a reviewer can trace how FSM actions are realized in code.\n- Prefer shared layouts, reusable components, and product-level information hierarchy over one-off page scaffolds when that improves usability.\n\nValidation policy:\n- Validate critical flows as you build.\n- Avoid unnecessary full builds during intermediate steps.\n- Run the build before final completion.\n\nResponse policy:\n- Return a concise implementation summary covering changed files, key behavior implemented, selector consistency, and verification status.",
+        "instance_template": "Please solve this issue: {{task}}\n\nYou can execute bash commands and edit files to implement the necessary changes.\n\n## Recommended Workflow\n\nThis workflows should be done step-by-step so that you can iterate on your changes and any possible problems.\n\n1. Analyze the codebase by finding and reading relevant files\n2. Create a script to reproduce the issue\n3. Edit the source code to resolve the issue\n4. Verify your fix works by running your script again\n5. Test edge cases to ensure your fix is robust\n6. Submit your changes and finish your work by issuing the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`.\n   Do not combine it with any other command. <important>After this command, you cannot continue working on this task.</important>\n\n## Command Execution Rules\n\nYou are operating in an environment where\n\n1. You issue at least one command\n2. The system executes the command(s) in a subshell\n3. You see the result(s)\n4. You write your next command(s)\n\nEach response should include:\n\n1. **Reasoning text** where you explain your analysis and plan\n2. At least one tool call with your command\n\n**CRITICAL REQUIREMENTS:**\n\n- Your response SHOULD include reasoning text explaining what you're doing\n- Your response MUST include AT LEAST ONE bash tool call\n- Directory or environment variable changes are not persistent. Every action is executed in a new subshell.\n- However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir && ...` or write/load environment variables from files\n- Submit your changes and finish your work by issuing the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`.\n  Do not combine it with any other command. <important>After this command, you cannot continue working on this task.</important>\n\nExample of a CORRECT response:\n<example_response>\nI need to understand the structure of the repository first. Let me check what files are in the current directory to get a better understanding of the codebase.\n\n[Makes bash tool call with {\"command\": \"ls -la\"} as arguments]\n</example_response>\n\n<system_information>\n{{system}} {{release}} {{version}} {{machine}}\n</system_information>\n\n## Useful command examples\n\n### Create a new file:\n\n```bash\ncat <<'EOF' > newfile.py\nimport numpy as np\nhello = \"world\"\nprint(hello)\nEOF\n```\n\n### Edit files with sed:\n\n{%- if system == \"Darwin\" -%}\n<important>\nYou are on MacOS. For all the below examples, you need to use `sed -i ''` instead of `sed -i`.\n</important>\n{%- endif -%}\n\n```bash\n# Replace all occurrences\nsed -i 's/old_string/new_string/g' filename.py\n\n# Replace only first occurrence\nsed -i 's/old_string/new_string/' filename.py\n\n# Replace first occurrence on line 1\nsed -i '1s/old_string/new_string/' filename.py\n\n# Replace all occurrences in lines 1-10\nsed -i '1,10s/old_string/new_string/g' filename.py\n```\n\n### View file content:\n\n```bash\n# View specific lines with numbers\nnl -ba filename.py | sed -n '10,20p'\n```\n\n### Any other command you want to run\n\n```bash\nanything\n```\n",
+        "step_limit": 50,
+        "cost_limit": 0.0,
+        "output_path": "/Users/evanwu/Desktop/autoguiworld/AutoWebWorld/autowebworld/react_context/react_20260306_174906_042055/turns/turn_001.traj.json"
+      },
+      "agent_type": "__main__.StreamingAgent",
+      "model": {
+        "model_name": "gemini-3.1-pro-preview",
+        "model_kwargs": {
+          "drop_params": true,
+          "api_base": "https://newapi.deepwisdom.ai/v1",
+          "custom_llm_provider": "openai"
+        },
+        "litellm_model_registry": null,
+        "set_cache_control": null,
+        "cost_tracking": "ignore_errors",
+        "format_error_template": "Tool call error:\n\n<error>\n{{error}}\n</error>\n\nHere is general guidance on how to submit correct toolcalls:\n\nEvery response needs to use the 'bash' tool at least once to execute commands.\n\nCall the bash tool with your command as the argument:\n- Tool: bash\n- Arguments: {\"command\": \"your_command_here\"}\n\nIf you want to end the task, please issue the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`\nwithout any other command.\n",
+        "observation_template": "{%- if output.output | length < 10000 -%}\n{\n  \"returncode\": {{ output.returncode }},\n  \"output\": {{ output.output | tojson }}\n  {%- if output.exception_info %}, \"exception_info\": {{ output.exception_info | tojson }}{% endif %}\n}\n{%- else -%}\n{\n  \"returncode\": {{ output.returncode }},\n  \"output_head\": {{ output.output[:5000] | tojson }},\n  \"output_tail\": {{ output.output[-5000:] | tojson }},\n  \"elided_chars\": {{ output.output | length - 10000 }},\n  \"warning\": \"Output too long.\"\n  {%- if output.exception_info %}, \"exception_info\": {{ output.exception_info | tojson }}{% endif %}\n}\n{%- endif -%}\n",
+        "multimodal_regex": ""
+      },
+      "model_type": "minisweagent.models.litellm_model.LitellmModel",
+      "environment": {
+        "cwd": "/Users/evanwu/Desktop/autoguiworld/AutoWebWorld/autowebworld/web_outputs/slack-web/20260306_174906",
+        "env": {
+          "PAGER": "cat",
+          "MANPAGER": "cat",
+          "LESS": "-R",
+          "PIP_PROGRESS_BAR": "off",
+          "TQDM_DISABLE": "1"
+        },
+        "timeout": 300,
+        "stream_output": true
+      },
+      "environment_type": "minisweagent.environments.local.LocalEnvironment"
+    },
+    "mini_version": "2.2.4",
+    "exit_status": "Submitted",
+    "submission": ""
+  },
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful assistant that can interact with a computer.\n\nAdditional project policy:\nYou are a senior React + TypeScript coding agent working inside an existing Vite project.\n\nCore mission:\n- Build a user-usable web product, not a literal FSM viewer and not a mechanical page-by-page translation of the FSM.\n- Treat the FSM as the behavioral contract.\n- Treat the input web theme as the product reference.\n- Synthesize both into a realistic, coherent frontend that users can understand and operate smoothly.\n\nInput interpretation:\n- The FSM defines valid states, actions, transitions, preconditions, effects, and any required selectors.\n- The web theme defines the product shape: information architecture, layout patterns, interaction style, visual tone, and content presentation.\n- Do not expose raw FSM structure, page IDs, action IDs, or internal schema fields to end users unless they naturally belong in the UI.\n\nPriority order:\n1. FSM correctness\n2. Required selector correctness\n3. End-to-end usability of core product flows\n4. Visual polish and thematic consistency\n\nExecution policy:\n- Operate only within the current workspace.\n- Inspect `fsm.json` and the existing project before making changes.\n- Build incrementally; do not rewrite the whole project from scratch unless absolutely necessary.\n- Keep the implementation readable, production-oriented, and easy to audit.\n\nImplementation principles:\n- Translate FSM logic into natural user flows, not raw FSM-shaped screens.\n- Use routes, panels, dialogs, drawers, tabs, or other suitable UI structures as needed, as long as FSM behavior remains faithful.\n- Every actionable FSM operation must remain executable in the frontend with observable results.\n- Required selectors must match the FSM exactly where specified.\n- Keep state transitions explicit enough that a reviewer can trace how FSM actions are realized in code.\n- Prefer shared layouts, reusable components, and product-level information hierarchy over one-off page scaffolds when that improves usability.\n\nValidation policy:\n- Validate critical flows as you build.\n- Avoid unnecessary full builds during intermediate steps.\n- Run the build before final completion.\n\nResponse policy:\n- Return a concise implementation summary covering changed files, key behavior implemented, selector consistency, and verification status."
+    },
+    {
+      "role": "user",
+      "content": "Please solve this issue: You are the coding agent for an FSM-to-Web task.\n\nInput below is the authoritative FSM JSON. Build a runnable React/Vite frontend from it.\nReal web theme name: slack\n\nSkill enforcement (mandatory):\n- Include `$frontend-design-ultimate` at the start of execution for this task.\n- You must use the `frontend-design-ultimate` skill for this task.\n- If this skill is unavailable, stop immediately and report exactly `SKILL_NOT_LOADED`.\n- Before any implementation, print exactly: `Using skill: frontend-design-ultimate`.\n\nFirst step requirements (must do in project root, not in subdirectories):\n- Create `todo.md` first (highest priority before any code implementation).\n- In `todo.md`, include a complete page list for this FSM app (all pages that will be generated), then provide a concrete implementation checklist derived from FSM pages/actions.\n- Create `style.txt` in project root with concise design/style rules for this FSM app.\n\nOutput file structure requirements:\n- Generate a consistent, auditable project structure.\n- Use TypeScript React source files for the final frontend implementation.\n- Follow this normalized file structure unless the FSM clearly requires a small justified deviation:\n\n```text\nmock_data.json              # Root-level mock domain data used by the generated web app.\nsrc/\n  main.tsx                  # React app entry; mounts the root application.\n  App.tsx                   # Top-level app shell; wires providers, layout, and page rendering.\n  index.css                 # Global styles, design tokens, resets, and shared visual foundations.\n  pages/\n    <PageName>Page.tsx      # One page component per FSM page; renders page-specific UI and actions.\n  components/\n    <SharedComponent>.tsx   # Reusable UI components and shared layout building blocks.\n  fsm/\n    context.tsx             # Shared FSM state context and provider used across the app.\n    engine.ts               # Core FSM transition logic: preconditions, effects, and navigation execution.\n    seed.ts                 # Loads and adapts initial runtime data from `mock_data.json`.\n```\n\n- `src/main.tsx` must be the only app entry.\n- `src/App.tsx` must remain focused on app composition and should not absorb all page logic.\n- `src/pages/` must contain one readable page component file for each FSM page.\n- `src/components/` should contain reusable UI, not page-specific business logic.\n- `src/fsm/` should centralize FSM runtime logic instead of scattering it across pages.\n- Keep the project structure stable across runs of similar FSM-to-web tasks.\n- Do not scatter FSM logic across arbitrary top-level source files.\n- Do not collapse the entire app into a single oversized file unless the FSM is genuinely trivial.\n\nMock data requirements:\n- Create `mock_data.json` in the project root.\n- Store all generated mock domain data for the synthesized web app in this file.\n- This file should contain realistic product-facing content data such as users, channels, messages, workspaces, options, and other domain records required by the app.\n- Do not store transient UI state in `mock_data.json`.\n- Do not scatter mock data across multiple unrelated source files unless a small adapter is needed to load `mock_data.json` into the app.\n- The frontend should read from this root-level mock data file directly or through a thin runtime adapter.\n\n1. Core goal\n- Build a realistic and usable frontend website, not an FSM field viewer.\n- FSM is the behavior contract: page transitions, preconditions, effects, and navigation must remain strictly consistent.\n- Usability is the product contract: users should complete tasks smoothly, understand the UI clearly, and receive clear feedback.\n\n2. FSM hard constraints (must not be violated)\n- All page transitions must follow the FSM.\n- Every operable action must be executable in the frontend and produce an observable result.\n- Frontend action element selectors must match FSM-defined selectors exactly, character by character.\n- If usability or visual design decisions conflict with FSM constraints, FSM constraints take priority.\n\n3. Usability and UI design requirements\n- While preserving FSM behavior fidelity, prioritize a polished visual experience and a real product feel.\n- Maintain a cohesive visual language across pages (color, typography, spacing, and component style).\n- Use clear information hierarchy and layout rhythm so primary tasks and key actions are easy to identify.\n- Provide natural interaction feedback for key operations (in-progress, success, and failure).\n- Use user-facing, natural copy; avoid exposing internal FSM IDs or raw structure to end users.\n- Use real web `slack` as a style and layout reference, but avoid mechanical 1:1 imitation.\n\n4. Prohibitions\n- Do not mechanically translate FSM fields page by page as the final UI.\n- Do not deliver static pages without truly executable interactions.\n- Do not claim completion if build passes but core user flows are not actually runnable.\n\n5. Definition of done (all required)\n- `npm run build` passes.\n- At least 3 core user flows can run end-to-end from entry action to result.\n- In the final response, explicitly describe:\n  - the FSM transition chain for each core flow\n  - how selector consistency is guaranteed\n  - how usability design is implemented (feedback, validation, and failure handling)\n- When all required implementation is complete and build is passing, include exact token `ALL_TASKS_DONE` in your submission.\n\nFSM JSON:\n{\n  \"meta\": {\n    \"app\": \"Team_chat-Slack_app\",\n    \"version\": \"1.0\",\n    \"initial_page_id\": \"HOME\",\n    \"terminal_pages\": [\n      \"SEND_MESSAGE_SUCCESS\",\n      \"SCHEDULE_MESSAGE_SUCCESS\",\n      \"CREATE_CHANNEL_SUCCESS\",\n      \"CREATE_DM_SUCCESS\",\n      \"UPDATE_PROFILE_SUCCESS\"\n    ],\n    \"global_signature_schema\": {\n      \"teams\": \"array<object>|null\",\n      \"channels\": \"array<object>|null\",\n      \"direct_messages\": \"array<object>|null\",\n      \"current_user_id\": \"string|null\"\n    },\n    \"complexity_profile\": {\n      \"interceptors\": {\n        \"cookie\": true,\n        \"permissions\": [\n          \"location\"\n        ],\n        \"captcha\": false,\n        \"register_correction\": false\n      },\n      \"pages\": {\n        \"min\": 15,\n        \"max\": 25\n      },\n      \"actions\": {\n        \"per_page_min\": 4,\n        \"per_page_max\": 6\n      },\n      \"terminals\": {\n        \"count\": 5\n      },\n      \"path_length\": {\n        \"len\": [\n          6,\n          8\n        ],\n        \"shortest_only\": true,\n        \"count_interceptors\": false,\n        \"strict\": false\n      },\n      \"home_nav_variants\": [\n        \"direct\",\n        \"hover\"\n      ],\n      \"home_nav_coverage\": \"each\",\n      \"list_filters\": {\n        \"enabled\": true,\n        \"fields_max\": 3,\n        \"two_step_parity\": true,\n        \"allowed_shapes\": [\n          \"text_inputs\",\n          \"checkboxes\"\n        ],\n        \"require_open_filtered\": true\n      },\n      \"policy\": {\n        \"home_policy\": \"navigation_first\",\n        \"back_policy\": \"recommended\",\n        \"interceptors\": {\n          \"cookie_placement\": \"home\",\n          \"permission_placement\": \"first_relevant_non_home\"\n        }\n      }\n    }\n  },\n  \"pages\": [\n    {\n      \"id\": \"HOME\",\n      \"signature_schema\": {\n        \"cookie_consent_given\": \"boolean|null\",\n        \"workspace_list_filters_applied\": \"boolean|null\"\n      },\n      \"actions\": [\n        {\n          \"id\": \"ACT_HOME_ACCEPT_COOKIES\",\n          \"name\": \"click\",\n          \"is_navigation\": false,\n          \"from\": \"HOME\",\n          \"to\": \"HOME\",\n          \"parameters\": {},\n          \"preconditions\": [\n            {\n              \"path\": \"$.cookie_consent_given\",\n              \"cond\": \"eq\",\n              \"value\": null\n            }\n          ],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.cookie_consent_given\",\n              \"value\": true\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#cookie-accept\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_HOME_GO_WORKSPACE_LIST_DIRECT\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"HOME\",\n          \"to\": \"WORKSPACE_LIST\",\n          \"parameters\": {},\n          \"preconditions\": [\n            {\n              \"path\": \"$.cookie_consent_given\",\n              \"cond\": \"eq\",\n              \"value\": true\n            }\n          ],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#nav-workspaces\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_HOME_GO_WORKSPACE_LIST_HOVER\",\n          \"name\": \"select\",\n          \"is_navigation\": true,\n          \"from\": \"HOME\",\n          \"to\": \"WORKSPACE_LIST\",\n          \"parameters\": {\n            \"widget\": \"hover_menu\"\n          },\n          \"preconditions\": [\n            {\n              \"path\": \"$.cookie_consent_given\",\n              \"cond\": \"eq\",\n              \"value\": true\n            }\n          ],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"hover\",\n              \"selector\": \"#top-nav-workspaces\"\n            },\n            {\n              \"op\": \"click\",\n              \"selector\": \"#top-nav-workspaces .menu-all-workspaces\",\n              \"ui_elements\": {\n                \"container\": \"#top-nav-workspaces\",\n                \"options\": [\n                  {\n                    \"value\": \"all_workspaces\",\n                    \"selector\": \"#top-nav-workspaces .menu-all-workspaces\"\n                  },\n                  {\n                    \"value\": \"recent\",\n                    \"selector\": \"#top-nav-workspaces .menu-recent\"\n                  }\n                ]\n              }\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_HOME_GO_PROFILE\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"HOME\",\n          \"to\": \"PROFILE_SETTINGS\",\n          \"parameters\": {},\n          \"preconditions\": [\n            {\n              \"path\": \"$.cookie_consent_given\",\n              \"cond\": \"eq\",\n              \"value\": true\n            }\n          ],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#nav-profile\"\n            }\n          ]\n        }\n      ]\n    },\n    {\n      \"id\": \"WORKSPACE_LIST\",\n      \"signature_schema\": {\n        \"teams\": \"array<object>|null\",\n        \"workspace_list_filters_applied\": \"boolean|null\",\n        \"workspace_list_has_searched\": \"boolean|null\",\n        \"workspace_list_viewport_anchor_id\": \"string|null\",\n        \"matched_team_id\": \"string|null\",\n        \"selected_team_id\": \"string|null\",\n        \"location_permission_granted\": \"boolean|null\"\n      },\n      \"actions\": [\n        {\n          \"id\": \"ACT_WORKSPACE_LOCATION_PERMISSION_ALLOW\",\n          \"name\": \"click\",\n          \"is_navigation\": false,\n          \"from\": \"WORKSPACE_LIST\",\n          \"to\": \"WORKSPACE_LIST\",\n          \"parameters\": {},\n          \"preconditions\": [\n            {\n              \"path\": \"$.location_permission_granted\",\n              \"cond\": \"eq\",\n              \"value\": null\n            }\n          ],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.location_permission_granted\",\n              \"value\": true\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#permission-location-allow\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_WORKSPACE_APPLY_FILTERS\",\n          \"name\": \"type\",\n          \"is_navigation\": false,\n          \"from\": \"WORKSPACE_LIST\",\n          \"to\": \"WORKSPACE_LIST\",\n          \"parameters\": {\n            \"filter_value\": \"{input_text}\"\n          },\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.workspace_list_filters_applied\",\n              \"value\": true\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#workspace-filter-text\"\n            },\n            {\n              \"op\": \"type_text\",\n              \"selector\": \"#workspace-filter-text\",\n              \"text\": \"{filter_value}\"\n            },\n            {\n              \"op\": \"click\",\n              \"selector\": \"#workspace-filter-include-joined\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_WORKSPACE_OPEN_FILTERED\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"WORKSPACE_LIST\",\n          \"to\": \"CHANNEL_LIST\",\n          \"parameters\": {\n            \"team_id\": \"{ITEM_ANY}\"\n          },\n          \"preconditions\": [\n            {\n              \"path\": \"$.workspace_list_filters_applied\",\n              \"cond\": \"eq\",\n              \"value\": true\n            }\n          ],\n          \"effects\": [\n            {\n              \"op\": \"clear\",\n              \"path\": \"$.workspace_list_filters_applied\"\n            },\n            {\n              \"op\": \"set\",\n              \"path\": \"$.selected_team_id\",\n              \"value_ref\": \"{team_id}\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#workspace-list .workspace-row-filtered\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_WORKSPACE_SEARCH\",\n          \"name\": \"search\",\n          \"is_navigation\": false,\n          \"from\": \"WORKSPACE_LIST\",\n          \"to\": \"WORKSPACE_LIST\",\n          \"parameters\": {\n            \"item_id\": \"{ITEM_ANY}\"\n          },\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.matched_team_id\",\n              \"value_ref\": \"{item_id}\"\n            },\n            {\n              \"op\": \"set\",\n              \"path\": \"$.workspace_list_has_searched\",\n              \"value\": true\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#workspace-search-input\"\n            },\n            {\n              \"op\": \"type_text\",\n              \"selector\": \"#workspace-search-input\",\n              \"text\": \"{search_query}\"\n            },\n            {\n              \"op\": \"key_press\",\n              \"key\": \"Enter\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_WORKSPACE_OPEN_MATCHED\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"WORKSPACE_LIST\",\n          \"to\": \"CHANNEL_LIST\",\n          \"parameters\": {\n            \"team_id\": \"{ITEM_ANY}\"\n          },\n          \"preconditions\": [\n            {\n              \"path\": \"$.matched_team_id\",\n              \"cond\": \"length_gt\",\n              \"value\": 0\n            },\n            {\n              \"path\": \"$.workspace_list_has_searched\",\n              \"cond\": \"eq\",\n              \"value\": true\n            }\n          ],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.selected_team_id\",\n              \"value_ref\": \"{team_id}\"\n            },\n            {\n              \"op\": \"clear\",\n              \"path\": \"$.workspace_list_has_searched\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#workspace-list .workspace-row-matched\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_WORKSPACE_SCROLL_INTO_VIEW\",\n          \"name\": \"click\",\n          \"is_navigation\": false,\n          \"from\": \"WORKSPACE_LIST\",\n          \"to\": \"WORKSPACE_LIST\",\n          \"parameters\": {\n            \"item_id\": \"{ITEM_ANY}\"\n          },\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.workspace_list_viewport_anchor_id\",\n              \"value_ref\": \"{item_id}\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#workspace-list-container\"\n            },\n            {\n              \"op\": \"drag\",\n              \"selector\": \"#workspace-list-container\",\n              \"to_value\": \"down\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_WORKSPACE_OPEN_ANY\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"WORKSPACE_LIST\",\n          \"to\": \"CHANNEL_LIST\",\n          \"parameters\": {\n            \"team_id\": \"{ITEM_ANY}\"\n          },\n          \"preconditions\": [\n            {\n              \"path\": \"$.workspace_list_viewport_anchor_id\",\n              \"cond\": \"length_gt\",\n              \"value\": 0\n            }\n          ],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.selected_team_id\",\n              \"value_ref\": \"{team_id}\"\n            },\n            {\n              \"op\": \"clear\",\n              \"path\": \"$.workspace_list_viewport_anchor_id\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#workspace-list .workspace-row-visible\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_WORKSPACE_BACK_HOME\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"WORKSPACE_LIST\",\n          \"to\": \"HOME\",\n          \"parameters\": {},\n          \"preconditions\": [],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#back-home\"\n            }\n          ]\n        }\n      ]\n    },\n    {\n      \"id\": \"CHANNEL_LIST\",\n      \"signature_schema\": {\n        \"channels\": \"array<object>|null\",\n        \"direct_messages\": \"array<object>|null\",\n        \"selected_team_id\": \"string|null\",\n        \"channel_list_filters_applied\": \"boolean|null\",\n        \"channel_list_has_searched\": \"boolean|null\",\n        \"channel_list_viewport_anchor_id\": \"string|null\",\n        \"matched_channel_id\": \"string|null\",\n        \"selected_channel_id\": \"string|null\",\n        \"selected_dm_id\": \"string|null\"\n      },\n      \"actions\": [\n        {\n          \"id\": \"ACT_CHANNEL_APPLY_FILTERS\",\n          \"name\": \"type\",\n          \"is_navigation\": false,\n          \"from\": \"CHANNEL_LIST\",\n          \"to\": \"CHANNEL_LIST\",\n          \"parameters\": {\n            \"filter_value\": \"{filter_value}\"\n          },\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.channel_list_filters_applied\",\n              \"value\": true\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#channel-filter-text\"\n            },\n            {\n              \"op\": \"type_text\",\n              \"selector\": \"#channel-filter-text\",\n              \"text\": \"{filter_value}\"\n            },\n            {\n              \"op\": \"click\",\n              \"selector\": \"#channel-filter-include-muted\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CHANNEL_OPEN_FILTERED\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"CHANNEL_LIST\",\n          \"to\": \"CHANNEL_VIEW\",\n          \"parameters\": {\n            \"channel_id\": \"{ITEM_ANY}\"\n          },\n          \"preconditions\": [\n            {\n              \"path\": \"$.channel_list_filters_applied\",\n              \"cond\": \"eq\",\n              \"value\": true\n            }\n          ],\n          \"effects\": [\n            {\n              \"op\": \"clear\",\n              \"path\": \"$.channel_list_filters_applied\"\n            },\n            {\n              \"op\": \"set\",\n              \"path\": \"$.selected_channel_id\",\n              \"value_ref\": \"{channel_id}\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#channel-list .channel-row-filtered\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CHANNEL_SEARCH\",\n          \"name\": \"search\",\n          \"is_navigation\": false,\n          \"from\": \"CHANNEL_LIST\",\n          \"to\": \"CHANNEL_LIST\",\n          \"parameters\": {\n            \"item_id\": \"{ITEM_ANY}\"\n          },\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.matched_channel_id\",\n              \"value_ref\": \"{item_id}\"\n            },\n            {\n              \"op\": \"set\",\n              \"path\": \"$.channel_list_has_searched\",\n              \"value\": true\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#channel-search-input\"\n            },\n            {\n              \"op\": \"type_text\",\n              \"selector\": \"#channel-search-input\",\n              \"text\": \"{search_query}\"\n            },\n            {\n              \"op\": \"key_press\",\n              \"key\": \"Enter\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CHANNEL_OPEN_MATCHED\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"CHANNEL_LIST\",\n          \"to\": \"CHANNEL_VIEW\",\n          \"parameters\": {\n            \"channel_id\": \"{ITEM_ANY}\"\n          },\n          \"preconditions\": [\n            {\n              \"path\": \"$.matched_channel_id\",\n              \"cond\": \"length_gt\",\n              \"value\": 0\n            },\n            {\n              \"path\": \"$.channel_list_has_searched\",\n              \"cond\": \"eq\",\n              \"value\": true\n            }\n          ],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.selected_channel_id\",\n              \"value_ref\": \"{channel_id}\"\n            },\n            {\n              \"op\": \"clear\",\n              \"path\": \"$.channel_list_has_searched\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#channel-list .channel-row-matched\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CHANNEL_SCROLL_INTO_VIEW\",\n          \"name\": \"click\",\n          \"is_navigation\": false,\n          \"from\": \"CHANNEL_LIST\",\n          \"to\": \"CHANNEL_LIST\",\n          \"parameters\": {\n            \"item_id\": \"{ITEM_ANY}\"\n          },\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.channel_list_viewport_anchor_id\",\n              \"value_ref\": \"{item_id}\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#channel-list-container\"\n            },\n            {\n              \"op\": \"drag\",\n              \"selector\": \"#channel-list-container\",\n              \"to_value\": \"down\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CHANNEL_OPEN_ANY\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"CHANNEL_LIST\",\n          \"to\": \"CHANNEL_VIEW\",\n          \"parameters\": {\n            \"channel_id\": \"{ITEM_ANY}\"\n          },\n          \"preconditions\": [\n            {\n              \"path\": \"$.channel_list_viewport_anchor_id\",\n              \"cond\": \"length_gt\",\n              \"value\": 0\n            }\n          ],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.selected_channel_id\",\n              \"value_ref\": \"{channel_id}\"\n            },\n            {\n              \"op\": \"clear\",\n              \"path\": \"$.channel_list_viewport_anchor_id\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#channel-list .channel-row-visible\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CHANNEL_GO_NEW_CHANNEL\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"CHANNEL_LIST\",\n          \"to\": \"CREATE_CHANNEL\",\n          \"parameters\": {},\n          \"preconditions\": [],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#button-create-channel\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CHANNEL_GO_DM_LIST\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"CHANNEL_LIST\",\n          \"to\": \"DM_LIST\",\n          \"parameters\": {},\n          \"preconditions\": [],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#nav-dm\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CHANNEL_BACK_WORKSPACE\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"CHANNEL_LIST\",\n          \"to\": \"WORKSPACE_LIST\",\n          \"parameters\": {},\n          \"preconditions\": [],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#back-workspaces\"\n            }\n          ]\n        }\n      ]\n    },\n    {\n      \"id\": \"CHANNEL_VIEW\",\n      \"signature_schema\": {\n        \"channels\": \"array<object>|null\",\n        \"selected_channel_id\": \"string|null\",\n        \"channel_view_has_searched\": \"boolean|null\",\n        \"channel_view_viewport_anchor_id\": \"string|null\",\n        \"matched_message_id\": \"string|null\",\n        \"selected_message_id\": \"string|null\",\n        \"compose_message_text\": \"string|null\",\n        \"compose_has_attachment\": \"boolean|null\",\n        \"compose_is_important\": \"boolean|null\",\n        \"scheduled_send_datetime\": \"string|null\"\n      },\n      \"actions\": [\n        {\n          \"id\": \"ACT_CHANNEL_VIEW_SEARCH_MESSAGES\",\n          \"name\": \"search\",\n          \"is_navigation\": false,\n          \"from\": \"CHANNEL_VIEW\",\n          \"to\": \"CHANNEL_VIEW\",\n          \"parameters\": {\n            \"item_id\": \"{ITEM_ANY}\"\n          },\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.matched_message_id\",\n              \"value_ref\": \"{item_id}\"\n            },\n            {\n              \"op\": \"set\",\n              \"path\": \"$.channel_view_has_searched\",\n              \"value\": true\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#channel-search-messages-input\"\n            },\n            {\n              \"op\": \"type_text\",\n              \"selector\": \"#channel-search-messages-input\",\n              \"text\": \"{search_query}\"\n            },\n            {\n              \"op\": \"key_press\",\n              \"key\": \"Enter\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CHANNEL_VIEW_OPEN_MATCHED_MESSAGE\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"CHANNEL_VIEW\",\n          \"to\": \"MESSAGE_THREAD\",\n          \"parameters\": {\n            \"message_id\": \"{ITEM_ANY}\"\n          },\n          \"preconditions\": [\n            {\n              \"path\": \"$.matched_message_id\",\n              \"cond\": \"length_gt\",\n              \"value\": 0\n            },\n            {\n              \"path\": \"$.channel_view_has_searched\",\n              \"cond\": \"eq\",\n              \"value\": true\n            }\n          ],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.selected_message_id\",\n              \"value_ref\": \"{message_id}\"\n            },\n            {\n              \"op\": \"clear\",\n              \"path\": \"$.channel_view_has_searched\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#message-list .message-row-matched\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CHANNEL_VIEW_SCROLL_MESSAGE_INTO_VIEW\",\n          \"name\": \"click\",\n          \"is_navigation\": false,\n          \"from\": \"CHANNEL_VIEW\",\n          \"to\": \"CHANNEL_VIEW\",\n          \"parameters\": {\n            \"item_id\": \"{ITEM_ANY}\"\n          },\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.channel_view_viewport_anchor_id\",\n              \"value_ref\": \"{item_id}\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#message-list-container\"\n            },\n            {\n              \"op\": \"drag\",\n              \"selector\": \"#message-list-container\",\n              \"to_value\": \"down\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CHANNEL_VIEW_OPEN_ANY_MESSAGE\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"CHANNEL_VIEW\",\n          \"to\": \"MESSAGE_THREAD\",\n          \"parameters\": {\n            \"message_id\": \"{ITEM_ANY}\"\n          },\n          \"preconditions\": [\n            {\n              \"path\": \"$.channel_view_viewport_anchor_id\",\n              \"cond\": \"length_gt\",\n              \"value\": 0\n            }\n          ],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.selected_message_id\",\n              \"value_ref\": \"{message_id}\"\n            },\n            {\n              \"op\": \"clear\",\n              \"path\": \"$.channel_view_viewport_anchor_id\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#message-list .message-row-visible\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CHANNEL_VIEW_TYPE_MESSAGE\",\n          \"name\": \"type\",\n          \"is_navigation\": false,\n          \"from\": \"CHANNEL_VIEW\",\n          \"to\": \"CHANNEL_VIEW\",\n          \"parameters\": {\n            \"input_text\": \"{input_text}\"\n          },\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.compose_message_text\",\n              \"value_ref\": \"{input_text}\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#message-composer-input\"\n            },\n            {\n              \"op\": \"type_text\",\n              \"selector\": \"#message-composer-input\",\n              \"text\": \"{input_text}\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CHANNEL_VIEW_TOGGLE_IMPORTANT\",\n          \"name\": \"click\",\n          \"is_navigation\": false,\n          \"from\": \"CHANNEL_VIEW\",\n          \"to\": \"CHANNEL_VIEW\",\n          \"parameters\": {},\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.compose_is_important\",\n              \"value\": true\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#composer-toggle-important\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CHANNEL_VIEW_ATTACH_FILE\",\n          \"name\": \"click\",\n          \"is_navigation\": false,\n          \"from\": \"CHANNEL_VIEW\",\n          \"to\": \"CHANNEL_VIEW\",\n          \"parameters\": {},\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.compose_has_attachment\",\n              \"value\": true\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#composer-attach-file\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CHANNEL_VIEW_OPEN_SCHEDULE_FORM\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"CHANNEL_VIEW\",\n          \"to\": \"SCHEDULE_MESSAGE_FORM\",\n          \"parameters\": {},\n          \"preconditions\": [\n            {\n              \"path\": \"$.compose_message_text\",\n              \"cond\": \"length_gt\",\n              \"value\": 0\n            }\n          ],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#composer-schedule-button\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CHANNEL_VIEW_SEND_MESSAGE\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"CHANNEL_VIEW\",\n          \"to\": \"SEND_MESSAGE_SUCCESS\",\n          \"parameters\": {},\n          \"preconditions\": [\n            {\n              \"path\": \"$.compose_message_text\",\n              \"cond\": \"length_gt\",\n              \"value\": 0\n            }\n          ],\n          \"effects\": [\n            {\n              \"op\": \"clear\",\n              \"path\": \"$.compose_message_text\"\n            },\n            {\n              \"op\": \"clear\",\n              \"path\": \"$.compose_has_attachment\"\n            },\n            {\n              \"op\": \"clear\",\n              \"path\": \"$.compose_is_important\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#composer-send-button\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CHANNEL_VIEW_BACK_CHANNEL_LIST\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"CHANNEL_VIEW\",\n          \"to\": \"CHANNEL_LIST\",\n          \"parameters\": {},\n          \"preconditions\": [],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#back-channel-list\"\n            }\n          ]\n        }\n      ]\n    },\n    {\n      \"id\": \"MESSAGE_THREAD\",\n      \"signature_schema\": {\n        \"selected_message_id\": \"string|null\",\n        \"reply_text\": \"string|null\"\n      },\n      \"actions\": [\n        {\n          \"id\": \"ACT_THREAD_TYPE_REPLY\",\n          \"name\": \"type\",\n          \"is_navigation\": false,\n          \"from\": \"MESSAGE_THREAD\",\n          \"to\": \"MESSAGE_THREAD\",\n          \"parameters\": {\n            \"input_text\": \"{input_text}\"\n          },\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.reply_text\",\n              \"value_ref\": \"{input_text}\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#thread-reply-input\"\n            },\n            {\n              \"op\": \"type_text\",\n              \"selector\": \"#thread-reply-input\",\n              \"text\": \"{input_text}\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_THREAD_SEND_REPLY\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"MESSAGE_THREAD\",\n          \"to\": \"SEND_MESSAGE_SUCCESS\",\n          \"parameters\": {},\n          \"preconditions\": [\n            {\n              \"path\": \"$.reply_text\",\n              \"cond\": \"length_gt\",\n              \"value\": 0\n            }\n          ],\n          \"effects\": [\n            {\n              \"op\": \"clear\",\n              \"path\": \"$.reply_text\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#thread-send-reply\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_THREAD_BACK_CHANNEL_VIEW\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"MESSAGE_THREAD\",\n          \"to\": \"CHANNEL_VIEW\",\n          \"parameters\": {},\n          \"preconditions\": [],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#back-channel-view\"\n            }\n          ]\n        }\n      ]\n    },\n    {\n      \"id\": \"SEND_MESSAGE_SUCCESS\",\n      \"signature_schema\": {\n        \"success_message\": \"string|null\"\n      },\n      \"actions\": [\n        {\n          \"id\": \"ACT_SEND_SUCCESS_GO_HOME\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"SEND_MESSAGE_SUCCESS\",\n          \"to\": \"HOME\",\n          \"parameters\": {},\n          \"preconditions\": [],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#go-home\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_SEND_SUCCESS_BACK_CHANNEL_VIEW\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"SEND_MESSAGE_SUCCESS\",\n          \"to\": \"CHANNEL_VIEW\",\n          \"parameters\": {},\n          \"preconditions\": [],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#back-channel-view\"\n            }\n          ]\n        }\n      ]\n    },\n    {\n      \"id\": \"SCHEDULE_MESSAGE_FORM\",\n      \"signature_schema\": {\n        \"compose_message_text\": \"string|null\",\n        \"schedule_date_time\": \"string|null\",\n        \"schedule_timezone\": \"string|null\"\n      },\n      \"actions\": [\n        {\n          \"id\": \"ACT_SCHEDULE_PICK_DATE\",\n          \"name\": \"select\",\n          \"is_navigation\": false,\n          \"from\": \"SCHEDULE_MESSAGE_FORM\",\n          \"to\": \"SCHEDULE_MESSAGE_FORM\",\n          \"parameters\": {\n            \"widget\": \"date_picker\",\n            \"year\": 2025,\n            \"month\": 10,\n            \"day\": 22,\n            \"hour\": 10,\n            \"minute\": 30\n          },\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.schedule_date_time\",\n              \"value\": \"2025-10-22T10:30:00Z\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#date-picker1\"\n            },\n            {\n              \"op\": \"click\",\n              \"selector\": \".ym-vertical\"\n            },\n            {\n              \"op\": \"click\",\n              \"selector\": \".year-2025\"\n            },\n            {\n              \"op\": \"click\",\n              \"selector\": \".month-10\"\n            },\n            {\n              \"op\": \"click\",\n              \"selector\": \".day-22\"\n            },\n            {\n              \"op\": \"click\",\n              \"selector\": \"#date-picker-hour\"\n            },\n            {\n              \"op\": \"click\",\n              \"selector\": \".hour-10\"\n            },\n            {\n              \"op\": \"click\",\n              \"selector\": \"#date-picker-minute\"\n            },\n            {\n              \"op\": \"click\",\n              \"selector\": \".minute-30\"\n            },\n            {\n              \"op\": \"key_press\",\n              \"key\": \"Enter\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_SCHEDULE_SELECT_TIMEZONE\",\n          \"name\": \"select\",\n          \"is_navigation\": false,\n          \"from\": \"SCHEDULE_MESSAGE_FORM\",\n          \"to\": \"SCHEDULE_MESSAGE_FORM\",\n          \"parameters\": {\n            \"widget\": \"dropdown\",\n            \"timezone\": \"UTC\"\n          },\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.schedule_timezone\",\n              \"value\": \"UTC\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#timezone-dropdown\"\n            },\n            {\n              \"op\": \"click\",\n              \"selector\": \"#timezone-option-utc\",\n              \"ui_elements\": {\n                \"container\": \"#timezone-dropdown\",\n                \"options\": [\n                  {\n                    \"value\": \"UTC\",\n                    \"selector\": \"#timezone-option-utc\"\n                  },\n                  {\n                    \"value\": \"PST\",\n                    \"selector\": \"#timezone-option-pst\"\n                  },\n                  {\n                    \"value\": \"EST\",\n                    \"selector\": \"#timezone-option-est\"\n                  }\n                ]\n              }\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_SCHEDULE_SUBMIT\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"SCHEDULE_MESSAGE_FORM\",\n          \"to\": \"SCHEDULE_MESSAGE_SUCCESS\",\n          \"parameters\": {},\n          \"preconditions\": [\n            {\n              \"path\": \"$.compose_message_text\",\n              \"cond\": \"length_gt\",\n              \"value\": 0\n            },\n            {\n              \"path\": \"$.schedule_date_time\",\n              \"cond\": \"length_gt\",\n              \"value\": 0\n            }\n          ],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#schedule-submit-button\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_SCHEDULE_BACK_CHANNEL_VIEW\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"SCHEDULE_MESSAGE_FORM\",\n          \"to\": \"CHANNEL_VIEW\",\n          \"parameters\": {},\n          \"preconditions\": [],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#back-channel-view\"\n            }\n          ]\n        }\n      ]\n    },\n    {\n      \"id\": \"SCHEDULE_MESSAGE_SUCCESS\",\n      \"signature_schema\": {\n        \"scheduled_message_id\": \"string|null\"\n      },\n      \"actions\": [\n        {\n          \"id\": \"ACT_SCHEDULE_SUCCESS_GO_HOME\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"SCHEDULE_MESSAGE_SUCCESS\",\n          \"to\": \"HOME\",\n          \"parameters\": {},\n          \"preconditions\": [],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#go-home\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_SCHEDULE_SUCCESS_BACK_CHANNEL_VIEW\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"SCHEDULE_MESSAGE_SUCCESS\",\n          \"to\": \"CHANNEL_VIEW\",\n          \"parameters\": {},\n          \"preconditions\": [],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#back-channel-view\"\n            }\n          ]\n        }\n      ]\n    },\n    {\n      \"id\": \"CREATE_CHANNEL\",\n      \"signature_schema\": {\n        \"new_channel_name\": \"string|null\",\n        \"new_channel_description\": \"string|null\",\n        \"new_channel_privacy\": \"string|null\",\n        \"new_channel_invite_ids\": \"array<string>|null\"\n      },\n      \"actions\": [\n        {\n          \"id\": \"ACT_CREATE_CHANNEL_TYPE_NAME\",\n          \"name\": \"type\",\n          \"is_navigation\": false,\n          \"from\": \"CREATE_CHANNEL\",\n          \"to\": \"CREATE_CHANNEL\",\n          \"parameters\": {\n            \"input_text\": \"{input_text}\"\n          },\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.new_channel_name\",\n              \"value_ref\": \"{input_text}\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#channel-name-input\"\n            },\n            {\n              \"op\": \"type_text\",\n              \"selector\": \"#channel-name-input\",\n              \"text\": \"{input_text}\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CREATE_CHANNEL_TYPE_DESCRIPTION\",\n          \"name\": \"type\",\n          \"is_navigation\": false,\n          \"from\": \"CREATE_CHANNEL\",\n          \"to\": \"CREATE_CHANNEL\",\n          \"parameters\": {\n            \"input_text\": \"{input_text}\"\n          },\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.new_channel_description\",\n              \"value_ref\": \"{input_text}\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#channel-description-input\"\n            },\n            {\n              \"op\": \"type_text\",\n              \"selector\": \"#channel-description-input\",\n              \"text\": \"{input_text}\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CREATE_CHANNEL_SELECT_PRIVACY\",\n          \"name\": \"select\",\n          \"is_navigation\": false,\n          \"from\": \"CREATE_CHANNEL\",\n          \"to\": \"CREATE_CHANNEL\",\n          \"parameters\": {\n            \"widget\": \"dropdown\",\n            \"privacy\": \"public\"\n          },\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.new_channel_privacy\",\n              \"value\": \"public\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#channel-privacy-dropdown\"\n            },\n            {\n              \"op\": \"click\",\n              \"selector\": \"#privacy-option-public\",\n              \"ui_elements\": {\n                \"container\": \"#channel-privacy-dropdown\",\n                \"options\": [\n                  {\n                    \"value\": \"public\",\n                    \"selector\": \"#privacy-option-public\"\n                  },\n                  {\n                    \"value\": \"private\",\n                    \"selector\": \"#privacy-option-private\"\n                  }\n                ]\n              }\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CREATE_CHANNEL_ADD_INVITE\",\n          \"name\": \"type\",\n          \"is_navigation\": false,\n          \"from\": \"CREATE_CHANNEL\",\n          \"to\": \"CREATE_CHANNEL\",\n          \"parameters\": {\n            \"input_text\": \"{input_text}\"\n          },\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"append_unique\",\n              \"path\": \"$.new_channel_invite_ids\",\n              \"value_ref\": \"{input_text}\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#channel-invite-input\"\n            },\n            {\n              \"op\": \"type_text\",\n              \"selector\": \"#channel-invite-input\",\n              \"text\": \"{input_text}\"\n            },\n            {\n              \"op\": \"key_press\",\n              \"key\": \"Enter\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CREATE_CHANNEL_SUBMIT\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"CREATE_CHANNEL\",\n          \"to\": \"CREATE_CHANNEL_SUCCESS\",\n          \"parameters\": {},\n          \"preconditions\": [\n            {\n              \"path\": \"$.new_channel_name\",\n              \"cond\": \"length_gt\",\n              \"value\": 0\n            }\n          ],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#create-channel-submit\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CREATE_CHANNEL_BACK_CHANNEL_LIST\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"CREATE_CHANNEL\",\n          \"to\": \"CHANNEL_LIST\",\n          \"parameters\": {},\n          \"preconditions\": [],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#back-channel-list\"\n            }\n          ]\n        }\n      ]\n    },\n    {\n      \"id\": \"CREATE_CHANNEL_SUCCESS\",\n      \"signature_schema\": {\n        \"created_channel_id\": \"string|null\"\n      },\n      \"actions\": [\n        {\n          \"id\": \"ACT_CREATE_CHANNEL_SUCCESS_GO_HOME\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"CREATE_CHANNEL_SUCCESS\",\n          \"to\": \"HOME\",\n          \"parameters\": {},\n          \"preconditions\": [],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#go-home\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CREATE_CHANNEL_SUCCESS_GO_CHANNEL_LIST\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"CREATE_CHANNEL_SUCCESS\",\n          \"to\": \"CHANNEL_LIST\",\n          \"parameters\": {},\n          \"preconditions\": [],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#go-channel-list\"\n            }\n          ]\n        }\n      ]\n    },\n    {\n      \"id\": \"DM_LIST\",\n      \"signature_schema\": {\n        \"direct_messages\": \"array<object>|null\",\n        \"dm_list_filters_applied\": \"boolean|null\",\n        \"dm_list_has_searched\": \"boolean|null\",\n        \"dm_list_viewport_anchor_id\": \"string|null\",\n        \"matched_dm_id\": \"string|null\",\n        \"selected_dm_id\": \"string|null\"\n      },\n      \"actions\": [\n        {\n          \"id\": \"ACT_DM_APPLY_FILTERS\",\n          \"name\": \"type\",\n          \"is_navigation\": false,\n          \"from\": \"DM_LIST\",\n          \"to\": \"DM_LIST\",\n          \"parameters\": {\n            \"filter_value\": \"{filter_value}\"\n          },\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.dm_list_filters_applied\",\n              \"value\": true\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#dm-filter-text\"\n            },\n            {\n              \"op\": \"type_text\",\n              \"selector\": \"#dm-filter-text\",\n              \"text\": \"{filter_value}\"\n            },\n            {\n              \"op\": \"click\",\n              \"selector\": \"#dm-filter-include-recent\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_DM_OPEN_FILTERED\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"DM_LIST\",\n          \"to\": \"DM_VIEW\",\n          \"parameters\": {\n            \"dm_id\": \"{ITEM_ANY}\"\n          },\n          \"preconditions\": [\n            {\n              \"path\": \"$.dm_list_filters_applied\",\n              \"cond\": \"eq\",\n              \"value\": true\n            }\n          ],\n          \"effects\": [\n            {\n              \"op\": \"clear\",\n              \"path\": \"$.dm_list_filters_applied\"\n            },\n            {\n              \"op\": \"set\",\n              \"path\": \"$.selected_dm_id\",\n              \"value_ref\": \"{dm_id}\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#dm-list .dm-row-filtered\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_DM_SEARCH\",\n          \"name\": \"search\",\n          \"is_navigation\": false,\n          \"from\": \"DM_LIST\",\n          \"to\": \"DM_LIST\",\n          \"parameters\": {\n            \"item_id\": \"{ITEM_ANY}\"\n          },\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.matched_dm_id\",\n              \"value_ref\": \"{item_id}\"\n            },\n            {\n              \"op\": \"set\",\n              \"path\": \"$.dm_list_has_searched\",\n              \"value\": true\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#dm-search-input\"\n            },\n            {\n              \"op\": \"type_text\",\n              \"selector\": \"#dm-search-input\",\n              \"text\": \"{search_query}\"\n            },\n            {\n              \"op\": \"key_press\",\n              \"key\": \"Enter\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_DM_OPEN_MATCHED\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"DM_LIST\",\n          \"to\": \"DM_VIEW\",\n          \"parameters\": {\n            \"dm_id\": \"{ITEM_ANY}\"\n          },\n          \"preconditions\": [\n            {\n              \"path\": \"$.matched_dm_id\",\n              \"cond\": \"length_gt\",\n              \"value\": 0\n            },\n            {\n              \"path\": \"$.dm_list_has_searched\",\n              \"cond\": \"eq\",\n              \"value\": true\n            }\n          ],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.selected_dm_id\",\n              \"value_ref\": \"{dm_id}\"\n            },\n            {\n              \"op\": \"clear\",\n              \"path\": \"$.dm_list_has_searched\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#dm-list .dm-row-matched\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_DM_SCROLL_INTO_VIEW\",\n          \"name\": \"click\",\n          \"is_navigation\": false,\n          \"from\": \"DM_LIST\",\n          \"to\": \"DM_LIST\",\n          \"parameters\": {\n            \"item_id\": \"{ITEM_ANY}\"\n          },\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.dm_list_viewport_anchor_id\",\n              \"value_ref\": \"{item_id}\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#dm-list-container\"\n            },\n            {\n              \"op\": \"drag\",\n              \"selector\": \"#dm-list-container\",\n              \"to_value\": \"down\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_DM_OPEN_ANY\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"DM_LIST\",\n          \"to\": \"DM_VIEW\",\n          \"parameters\": {\n            \"dm_id\": \"{ITEM_ANY}\"\n          },\n          \"preconditions\": [\n            {\n              \"path\": \"$.dm_list_viewport_anchor_id\",\n              \"cond\": \"length_gt\",\n              \"value\": 0\n            }\n          ],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.selected_dm_id\",\n              \"value_ref\": \"{dm_id}\"\n            },\n            {\n              \"op\": \"clear\",\n              \"path\": \"$.dm_list_viewport_anchor_id\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#dm-list .dm-row-visible\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_DM_GO_CREATE_DM\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"DM_LIST\",\n          \"to\": \"CREATE_DM\",\n          \"parameters\": {},\n          \"preconditions\": [],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#button-new-dm\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_DM_BACK_CHANNEL_LIST\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"DM_LIST\",\n          \"to\": \"CHANNEL_LIST\",\n          \"parameters\": {},\n          \"preconditions\": [],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#back-channel-list\"\n            }\n          ]\n        }\n      ]\n    },\n    {\n      \"id\": \"DM_VIEW\",\n      \"signature_schema\": {\n        \"selected_dm_id\": \"string|null\",\n        \"dm_compose_text\": \"string|null\"\n      },\n      \"actions\": [\n        {\n          \"id\": \"ACT_DM_VIEW_TYPE_MESSAGE\",\n          \"name\": \"type\",\n          \"is_navigation\": false,\n          \"from\": \"DM_VIEW\",\n          \"to\": \"DM_VIEW\",\n          \"parameters\": {\n            \"input_text\": \"{input_text}\"\n          },\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.dm_compose_text\",\n              \"value_ref\": \"{input_text}\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#dm-composer-input\"\n            },\n            {\n              \"op\": \"type_text\",\n              \"selector\": \"#dm-composer-input\",\n              \"text\": \"{input_text}\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_DM_VIEW_SEND_MESSAGE\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"DM_VIEW\",\n          \"to\": \"SEND_MESSAGE_SUCCESS\",\n          \"parameters\": {},\n          \"preconditions\": [\n            {\n              \"path\": \"$.dm_compose_text\",\n              \"cond\": \"length_gt\",\n              \"value\": 0\n            }\n          ],\n          \"effects\": [\n            {\n              \"op\": \"clear\",\n              \"path\": \"$.dm_compose_text\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#dm-send-button\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_DM_VIEW_BACK_DM_LIST\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"DM_VIEW\",\n          \"to\": \"DM_LIST\",\n          \"parameters\": {},\n          \"preconditions\": [],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#back-dm-list\"\n            }\n          ]\n        }\n      ]\n    },\n    {\n      \"id\": \"CREATE_DM\",\n      \"signature_schema\": {\n        \"dm_recipient_ids\": \"array<string>|null\",\n        \"dm_initial_message\": \"string|null\"\n      },\n      \"actions\": [\n        {\n          \"id\": \"ACT_CREATE_DM_ADD_RECIPIENT\",\n          \"name\": \"type\",\n          \"is_navigation\": false,\n          \"from\": \"CREATE_DM\",\n          \"to\": \"CREATE_DM\",\n          \"parameters\": {\n            \"input_text\": \"{input_text}\"\n          },\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"append_unique\",\n              \"path\": \"$.dm_recipient_ids\",\n              \"value_ref\": \"{input_text}\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#dm-recipient-input\"\n            },\n            {\n              \"op\": \"type_text\",\n              \"selector\": \"#dm-recipient-input\",\n              \"text\": \"{input_text}\"\n            },\n            {\n              \"op\": \"key_press\",\n              \"key\": \"Enter\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CREATE_DM_TYPE_INITIAL_MESSAGE\",\n          \"name\": \"type\",\n          \"is_navigation\": false,\n          \"from\": \"CREATE_DM\",\n          \"to\": \"CREATE_DM\",\n          \"parameters\": {\n            \"input_text\": \"{input_text}\"\n          },\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.dm_initial_message\",\n              \"value_ref\": \"{input_text}\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#dm-initial-message-input\"\n            },\n            {\n              \"op\": \"type_text\",\n              \"selector\": \"#dm-initial-message-input\",\n              \"text\": \"{input_text}\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CREATE_DM_SUBMIT\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"CREATE_DM\",\n          \"to\": \"CREATE_DM_SUCCESS\",\n          \"parameters\": {},\n          \"preconditions\": [\n            {\n              \"path\": \"$.dm_initial_message\",\n              \"cond\": \"length_gt\",\n              \"value\": 0\n            }\n          ],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#create-dm-submit\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CREATE_DM_BACK_DM_LIST\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"CREATE_DM\",\n          \"to\": \"DM_LIST\",\n          \"parameters\": {},\n          \"preconditions\": [],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#back-dm-list\"\n            }\n          ]\n        }\n      ]\n    },\n    {\n      \"id\": \"CREATE_DM_SUCCESS\",\n      \"signature_schema\": {\n        \"created_dm_id\": \"string|null\"\n      },\n      \"actions\": [\n        {\n          \"id\": \"ACT_CREATE_DM_SUCCESS_GO_HOME\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"CREATE_DM_SUCCESS\",\n          \"to\": \"HOME\",\n          \"parameters\": {},\n          \"preconditions\": [],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#go-home\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_CREATE_DM_SUCCESS_GO_DM_LIST\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"CREATE_DM_SUCCESS\",\n          \"to\": \"DM_LIST\",\n          \"parameters\": {},\n          \"preconditions\": [],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#go-dm-list\"\n            }\n          ]\n        }\n      ]\n    },\n    {\n      \"id\": \"PROFILE_SETTINGS\",\n      \"signature_schema\": {\n        \"profile_display_name\": \"string|null\",\n        \"profile_title\": \"string|null\",\n        \"profile_timezone\": \"string|null\"\n      },\n      \"actions\": [\n        {\n          \"id\": \"ACT_PROFILE_TYPE_DISPLAY_NAME\",\n          \"name\": \"type\",\n          \"is_navigation\": false,\n          \"from\": \"PROFILE_SETTINGS\",\n          \"to\": \"PROFILE_SETTINGS\",\n          \"parameters\": {\n            \"input_text\": \"{input_text}\"\n          },\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.profile_display_name\",\n              \"value_ref\": \"{input_text}\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#profile-display-name-input\"\n            },\n            {\n              \"op\": \"type_text\",\n              \"selector\": \"#profile-display-name-input\",\n              \"text\": \"{input_text}\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_PROFILE_TYPE_TITLE\",\n          \"name\": \"type\",\n          \"is_navigation\": false,\n          \"from\": \"PROFILE_SETTINGS\",\n          \"to\": \"PROFILE_SETTINGS\",\n          \"parameters\": {\n            \"input_text\": \"{input_text}\"\n          },\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.profile_title\",\n              \"value_ref\": \"{input_text}\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#profile-title-input\"\n            },\n            {\n              \"op\": \"type_text\",\n              \"selector\": \"#profile-title-input\",\n              \"text\": \"{input_text}\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_PROFILE_SELECT_TIMEZONE\",\n          \"name\": \"select\",\n          \"is_navigation\": false,\n          \"from\": \"PROFILE_SETTINGS\",\n          \"to\": \"PROFILE_SETTINGS\",\n          \"parameters\": {\n            \"widget\": \"dropdown\",\n            \"timezone\": \"UTC\"\n          },\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.profile_timezone\",\n              \"value\": \"UTC\"\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#profile-timezone-dropdown\"\n            },\n            {\n              \"op\": \"click\",\n              \"selector\": \"#profile-timezone-utc\",\n              \"ui_elements\": {\n                \"container\": \"#profile-timezone-dropdown\",\n                \"options\": [\n                  {\n                    \"value\": \"UTC\",\n                    \"selector\": \"#profile-timezone-utc\"\n                  },\n                  {\n                    \"value\": \"PST\",\n                    \"selector\": \"#profile-timezone-pst\"\n                  },\n                  {\n                    \"value\": \"EST\",\n                    \"selector\": \"#profile-timezone-est\"\n                  }\n                ]\n              }\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_PROFILE_SAVE\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"PROFILE_SETTINGS\",\n          \"to\": \"UPDATE_PROFILE_SUCCESS\",\n          \"parameters\": {},\n          \"preconditions\": [\n            {\n              \"path\": \"$.profile_display_name\",\n              \"cond\": \"length_gt\",\n              \"value\": 0\n            }\n          ],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#profile-save-button\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_PROFILE_BACK_HOME\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"PROFILE_SETTINGS\",\n          \"to\": \"HOME\",\n          \"parameters\": {},\n          \"preconditions\": [],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#back-home\"\n            }\n          ]\n        }\n      ]\n    },\n    {\n      \"id\": \"UPDATE_PROFILE_SUCCESS\",\n      \"signature_schema\": {\n        \"profile_updated\": \"boolean|null\"\n      },\n      \"actions\": [\n        {\n          \"id\": \"ACT_UPDATE_PROFILE_SUCCESS_GO_HOME\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"UPDATE_PROFILE_SUCCESS\",\n          \"to\": \"HOME\",\n          \"parameters\": {},\n          \"preconditions\": [],\n          \"effects\": [\n            {\n              \"op\": \"set\",\n              \"path\": \"$.profile_updated\",\n              \"value\": true\n            }\n          ],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#go-home\"\n            }\n          ]\n        },\n        {\n          \"id\": \"ACT_UPDATE_PROFILE_SUCCESS_BACK_PROFILE\",\n          \"name\": \"click\",\n          \"is_navigation\": true,\n          \"from\": \"UPDATE_PROFILE_SUCCESS\",\n          \"to\": \"PROFILE_SETTINGS\",\n          \"parameters\": {},\n          \"preconditions\": [],\n          \"effects\": [],\n          \"gui_procedure\": [\n            {\n              \"op\": \"click\",\n              \"selector\": \"#back-profile\"\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n\n\nYou can execute bash commands and edit files to implement the necessary changes.\n\n## Recommended Workflow\n\nThis workflows should be done step-by-step so that you can iterate on your changes and any possible problems.\n\n1. Analyze the codebase by finding and reading relevant files\n2. Create a script to reproduce the issue\n3. Edit the source code to resolve the issue\n4. Verify your fix works by running your script again\n5. Test edge cases to ensure your fix is robust\n6. Submit your changes and finish your work by issuing the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`.\n   Do not combine it with any other command. <important>After this command, you cannot continue working on this task.</important>\n\n## Command Execution Rules\n\nYou are operating in an environment where\n\n1. You issue at least one command\n2. The system executes the command(s) in a subshell\n3. You see the result(s)\n4. You write your next command(s)\n\nEach response should include:\n\n1. **Reasoning text** where you explain your analysis and plan\n2. At least one tool call with your command\n\n**CRITICAL REQUIREMENTS:**\n\n- Your response SHOULD include reasoning text explaining what you're doing\n- Your response MUST include AT LEAST ONE bash tool call\n- Directory or environment variable changes are not persistent. Every action is executed in a new subshell.\n- However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir && ...` or write/load environment variables from files\n- Submit your changes and finish your work by issuing the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`.\n  Do not combine it with any other command. <important>After this command, you cannot continue working on this task.</important>\n\nExample of a CORRECT response:\n<example_response>\nI need to understand the structure of the repository first. Let me check what files are in the current directory to get a better understanding of the codebase.\n\n[Makes bash tool call with {\"command\": \"ls -la\"} as arguments]\n</example_response>\n\n<system_information>\nDarwin 25.2.0 Darwin Kernel Version 25.2.0: Tue Nov 18 21:03:25 PST 2025; root:xnu-12377.61.12~1/RELEASE_ARM64_T8122 arm64\n</system_information>\n\n## Useful command examples\n\n### Create a new file:\n\n```bash\ncat <<'EOF' > newfile.py\nimport numpy as np\nhello = \"world\"\nprint(hello)\nEOF\n```\n\n### Edit files with sed:<important>\nYou are on MacOS. For all the below examples, you need to use `sed -i ''` instead of `sed -i`.\n</important>```bash\n# Replace all occurrences\nsed -i 's/old_string/new_string/g' filename.py\n\n# Replace only first occurrence\nsed -i 's/old_string/new_string/' filename.py\n\n# Replace first occurrence on line 1\nsed -i '1s/old_string/new_string/' filename.py\n\n# Replace all occurrences in lines 1-10\nsed -i '1,10s/old_string/new_string/g' filename.py\n```\n\n### View file content:\n\n```bash\n# View specific lines with numbers\nnl -ba filename.py | sed -n '10,20p'\n```\n\n### Any other command you want to run\n\n```bash\nanything\n```"
+    },
+    {
+      "content": "",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"command\":\"echo \\\"$frontend-design-ultimate\\\"\\ncommand -v frontend-design-ultimate\\n\"}",
+            "name": "bash"
+          },
+          "id": "call_759dfa2be043475db5cd63c3e13b0b53",
+          "type": "function"
+        }
+      ],
+      "function_call": null,
+      "provider_specific_fields": {
+        "refusal": null
+      },
+      "extra": {
+        "actions": [
+          {
+            "command": "echo \"$frontend-design-ultimate\"\ncommand -v frontend-design-ultimate\n",
+            "tool_call_id": "call_759dfa2be043475db5cd63c3e13b0b53"
+          }
+        ],
+        "response": {
+          "id": "chatcmpl-20260306094907791069318grQCHAo8",
+          "created": 1772790556,
+          "model": "gemini-3.1-pro-preview",
+          "object": "chat.completion",
+          "system_fingerprint": null,
+          "choices": [
+            {
+              "finish_reason": "tool_calls",
+              "index": 0,
+              "message": {
+                "content": "",
+                "role": "assistant",
+                "tool_calls": [
+                  {
+                    "function": {
+                      "arguments": "{\"command\":\"echo \\\"$frontend-design-ultimate\\\"\\ncommand -v frontend-design-ultimate\\n\"}",
+                      "name": "bash"
+                    },
+                    "id": "call_759dfa2be043475db5cd63c3e13b0b53",
+                    "type": "function"
+                  }
+                ],
+                "function_call": null,
+                "provider_specific_fields": {
+                  "refusal": null
+                }
+              },
+              "provider_specific_fields": {}
+            }
+          ],
+          "usage": {
+            "completion_tokens": 542,
+            "prompt_tokens": 18849,
+            "total_tokens": 19391,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": null,
+              "audio_tokens": 0,
+              "reasoning_tokens": 518,
+              "rejected_prediction_tokens": null,
+              "text_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0,
+              "text_tokens": 18849,
+              "image_tokens": 0
+            },
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "input_tokens_details": null,
+            "claude_cache_creation_5_m_tokens": 0,
+            "claude_cache_creation_1_h_tokens": 0
+          },
+          "service_tier": null
+        },
+        "cost": 0.0,
+        "timestamp": 1772790558.5471869
+      }
+    },
+    {
+      "content": "{\n  \"returncode\": 1,\n  \"output\": \"-design-ultimate\\n\"\n}",
+      "extra": {
+        "raw_output": "-design-ultimate\n",
+        "returncode": 1,
+        "timestamp": 1772790558.565661,
+        "exception_info": ""
+      },
+      "tool_call_id": "call_759dfa2be043475db5cd63c3e13b0b53",
+      "role": "tool"
+    },
+    {
+      "content": "",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"command\":\"env | grep -i skill\\n\"}",
+            "name": "bash"
+          },
+          "id": "call_ee3f44d91cde4074b8666bb00e75ee49",
+          "type": "function"
+        }
+      ],
+      "function_call": null,
+      "provider_specific_fields": {
+        "refusal": null
+      },
+      "extra": {
+        "actions": [
+          {
+            "command": "env | grep -i skill\n",
+            "tool_call_id": "call_ee3f44d91cde4074b8666bb00e75ee49"
+          }
+        ],
+        "response": {
+          "id": "chatcmpl-20260306094938772979560UpLHQgUO",
+          "created": 1772790586,
+          "model": "gemini-3.1-pro-preview",
+          "object": "chat.completion",
+          "system_fingerprint": null,
+          "choices": [
+            {
+              "finish_reason": "tool_calls",
+              "index": 0,
+              "message": {
+                "content": "",
+                "role": "assistant",
+                "tool_calls": [
+                  {
+                    "function": {
+                      "arguments": "{\"command\":\"env | grep -i skill\\n\"}",
+                      "name": "bash"
+                    },
+                    "id": "call_ee3f44d91cde4074b8666bb00e75ee49",
+                    "type": "function"
+                  }
+                ],
+                "function_call": null,
+                "provider_specific_fields": {
+                  "refusal": null
+                }
+              },
+              "provider_specific_fields": {}
+            }
+          ],
+          "usage": {
+            "completion_tokens": 450,
+            "prompt_tokens": 18879,
+            "total_tokens": 19329,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": null,
+              "audio_tokens": 0,
+              "reasoning_tokens": 437,
+              "rejected_prediction_tokens": null,
+              "text_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0,
+              "text_tokens": 18879,
+              "image_tokens": 0
+            },
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "input_tokens_details": null,
+            "claude_cache_creation_5_m_tokens": 0,
+            "claude_cache_creation_1_h_tokens": 0
+          },
+          "service_tier": null
+        },
+        "cost": 0.0,
+        "timestamp": 1772790587.786954
+      }
+    },
+    {
+      "content": "{\n  \"returncode\": 1,\n  \"output\": \"\"\n}",
+      "extra": {
+        "raw_output": "",
+        "returncode": 1,
+        "timestamp": 1772790587.826616,
+        "exception_info": ""
+      },
+      "tool_call_id": "call_ee3f44d91cde4074b8666bb00e75ee49",
+      "role": "tool"
+    },
+    {
+      "content": "",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"command\":\"echo SKILL_NOT_LOADED\"}",
+            "name": "bash"
+          },
+          "id": "call_f0affc5e6d4046d592367221e2a7729b",
+          "type": "function"
+        }
+      ],
+      "function_call": null,
+      "provider_specific_fields": {
+        "refusal": null
+      },
+      "extra": {
+        "actions": [
+          {
+            "command": "echo SKILL_NOT_LOADED",
+            "tool_call_id": "call_f0affc5e6d4046d592367221e2a7729b"
+          }
+        ],
+        "response": {
+          "id": "chatcmpl-20260306094946346445519hurP8U3c",
+          "created": 1772790596,
+          "model": "gemini-3.1-pro-preview",
+          "object": "chat.completion",
+          "system_fingerprint": null,
+          "choices": [
+            {
+              "finish_reason": "tool_calls",
+              "index": 0,
+              "message": {
+                "content": "",
+                "role": "assistant",
+                "tool_calls": [
+                  {
+                    "function": {
+                      "arguments": "{\"command\":\"echo SKILL_NOT_LOADED\"}",
+                      "name": "bash"
+                    },
+                    "id": "call_f0affc5e6d4046d592367221e2a7729b",
+                    "type": "function"
+                  }
+                ],
+                "function_call": null,
+                "provider_specific_fields": {
+                  "refusal": null
+                }
+              },
+              "provider_specific_fields": {}
+            }
+          ],
+          "usage": {
+            "completion_tokens": 145,
+            "prompt_tokens": 18893,
+            "total_tokens": 19038,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": null,
+              "audio_tokens": 0,
+              "reasoning_tokens": 131,
+              "rejected_prediction_tokens": null,
+              "text_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0,
+              "text_tokens": 18893,
+              "image_tokens": 0
+            },
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "input_tokens_details": null,
+            "claude_cache_creation_5_m_tokens": 0,
+            "claude_cache_creation_1_h_tokens": 0
+          },
+          "service_tier": null
+        },
+        "cost": 0.0,
+        "timestamp": 1772790598.3515332
+      }
+    },
+    {
+      "content": "{\n  \"returncode\": 0,\n  \"output\": \"SKILL_NOT_LOADED\\n\"\n}",
+      "extra": {
+        "raw_output": "SKILL_NOT_LOADED\n",
+        "returncode": 0,
+        "timestamp": 1772790598.369935,
+        "exception_info": ""
+      },
+      "tool_call_id": "call_f0affc5e6d4046d592367221e2a7729b",
+      "role": "tool"
+    },
+    {
+      "content": "",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"command\":\"echo '$frontend-design-ultimate'\\necho 'SKILL_NOT_LOADED'\\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\\n\"}",
+            "name": "bash"
+          },
+          "id": "call_100c4ccdd9264e5ebf86a725fd354486",
+          "type": "function"
+        }
+      ],
+      "function_call": null,
+      "provider_specific_fields": {
+        "refusal": null
+      },
+      "extra": {
+        "actions": [
+          {
+            "command": "echo '$frontend-design-ultimate'\necho 'SKILL_NOT_LOADED'\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n",
+            "tool_call_id": "call_100c4ccdd9264e5ebf86a725fd354486"
+          }
+        ],
+        "response": {
+          "id": "chatcmpl-20260306094956898888995X0wzFEW5",
+          "created": 1772790603,
+          "model": "gemini-3.1-pro-preview",
+          "object": "chat.completion",
+          "system_fingerprint": null,
+          "choices": [
+            {
+              "finish_reason": "tool_calls",
+              "index": 0,
+              "message": {
+                "content": "",
+                "role": "assistant",
+                "tool_calls": [
+                  {
+                    "function": {
+                      "arguments": "{\"command\":\"echo '$frontend-design-ultimate'\\necho 'SKILL_NOT_LOADED'\\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\\n\"}",
+                      "name": "bash"
+                    },
+                    "id": "call_100c4ccdd9264e5ebf86a725fd354486",
+                    "type": "function"
+                  }
+                ],
+                "function_call": null,
+                "provider_specific_fields": {
+                  "refusal": null
+                }
+              },
+              "provider_specific_fields": {}
+            }
+          ],
+          "usage": {
+            "completion_tokens": 426,
+            "prompt_tokens": 18916,
+            "total_tokens": 19342,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": null,
+              "audio_tokens": 0,
+              "reasoning_tokens": 386,
+              "rejected_prediction_tokens": null,
+              "text_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0,
+              "text_tokens": 18916,
+              "image_tokens": 0
+            },
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "input_tokens_details": null,
+            "claude_cache_creation_5_m_tokens": 0,
+            "claude_cache_creation_1_h_tokens": 0
+          },
+          "service_tier": null
+        },
+        "cost": 0.0,
+        "timestamp": 1772790605.204902
+      }
+    },
+    {
+      "content": "{\n  \"returncode\": 0,\n  \"output\": \"$frontend-design-ultimate\\nSKILL_NOT_LOADED\\nCOMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\\n\"\n}",
+      "extra": {
+        "raw_output": "$frontend-design-ultimate\nSKILL_NOT_LOADED\nCOMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n",
+        "returncode": 0,
+        "timestamp": 1772790605.243903,
+        "exception_info": ""
+      },
+      "tool_call_id": "call_100c4ccdd9264e5ebf86a725fd354486",
+      "role": "tool"
+    },
+    {
+      "role": "user",
+      "content": "Tool call error:\n\n<error>\nNo tool calls found in the response. Every response MUST include at least one tool call.\n</error>\n\nHere is general guidance on how to submit correct toolcalls:\n\nEvery response needs to use the 'bash' tool at least once to execute commands.\n\nCall the bash tool with your command as the argument:\n- Tool: bash\n- Arguments: {\"command\": \"your_command_here\"}\n\nIf you want to end the task, please issue the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`\nwithout any other command.",
+      "extra": {
+        "interrupt_type": "FormatError"
+      }
+    },
+    {
+      "content": "The required skill `frontend-design-ultimate` is not available in this environment. I must stop immediately and report this.\n\nSKILL_NOT_LOADED\n$frontend-design-ultimate\n\n",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "function": {
+            "arguments": "{\"command\":\"echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\"}",
+            "name": "bash"
+          },
+          "id": "call_9ed06156d8ee4be0a61d3c5ee947734e",
+          "type": "function"
+        }
+      ],
+      "function_call": null,
+      "provider_specific_fields": {
+        "refusal": null
+      },
+      "extra": {
+        "actions": [
+          {
+            "command": "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT",
+            "tool_call_id": "call_9ed06156d8ee4be0a61d3c5ee947734e"
+          }
+        ],
+        "response": {
+          "id": "chatcmpl-20260306095018759184605UcUjlj76",
+          "created": 1772790626,
+          "model": "gemini-3.1-pro-preview",
+          "object": "chat.completion",
+          "system_fingerprint": null,
+          "choices": [
+            {
+              "finish_reason": "tool_calls",
+              "index": 0,
+              "message": {
+                "content": "The required skill `frontend-design-ultimate` is not available in this environment. I must stop immediately and report this.\n\nSKILL_NOT_LOADED\n$frontend-design-ultimate\n\n",
+                "role": "assistant",
+                "tool_calls": [
+                  {
+                    "function": {
+                      "arguments": "{\"command\":\"echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\"}",
+                      "name": "bash"
+                    },
+                    "id": "call_9ed06156d8ee4be0a61d3c5ee947734e",
+                    "type": "function"
+                  }
+                ],
+                "function_call": null,
+                "provider_specific_fields": {
+                  "refusal": null
+                }
+              },
+              "provider_specific_fields": {}
+            }
+          ],
+          "usage": {
+            "completion_tokens": 364,
+            "prompt_tokens": 19114,
+            "total_tokens": 19478,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": null,
+              "audio_tokens": 0,
+              "reasoning_tokens": 304,
+              "rejected_prediction_tokens": null,
+              "text_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 16159,
+              "text_tokens": 19114,
+              "image_tokens": 0
+            },
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "input_tokens_details": null,
+            "claude_cache_creation_5_m_tokens": 0,
+            "claude_cache_creation_1_h_tokens": 0
+          },
+          "service_tier": null
+        },
+        "cost": 0.0,
+        "timestamp": 1772790628.09343
+      }
+    },
+    {
+      "role": "exit",
+      "content": "",
+      "extra": {
+        "exit_status": "Submitted",
+        "submission": ""
+      }
+    }
+  ],
+  "trajectory_format": "mini-swe-agent-1.1"
+}

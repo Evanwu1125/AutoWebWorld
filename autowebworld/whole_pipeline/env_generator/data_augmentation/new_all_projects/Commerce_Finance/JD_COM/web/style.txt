@@ -1,0 +1,45 @@
+# Visual Style Guide - JD.COM Inspiration
+
+## Theme Overview
+This application mimics the JD.COM e-commerce platform. The design focuses on a "Mall" experience: trustworthy, vibrant, and content-rich. The target audience is general consumers looking for quality products and reliable service.
+
+## Color Scheme
+- **Primary Brand Color**: JD Red (#E1251B) - Used for primary buttons, price text, and key accents.
+- **Secondary Color**: Dark Gray (#333333) - Used for primary text, headings.
+- **Background Color**: Light Gray (#F6F6F6) - Page background to separate content blocks.
+- **Surface Color**: White (#FFFFFF) - Card backgrounds, headers, content areas.
+- **Accent Color**: Orange (#FF9900) - Used for special tags, ratings.
+
+## Typography
+- **Font Family**: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif.
+- **Sizes**:
+  - Headings: 18px - 24px (Bold)
+  - Body: 14px (Regular)
+  - Small/Meta: 12px (Gray)
+  - Price: 20px (Bold, Red)
+
+## Layout & Spacing
+- **Container**: Centered, max-width 1200px for desktop. Full width for mobile.
+- **Grid System**: 
+  - Product lists: Grid layout (2 cols mobile, 4-5 cols desktop).
+  - Sections separated by 12px - 20px whitespace.
+- **Cards**: White background, subtle shadow (shadow-sm), rounded corners (rounded-lg).
+
+## Component Styling
+- **Buttons**:
+  - Primary: JD Red background, White text, rounded-full or slightly rounded (rounded-full).
+  - Secondary: White background, Gray border, Black text.
+- **Inputs**: Gray border (#CCCCCC), focus state with Red glow.
+- **Navigation**: White sticky header, clear iconography.
+- **Images**: High quality, object-cover, often with white padding for products.
+
+## Visual Tone
+- Professional yet energetic.
+- "Busy" but organized - high information density is expected in e-commerce.
+- Usage of badges (e.g., "Self-Operated", "Flash Sale") to create urgency.
+
+## Image Usage Strategy
+- **Hero Banners**: Colorful, promotional banners on Home.
+- **Product Thumbnails**: Clean product shots on white backgrounds.
+- **Category Icons**: Graphical icons for navigation menus.
+- **Realism**: Use ImageGetter to fetch real product images (laptops, groceries, phones) to make the mall feel stocked.

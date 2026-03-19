@@ -14,8 +14,9 @@ Your output must be a single valid JSON object only (no prose). Recommended orde
 
 ### Execution Alignment
 
-- During BFS path-finding, only `{ "op":"set" }` with `value` or `value_ref` is applied. `value_expr` is not executed by BFS and must not be relied on for gating-critical updates (e.g., copying `matched_*_id` to `selected_*_id`). Keep any `value_expr` to non-gating visual/data effects.
-- BFS realism gate: any navigation that finalizes/submits (checkout/order/confirm/complete) MUST gate on a non-empty selection/collection using length_gt(...,0); do not rely on value_expr for gating.
+- During BFS path-finding, supported effect ops are `set | inc | clear | append_unique`.
+- For `set`, use explicit `value` or `value_ref` only.
+- BFS realism gate: any navigation that finalizes/submits (checkout/order/confirm/complete) MUST gate on a non-empty selection/collection using length_gt(...,0).
 - Minimalism: to satisfy the above, add only the precondition; do not introduce synthetic list 'load'/'refresh' actions on list pages.
 
 ## Data Structure Specifications
@@ -36,17 +37,18 @@ Your output must be a single valid JSON object only (no prose). Recommended orde
 * set literal/param: `{"op":"set","path":"$.x","value":1}` | `{"op":"set","path":"$.x","value_ref":"{param}"}`
 * increment: `{"op":"inc","path":"$.counter","by":1}`
 * clear: `{"op":"clear","path":"$.filters"}`
-* computed: `{"op":"set","path":"$.total","value_expr":"sum($.items[*].price)"}`
-* Allowed helpers inside `value_expr`: `append(array,obj)`, `remove_where(array,pred)`, `map`, `filter`, `merge`, `set_prop`, `uniq`, `sort_by`, `now()`, `len()`, `gen_id()`.
+* append unique: `{"op":"append_unique","path":"$.selected_ids","value_ref":"{item_id}"}`
 
 ### Complexity Profile Semantics
 
+The Complexity Profile is external guidance provided by the instruction prompt. It is not part of the emitted `fsm.json` and must not be copied into `meta`.
+
 - pages:{min,max} → MUST generate page count within [min,max] range (at least min, at most max).
 - terminals:{count}.
-- path_length:{len[min,max],shortest_only,count_interceptors} -> PASS if there EXISTS >=1 HOME->terminal trajectory within [min,max]; if `shortest_only=true`, evaluate over shortest trajectories only; apply `count_interceptors` policy.
-- home_nav_variants ⊆ {direct,hover,menu,scroll} with coverage="each".
+- path_length:{len[min,max],shortest_only,count_interceptors} -> target a realistic HOME->terminal trajectory within [min,max]; treat as optimization target unless profile explicitly marks it strict.
+- home_nav_variants ⊆ {direct,hover,menu,scroll}; coverage policy is profile-driven.
 - list_filters:{enabled,fields_max,two_step_parity,allowed_shapes ⊆ 4-types}; two_step_parity: APPLY_FILTERS(non-nav) → OPEN_FILTERED_ITEM(nav).
-- interceptors:{cookie,permission(location only)} → non-nav gates + preconditions; cookie on HOME, permission on first non-HOME page.
+- interceptors:{cookie,permission(location only)} → non-nav gates + preconditions; placement follows profile policy (default: cookie on HOME, permission on first relevant non-HOME page).
 - Unspecified fields fall back to defaults; only 4 filter shapes exist by default.
 
 ## Standard GUI Procedures
@@ -144,9 +146,7 @@ When a `click` operation selects from multiple options (dropdown, select, sort, 
 
 ### Interceptor Actions
 
-All interceptor actions MUST be non-navigation (`is_navigation=false`, `to` equals `from`) and placed on relevant pages.
-
-EXCEPTION: Cookie consent is placed on HOME page (as the first action users encounter).
+All interceptor actions MUST be non-navigation (`is_navigation=false`, `to` equals `from`) and placed on relevant pages according to profile policy.
 
 * **Cookie consent**:
   * Accept cookies:
@@ -157,9 +157,7 @@ EXCEPTION: Cookie consent is placed on HOME page (as the first action users enco
     * Pattern: `[click]` (then additional steps for detailed settings)
     * Selector: `#cookie-more-options`
     * Example: `[{"op":"click","selector":"#cookie-more-options"}]`
-  * Placement: Cookie banner ONLY appears on HOME page when user first visits the app
-  * Cookie consent action should be placed on HOME page (exception to "HOME is navigation-only" rule)
-  * This should be the FIRST action users need to take before navigating away from HOME
+  * Placement: follow profile policy (default HOME-first)
 
 * **Permission** (location only):
   * Grant location permission:
@@ -169,7 +167,7 @@ EXCEPTION: Cookie consent is placed on HOME page (as the first action users enco
   * Deny permission (optional):
     * Pattern: `[click]`
     * Selector: `#permission-location-deny`
-  * Placement: Define on the FIRST non-HOME page that user navigates to from HOME
+  * Placement: follow profile policy (default first relevant non-HOME page)
   * This is a non-navigation action (modal/dialog)
   * Global flag requirement:
     - Add to signature: $.location_permission_granted (boolean|null)
@@ -177,7 +175,7 @@ EXCEPTION: Cookie consent is placed on HOME page (as the first action users enco
     - Precondition: { "path": "$.location_permission_granted", "cond": "not_exists" } or { "path": "$.location_permission_granted", "cond": "eq", "value": null }
     - Effect: { "op": "set", "path": "$.location_permission_granted", "value": true }
   * Ensures permission dialog only appears once per session
-  * Do NOT place on SETTINGS page or multiple pages
+  * Avoid duplicate placement across multiple unrelated pages
 
 ### List Filter Actions
 
@@ -216,7 +214,7 @@ When `list_filters.enabled=true`, use only allowed shapes from the profile. Each
 
 ### Home Navigation Variants
 
-Variants allowed: {direct,hover,menu,scroll}. If listed in profile, enforce coverage="each" per target.
+Variants allowed: {direct,hover,menu,scroll}. If listed in profile, prioritize requested coverage.
 
 GUI procedure patterns:
   - direct: `[click]` (single-step, no hover/drag/key_press first)
@@ -231,7 +229,7 @@ To avoid "demo-only flows," any theme with create/join/add/remove/update semanti
 
 * **[D1] Declare collections** in `signature_schema` with stable JSONPaths reused across pages (e.g., `$.groups`, `$.group_detail.members`, `$.items`, `$.emails`).
 * **[D2] List/Detail pages are mandatory** for those collections; do **not** model pagination pages or indices.
-* **[D3] CRUD persists on the **submit** action** (Create→`append`, Update→`map`/`set_prop`, Delete→`remove_where`).
+* **[D3] CRUD persists on the **submit** action** using explicit supported effect operations (e.g., `set`, `inc`, `clear`, `append_unique`) and consistent shared-state paths.
 * **[D4] Shared-fields policy**: any collection visible across pages uses the **same JSONPath** on each page.
 * **[D5] Empty state**: list pages remain usable when the collection is empty (e.g., allow "Create first …").
 
@@ -277,11 +275,10 @@ To keep BFS state finite and canonical, **all item- or sku-specific values use a
 * **[R2] Back**: every non-initial page provides a Back action to the previous page (effects may be empty).
 * **[R3] Search gating on multi-field forms**: if a search form requires multiple inputs, add `preconditions` so Search is clickable only when required fields are complete.
 * **[R4] Terminal pages**: visibly indicate success and provide a "Go Home" action to `HOME` (**effects may be empty**). Avoid non-null hard dependencies; display-only fields should be optional or set locally.
-* **[R5] Home policy (minimal)**:
-  * HOME is navigation-only.
-  * Do not place business actions on HOME (e.g., create/delete/edit/submit/select/filter/search).
-  * EXCEPTION: Cookie consent action is allowed on HOME (as the first action users encounter).
-  * Permission action should NOT be on HOME; it appears on first non-HOME page.
+* **[R5] Home policy (default)**:
+  * Keep HOME navigation-first by default.
+  * Avoid placing heavy business forms on HOME unless the theme explicitly requires it.
+  * Interceptor placement follows profile policy (default cookie on HOME, permission on first relevant non-HOME page).
 
 ### Pre-success Form Realism
 
@@ -292,7 +289,7 @@ To keep BFS state finite and canonical, **all item- or sku-specific values use a
 
 ## FSM Structure Definition
 
-* `meta`: `{ app, version, initial_page_id, terminal_pages [, optional global_signature_schema] }`
+* `meta`: `{ app, initial_page_id, terminal_pages }`
 * `pages[]`: each page:
   ```json
   {
@@ -316,6 +313,7 @@ To keep BFS state finite and canonical, **all item- or sku-specific values use a
 
 ## Universal Self-Check Requirements
 
+* `meta` contains only `app`, `initial_page_id`, and `terminal_pages`.
 * All `effects.path` exist in the page's `signature_schema`; **no cross-page writes**.
 * Navigation actions have meaningful effects or are purely navigational with empty `effects` (Back/Go Home/etc.).
 * `meta.terminal_pages` exists; at least one path from `HOME` to **each** terminal.
@@ -331,7 +329,6 @@ To keep BFS state finite and canonical, **all item- or sku-specific values use a
 * Click operations selecting from options include `ui_elements` with all available options.
 * Selectors in `ui_elements.options` are concrete and unique (e.g., `.option-1`, `#sort-option-newest`).
 * Same container has consistent options across different actions.
-* Interceptor actions are non-navigation; cookie on HOME, permission on first non-HOME page.
-* Filter actions are non-navigation and not on HOME.
+* Interceptor actions are non-navigation and profile-driven in placement.
+* Filter actions are non-navigation and should usually be on list/detail pages (not HOME unless profile/theme explicitly requires).
 * Date picker multi-instance uses indexed selectors when needed.
-

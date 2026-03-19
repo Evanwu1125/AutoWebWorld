@@ -1,7 +1,9 @@
 Validate the following `fsm.json` and return the audit report strictly following the Output JSON schema defined in the system prompt. Provide minimal-change fix suggestions where appropriate.
 
+Complexity Profile JSON:
+{COMPLEXITY_PROFILE_JSON}
+
+Use this profile as soft guidance where applicable. Keep protocol-level correctness checks strict.
+
 FSM JSON:
 {fsm_json_here}
-
-
-Note: Enforce the "Home policy (minimal)": HOME is navigation-only; no business actions on HOME.

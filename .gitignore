@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.conda/
+.venv/
+venv/
+env/
+
+# Large generated data
+autowebworld/whole_pipeline/new_outputs/
+trajectory/fsm/generator/fsm_perfect_outputs/
+trajectory/fsm/temp/
+
+# Compressed archives
+*.tar.gz
+*.zip
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Wandb
+wandb/

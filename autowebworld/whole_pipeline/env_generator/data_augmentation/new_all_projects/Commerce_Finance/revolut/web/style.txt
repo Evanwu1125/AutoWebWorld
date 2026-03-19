@@ -1,0 +1,47 @@
+# Visual Design Style Guide - Neobank (Revolut Inspired)
+
+## Theme Overview
+The application follows a modern, clean, and minimalist design language inspired by Revolut. The focus is on clarity, speed, and trust, typical of fintech applications. The interface uses a generous amount of whitespace, crisp typography, and subtle shadows to create depth.
+
+## Color Palette
+- **Primary**: #2563EB (Royal Blue) - Used for primary actions, active states, and brand accents.
+- **Secondary**: #111827 (Gray 900) - Used for primary text and headings.
+- **Accent**: #F472B6 (Pink 400) - Used for highlights or special features (optional).
+- **Background**: #F3F4F6 (Gray 100) - Main application background.
+- **Surface**: #FFFFFF (White) - Card backgrounds, modal dialogs, and navigation bars.
+- **Error**: #EF4444 (Red 500) - Error states and destructive actions (e.g., Freeze Card).
+- **Success**: #10B981 (Green 500) - Success messages and positive balance indicators.
+- **Text Secondary**: #6B7280 (Gray 500) - Subtitles and secondary information.
+
+## Typography
+- **Font Family**: Inter, system-ui, sans-serif.
+- **Headings**: Bold, high contrast.
+- **Body**: Clean, legible, 14px-16px base size.
+
+## Layout & Spacing
+- **Container**: Centered, max-width constrained for larger screens (e.g., max-w-4xl), but fully responsive.
+- **Grid/Flex**: Extensive use of flexbox for alignment and grid for lists (cards, accounts).
+- **Padding**: Comfortable spacing (p-4, p-6) to avoid clutter.
+- **Radius**: Rounded corners (rounded-xl or rounded-2xl) for cards and buttons to soften the UI.
+
+## Component Styling
+- **Buttons**:
+  - Primary: Solid background, white text, rounded-full or rounded-lg, shadow-md hover:shadow-lg.
+  - Secondary/Outline: Bordered, transparent background.
+  - Ghost: Text only, hover background.
+- **Cards**: White background, shadow-sm, rounded-xl, padding.
+- **Inputs**: Light gray background (bg-gray-50) or white with border, focus ring (ring-2 ring-primary).
+- **Lists**:
+  - List items with icons/avatars on the left, text in middle, value/action on right.
+  - Hover effects on interactive rows (bg-gray-50).
+
+## Visual Assets
+- **Images**: Real images for user avatars, merchant logos, and card designs using ImageGetter.
+- **Icons**: Use SVGs or standard library icons (e.g., Lucide or Heroicons via simple SVG strings if needed, or stick to text/CSS shapes if libraries aren't available).
+
+## Specific Page Guidelines
+- **Home**: Dashboard feel, quick actions grid, total balance prominence.
+- **Accounts**: List of accounts with balances, clean rows.
+- **Payments**: Contact list with avatars.
+- **Cards**: Visual representation of cards (rectangles with gradients), settings below.
+- **Exchange**: Currency pair selector, clear rate display.

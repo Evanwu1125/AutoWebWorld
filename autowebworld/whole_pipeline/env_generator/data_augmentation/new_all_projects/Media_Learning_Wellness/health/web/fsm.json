@@ -1,0 +1,3261 @@
+{
+  "meta": {
+    "app": "Telemedicine-Teladoc Health_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "SCHEDULE_VISIT_SUCCESS",
+      "INSTANT_VISIT_SUCCESS",
+      "PRESCRIPTION_RENEWAL_SUCCESS",
+      "MENTAL_HEALTH_BOOKING_SUCCESS",
+      "BILL_PAYMENT_SUCCESS"
+    ],
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 20,
+        "max": 35
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover",
+        "menu"
+      ],
+      "home_nav_coverage": "any",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 4,
+        "two_step_parity": false,
+        "allowed_shapes": [
+          "checkboxes",
+          "sliders",
+          "sort"
+        ]
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "current_user_id": "string|null",
+        "cookie_consent_given": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_HOME_ACCEPT_COOKIES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cookie_consent_given",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_LOGIN_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "LOGIN",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#home-cta-login"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_VISIT_TYPES_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "VISIT_TYPE_SELECTION",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-menu"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-menu-visits"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_INSTANT_VISIT_HOVER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "INSTANT_VISIT_TRIAGE",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#nav-visits"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-visits-instant"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_BENEFITS_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "BENEFITS_OVERVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-menu"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-menu-benefits"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LOGIN",
+      "signature_schema": {
+        "location_permission_granted": "boolean|null",
+        "login_email_entered": "string|null",
+        "login_password_entered": "string|null",
+        "login_can_submit": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_LOGIN_GRANT_LOCATION",
+          "name": "click",
+          "is_navigation": false,
+          "from": "LOGIN",
+          "to": "LOGIN",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LOGIN_TYPE_EMAIL",
+          "name": "type",
+          "is_navigation": false,
+          "from": "LOGIN",
+          "to": "LOGIN",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.login_email_entered",
+              "value": "user@example.com"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#login-email"
+            },
+            {
+              "op": "type_text",
+              "selector": "#login-email",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LOGIN_TYPE_PASSWORD",
+          "name": "type",
+          "is_navigation": false,
+          "from": "LOGIN",
+          "to": "LOGIN",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.login_password_entered",
+              "value": "secret"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#login-password"
+            },
+            {
+              "op": "type_text",
+              "selector": "#login-password",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LOGIN_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "LOGIN",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.login_email_entered",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.login_password_entered",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.login_can_submit",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#login-submit"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LOGIN_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "LOGIN",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DASHBOARD",
+      "signature_schema": {
+        "upcoming_appointments": "array<object>|null",
+        "conditions_list": "array<object>|null",
+        "dashboard_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_DASH_TO_SCHEDULE_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD",
+          "to": "VISIT_TYPE_SELECTION",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dashboard-schedule-visit"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DASH_TO_INSTANT_VISIT_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD",
+          "to": "INSTANT_VISIT_TRIAGE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dashboard-menu"
+            },
+            {
+              "op": "click",
+              "selector": "#dashboard-menu-instant"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DASH_TO_APPTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD",
+          "to": "APPOINTMENTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#nav-appointments"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-appointments-upcoming"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DASH_TO_BILLING",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD",
+          "to": "BILLING_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#nav-billing"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-billing-overview"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DASH_TO_SETTINGS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD",
+          "to": "SETTINGS_ACCOUNT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dashboard-profile-menu"
+            },
+            {
+              "op": "click",
+              "selector": "#dashboard-profile-settings"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DASH_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#logo-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "VISIT_TYPE_SELECTION",
+      "signature_schema": {
+        "location_permission_granted": "boolean|null",
+        "selected_visit_type": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_VT_GRANT_LOCATION",
+          "name": "click",
+          "is_navigation": false,
+          "from": "VISIT_TYPE_SELECTION",
+          "to": "VISIT_TYPE_SELECTION",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "ACT_VT_SELECT_MEDICAL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "VISIT_TYPE_SELECTION",
+          "to": "PROVIDER_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_visit_type",
+              "value": "general_medical"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#visit-type-medical"
+            }
+          ]
+        },
+        {
+          "id": "ACT_VT_SELECT_MENTAL_HEALTH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "VISIT_TYPE_SELECTION",
+          "to": "MENTAL_HEALTH_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_visit_type",
+              "value": "mental_health"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#visit-type-mental-health"
+            }
+          ]
+        },
+        {
+          "id": "ACT_VT_BACK_DASHBOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "VISIT_TYPE_SELECTION",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROVIDER_LIST",
+      "signature_schema": {
+        "providers": "array<object>|null",
+        "provider_list_has_searched": "boolean|null",
+        "provider_list_viewport_anchor_id": "string|null",
+        "matched_provider_id": "string|null",
+        "selected_provider_id": "string|null",
+        "provider_list_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PROVIDERS_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "PROVIDER_LIST",
+          "to": "PROVIDER_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_provider_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.provider_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#provider-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#provider-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROVIDERS_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PROVIDER_LIST",
+          "to": "PROVIDER_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.provider_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#provider-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#provider-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROVIDERS_OPEN_MATCHED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROVIDER_LIST",
+          "to": "PROVIDER_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_provider_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.provider_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_provider_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.provider_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#provider-list-container .provider-list-item-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROVIDERS_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROVIDER_LIST",
+          "to": "PROVIDER_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.provider_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_provider_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.provider_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#provider-list-container .provider-list-item-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROVIDERS_FILTER_SPECIALTY",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PROVIDER_LIST",
+          "to": "PROVIDER_LIST",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.provider_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-specialty-primary-care-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROVIDERS_SORT_RATING",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PROVIDER_LIST",
+          "to": "PROVIDER_LIST",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.provider_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#provider-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#sort-option-rating-desc",
+              "ui_elements": {
+                "container": "#provider-sort-dropdown",
+                "options": [
+                  {
+                    "value": "rating",
+                    "selector": "#sort-option-rating-desc"
+                  },
+                  {
+                    "value": "soonest",
+                    "selector": "#sort-option-soonest"
+                  },
+                  {
+                    "value": "experience",
+                    "selector": "#sort-option-experience"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROVIDERS_OPEN_FILTERED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROVIDER_LIST",
+          "to": "PROVIDER_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.provider_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.provider_list_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_provider_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#provider-list-container .provider-list-item-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROVIDERS_BACK_VT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROVIDER_LIST",
+          "to": "VISIT_TYPE_SELECTION",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-visit-type"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROVIDER_DETAIL",
+      "signature_schema": {
+        "selected_provider_id": "string|null",
+        "selected_symptom_description": "string|null",
+        "selected_reason_for_visit": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PD_TYPE_REASON",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PROVIDER_DETAIL",
+          "to": "PROVIDER_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_reason_for_visit",
+              "value": "sore throat"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#reason-for-visit-textarea"
+            },
+            {
+              "op": "type_text",
+              "selector": "#reason-for-visit-textarea",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PD_TYPE_SYMPTOM",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PROVIDER_DETAIL",
+          "to": "PROVIDER_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_symptom_description",
+              "value": "mild cough"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#symptom-description-textarea"
+            },
+            {
+              "op": "type_text",
+              "selector": "#symptom-description-textarea",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PD_GO_TO_SCHEDULE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROVIDER_DETAIL",
+          "to": "SCHEDULE_APPOINTMENT",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_reason_for_visit",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#schedule-with-provider"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PD_BACK_PROVIDERS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROVIDER_DETAIL",
+          "to": "PROVIDER_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-provider-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SCHEDULE_APPOINTMENT",
+      "signature_schema": {
+        "selected_provider_id": "string|null",
+        "schedule_selected_date": "string|null",
+        "schedule_selected_slot": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SCHED_PICK_DATE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SCHEDULE_APPOINTMENT",
+          "to": "SCHEDULE_APPOINTMENT",
+          "parameters": {
+            "widget": "date_picker",
+            "year": 2025,
+            "month": 10,
+            "day": 22
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.schedule_selected_date",
+              "value": "2025-10-22"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#date-picker1"
+            },
+            {
+              "op": "click",
+              "selector": ".year-2025"
+            },
+            {
+              "op": "click",
+              "selector": ".month-10"
+            },
+            {
+              "op": "click",
+              "selector": ".day-22"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SCHED_SELECT_SLOT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SCHEDULE_APPOINTMENT",
+          "to": "SCHEDULE_APPOINTMENT",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [
+            {
+              "path": "$.schedule_selected_date",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.schedule_selected_slot",
+              "value": "10:30"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#time-slot-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#time-slot-1030",
+              "ui_elements": {
+                "container": "#time-slot-dropdown",
+                "options": [
+                  {
+                    "value": "09:00",
+                    "selector": "#time-slot-0900"
+                  },
+                  {
+                    "value": "10:30",
+                    "selector": "#time-slot-1030"
+                  },
+                  {
+                    "value": "14:00",
+                    "selector": "#time-slot-1400"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_SCHED_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SCHEDULE_APPOINTMENT",
+          "to": "SCHEDULE_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.schedule_selected_slot",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#continue-to-review"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SCHED_BACK_PROVIDER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SCHEDULE_APPOINTMENT",
+          "to": "PROVIDER_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-provider-detail"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SCHEDULE_REVIEW",
+      "signature_schema": {
+        "selected_provider_id": "string|null",
+        "schedule_selected_date": "string|null",
+        "schedule_selected_slot": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SCHED_REVIEW_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SCHEDULE_REVIEW",
+          "to": "SCHEDULE_VISIT_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.schedule_selected_slot",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#confirm-schedule"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SCHED_REVIEW_BACK_SCHED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SCHEDULE_REVIEW",
+          "to": "SCHEDULE_APPOINTMENT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-schedule"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SCHEDULE_VISIT_SUCCESS",
+      "signature_schema": {
+        "confirmation_number": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SCHED_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SCHEDULE_VISIT_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.confirmation_number",
+              "value": "CONF123"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SCHED_SUCCESS_GO_DASHBOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SCHEDULE_VISIT_SUCCESS",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#success-go-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "INSTANT_VISIT_TRIAGE",
+      "signature_schema": {
+        "triage_reason": "string|null",
+        "triage_symptom_duration": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_INSTANT_TYPE_REASON",
+          "name": "type",
+          "is_navigation": false,
+          "from": "INSTANT_VISIT_TRIAGE",
+          "to": "INSTANT_VISIT_TRIAGE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.triage_reason",
+              "value": "fever"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#instant-reason"
+            },
+            {
+              "op": "type_text",
+              "selector": "#instant-reason",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_INSTANT_TYPE_DURATION",
+          "name": "type",
+          "is_navigation": false,
+          "from": "INSTANT_VISIT_TRIAGE",
+          "to": "INSTANT_VISIT_TRIAGE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.triage_symptom_duration",
+              "value": "2 days"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#instant-duration"
+            },
+            {
+              "op": "type_text",
+              "selector": "#instant-duration",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_INSTANT_CONTINUE_QUEUE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "INSTANT_VISIT_TRIAGE",
+          "to": "INSTANT_VISIT_QUEUE",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.triage_reason",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#instant-continue"
+            }
+          ]
+        },
+        {
+          "id": "ACT_INSTANT_TRIAGE_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "INSTANT_VISIT_TRIAGE",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "INSTANT_VISIT_QUEUE",
+      "signature_schema": {
+        "queue_position": "number|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_QUEUE_JOIN",
+          "name": "click",
+          "is_navigation": true,
+          "from": "INSTANT_VISIT_QUEUE",
+          "to": "INSTANT_VISIT_SUCCESS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.queue_position",
+              "value": 1
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#join-queue"
+            }
+          ]
+        },
+        {
+          "id": "ACT_QUEUE_BACK_TRIAGE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "INSTANT_VISIT_QUEUE",
+          "to": "INSTANT_VISIT_TRIAGE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-triage"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "INSTANT_VISIT_SUCCESS",
+      "signature_schema": {
+        "visit_started": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_INSTANT_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "INSTANT_VISIT_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.visit_started",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#instant-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_INSTANT_SUCCESS_GO_DASH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "INSTANT_VISIT_SUCCESS",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#instant-success-go-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PRESCRIPTION_LIST",
+      "signature_schema": {
+        "prescriptions": "array<object>|null",
+        "matched_prescription_id": "string|null",
+        "selected_prescription_id": "string|null",
+        "prescription_list_has_searched": "boolean|null",
+        "prescription_list_viewport_anchor_id": "string|null",
+        "prescription_list_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_RX_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "PRESCRIPTION_LIST",
+          "to": "PRESCRIPTION_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_prescription_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.prescription_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#rx-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#rx-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RX_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PRESCRIPTION_LIST",
+          "to": "PRESCRIPTION_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.prescription_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#rx-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#rx-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RX_OPEN_MATCHED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRESCRIPTION_LIST",
+          "to": "PRESCRIPTION_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_prescription_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.prescription_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_prescription_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.prescription_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#rx-list-container .rx-list-item-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RX_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRESCRIPTION_LIST",
+          "to": "PRESCRIPTION_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.prescription_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_prescription_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.prescription_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#rx-list-container .rx-list-item-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RX_FILTER_STATUS",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PRESCRIPTION_LIST",
+          "to": "PRESCRIPTION_LIST",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.prescription_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-rx-active-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RX_OPEN_FILTERED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRESCRIPTION_LIST",
+          "to": "PRESCRIPTION_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.prescription_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.prescription_list_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_prescription_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#rx-list-container .rx-list-item-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RX_BACK_DASH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRESCRIPTION_LIST",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PRESCRIPTION_DETAIL",
+      "signature_schema": {
+        "selected_prescription_id": "string|null",
+        "renewal_notes": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_RX_DETAIL_TYPE_NOTES",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PRESCRIPTION_DETAIL",
+          "to": "PRESCRIPTION_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.renewal_notes",
+              "value": "need 90-day supply"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#renewal-notes"
+            },
+            {
+              "op": "type_text",
+              "selector": "#renewal-notes",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RX_DETAIL_CONTINUE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRESCRIPTION_DETAIL",
+          "to": "PRESCRIPTION_RENEWAL_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_prescription_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#continue-renewal"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RX_DETAIL_BACK_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRESCRIPTION_DETAIL",
+          "to": "PRESCRIPTION_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-rx-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PRESCRIPTION_RENEWAL_REVIEW",
+      "signature_schema": {
+        "selected_prescription_id": "string|null",
+        "renewal_notes": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_RX_RENEWAL_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRESCRIPTION_RENEWAL_REVIEW",
+          "to": "PRESCRIPTION_RENEWAL_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_prescription_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#confirm-renewal"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RX_RENEWAL_BACK_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRESCRIPTION_RENEWAL_REVIEW",
+          "to": "PRESCRIPTION_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-renewal-detail"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PRESCRIPTION_RENEWAL_SUCCESS",
+      "signature_schema": {
+        "renewal_confirmation": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_RX_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRESCRIPTION_RENEWAL_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.renewal_confirmation",
+              "value": "RXCONF123"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#rx-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RX_SUCCESS_GO_DASH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRESCRIPTION_RENEWAL_SUCCESS",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#rx-success-go-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MENTAL_HEALTH_LIST",
+      "signature_schema": {
+        "therapists": "array<object>|null",
+        "matched_therapist_id": "string|null",
+        "selected_therapist_id": "string|null",
+        "mh_list_has_searched": "boolean|null",
+        "mh_list_viewport_anchor_id": "string|null",
+        "mh_list_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MH_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "MENTAL_HEALTH_LIST",
+          "to": "MENTAL_HEALTH_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_therapist_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.mh_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#mh-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#mh-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MH_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MENTAL_HEALTH_LIST",
+          "to": "MENTAL_HEALTH_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.mh_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#mh-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#mh-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MH_OPEN_MATCHED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MENTAL_HEALTH_LIST",
+          "to": "MENTAL_HEALTH_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_therapist_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.mh_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_therapist_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.mh_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#mh-list-container .mh-list-item-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MH_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MENTAL_HEALTH_LIST",
+          "to": "MENTAL_HEALTH_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.mh_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_therapist_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.mh_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#mh-list-container .mh-list-item-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MH_FILTER_EXPERIENCE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "MENTAL_HEALTH_LIST",
+          "to": "MENTAL_HEALTH_LIST",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.mh_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#experience-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#experience-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MH_OPEN_FILTERED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MENTAL_HEALTH_LIST",
+          "to": "MENTAL_HEALTH_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.mh_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.mh_list_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_therapist_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#mh-list-container .mh-list-item-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MH_BACK_VT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MENTAL_HEALTH_LIST",
+          "to": "VISIT_TYPE_SELECTION",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-visit-types"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MENTAL_HEALTH_DETAIL",
+      "signature_schema": {
+        "selected_therapist_id": "string|null",
+        "mh_reason_for_visit": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MH_DETAIL_TYPE_REASON",
+          "name": "type",
+          "is_navigation": false,
+          "from": "MENTAL_HEALTH_DETAIL",
+          "to": "MENTAL_HEALTH_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.mh_reason_for_visit",
+              "value": "anxiety follow-up"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#mh-reason-textarea"
+            },
+            {
+              "op": "type_text",
+              "selector": "#mh-reason-textarea",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MH_DETAIL_CONTINUE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MENTAL_HEALTH_DETAIL",
+          "to": "MENTAL_HEALTH_SCHEDULE",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.mh_reason_for_visit",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#mh-continue-schedule"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MH_DETAIL_BACK_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MENTAL_HEALTH_DETAIL",
+          "to": "MENTAL_HEALTH_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-mh-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MENTAL_HEALTH_SCHEDULE",
+      "signature_schema": {
+        "selected_therapist_id": "string|null",
+        "mh_schedule_date": "string|null",
+        "mh_schedule_slot": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MH_SCHED_PICK_DATE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "MENTAL_HEALTH_SCHEDULE",
+          "to": "MENTAL_HEALTH_SCHEDULE",
+          "parameters": {
+            "widget": "date_picker",
+            "year": 2025,
+            "month": 11,
+            "day": 5
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.mh_schedule_date",
+              "value": "2025-11-05"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#date-picker2"
+            },
+            {
+              "op": "click",
+              "selector": ".year-2025"
+            },
+            {
+              "op": "click",
+              "selector": ".month-11"
+            },
+            {
+              "op": "click",
+              "selector": ".day-5"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MH_SCHED_SELECT_SLOT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "MENTAL_HEALTH_SCHEDULE",
+          "to": "MENTAL_HEALTH_SCHEDULE",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [
+            {
+              "path": "$.mh_schedule_date",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.mh_schedule_slot",
+              "value": "16:00"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#mh-time-slot-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#mh-time-slot-1600",
+              "ui_elements": {
+                "container": "#mh-time-slot-dropdown",
+                "options": [
+                  {
+                    "value": "15:00",
+                    "selector": "#mh-time-slot-1500"
+                  },
+                  {
+                    "value": "16:00",
+                    "selector": "#mh-time-slot-1600"
+                  },
+                  {
+                    "value": "17:00",
+                    "selector": "#mh-time-slot-1700"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_MH_SCHED_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MENTAL_HEALTH_SCHEDULE",
+          "to": "MENTAL_HEALTH_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.mh_schedule_slot",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#mh-continue-review"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MH_SCHED_BACK_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MENTAL_HEALTH_SCHEDULE",
+          "to": "MENTAL_HEALTH_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-mh-detail"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MENTAL_HEALTH_REVIEW",
+      "signature_schema": {
+        "mh_schedule_date": "string|null",
+        "mh_schedule_slot": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MH_REVIEW_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MENTAL_HEALTH_REVIEW",
+          "to": "MENTAL_HEALTH_BOOKING_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.mh_schedule_slot",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#mh-confirm-booking"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MH_REVIEW_BACK_SCHED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MENTAL_HEALTH_REVIEW",
+          "to": "MENTAL_HEALTH_SCHEDULE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-mh-schedule"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MENTAL_HEALTH_BOOKING_SUCCESS",
+      "signature_schema": {
+        "mh_booking_confirmation": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MH_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MENTAL_HEALTH_BOOKING_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.mh_booking_confirmation",
+              "value": "MHCONF123"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#mh-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MH_SUCCESS_GO_DASH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MENTAL_HEALTH_BOOKING_SUCCESS",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#mh-success-go-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "APPOINTMENTS_LIST",
+      "signature_schema": {
+        "appointments": "array<object>|null",
+        "matched_appointment_id": "string|null",
+        "selected_appointment_id": "string|null",
+        "appts_list_has_searched": "boolean|null",
+        "appts_list_viewport_anchor_id": "string|null",
+        "appts_list_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_APPTS_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "APPOINTMENTS_LIST",
+          "to": "APPOINTMENTS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_appointment_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.appts_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#appts-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#appts-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_APPTS_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "APPOINTMENTS_LIST",
+          "to": "APPOINTMENTS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.appts_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#appts-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#appts-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_APPTS_OPEN_MATCHED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "APPOINTMENTS_LIST",
+          "to": "APPOINTMENT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_appointment_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.appts_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_appointment_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.appts_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#appts-list-container .appts-list-item-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_APPTS_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "APPOINTMENTS_LIST",
+          "to": "APPOINTMENT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.appts_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_appointment_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.appts_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#appts-list-container .appts-list-item-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_APPTS_FILTER_TYPE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "APPOINTMENTS_LIST",
+          "to": "APPOINTMENTS_LIST",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.appts_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-appt-virtual-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_APPTS_OPEN_FILTERED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "APPOINTMENTS_LIST",
+          "to": "APPOINTMENT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.appts_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.appts_list_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_appointment_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#appts-list-container .appts-list-item-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_APPTS_BACK_DASH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "APPOINTMENTS_LIST",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "APPOINTMENT_DETAIL",
+      "signature_schema": {
+        "selected_appointment_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_APPT_DETAIL_GO_TO_BILLING",
+          "name": "click",
+          "is_navigation": true,
+          "from": "APPOINTMENT_DETAIL",
+          "to": "BILLING_OVERVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_appointment_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#view-bill"
+            }
+          ]
+        },
+        {
+          "id": "ACT_APPT_DETAIL_BACK_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "APPOINTMENT_DETAIL",
+          "to": "APPOINTMENTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-appts-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BILLING_OVERVIEW",
+      "signature_schema": {
+        "bills": "array<object>|null",
+        "matched_bill_id": "string|null",
+        "selected_bill_id": "string|null",
+        "billing_list_has_searched": "boolean|null",
+        "billing_list_viewport_anchor_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_BILL_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "BILLING_OVERVIEW",
+          "to": "BILLING_OVERVIEW",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_bill_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.billing_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#billing-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#billing-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BILL_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "BILLING_OVERVIEW",
+          "to": "BILLING_OVERVIEW",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.billing_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#billing-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#billing-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BILL_OPEN_MATCHED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BILLING_OVERVIEW",
+          "to": "BILL_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_bill_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.billing_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_bill_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.billing_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#billing-list-container .billing-list-item-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BILL_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BILLING_OVERVIEW",
+          "to": "BILL_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.billing_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_bill_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.billing_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#billing-list-container .billing-list-item-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BILL_BACK_DASH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BILLING_OVERVIEW",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BILL_DETAIL",
+      "signature_schema": {
+        "selected_bill_id": "string|null",
+        "billing_amount_due": "number|null",
+        "payment_method_selected": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_BILL_DETAIL_SELECT_PAYMENT_METHOD",
+          "name": "select",
+          "is_navigation": false,
+          "from": "BILL_DETAIL",
+          "to": "BILL_DETAIL",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.payment_method_selected",
+              "value": "card"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#payment-method-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#payment-method-card",
+              "ui_elements": {
+                "container": "#payment-method-dropdown",
+                "options": [
+                  {
+                    "value": "card",
+                    "selector": "#payment-method-card"
+                  },
+                  {
+                    "value": "hsa",
+                    "selector": "#payment-method-hsa"
+                  },
+                  {
+                    "value": "paypal",
+                    "selector": "#payment-method-paypal"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_BILL_DETAIL_CONTINUE_PAYMENT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BILL_DETAIL",
+          "to": "BILL_PAYMENT",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.payment_method_selected",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.billing_amount_due",
+              "value": 50
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#continue-to-payment"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BILL_DETAIL_BACK_OVERVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BILL_DETAIL",
+          "to": "BILLING_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-billing-overview"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BILL_PAYMENT",
+      "signature_schema": {
+        "billing_amount_due": "number|null",
+        "card_number_entered": "string|null",
+        "card_cvv_entered": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PAYMENT_TYPE_CARD_NUMBER",
+          "name": "type",
+          "is_navigation": false,
+          "from": "BILL_PAYMENT",
+          "to": "BILL_PAYMENT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.card_number_entered",
+              "value": "4111111111111111"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#card-number-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#card-number-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENT_TYPE_CVV",
+          "name": "type",
+          "is_navigation": false,
+          "from": "BILL_PAYMENT",
+          "to": "BILL_PAYMENT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.card_cvv_entered",
+              "value": "123"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#card-cvv-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#card-cvv-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENT_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BILL_PAYMENT",
+          "to": "BILL_PAYMENT_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.card_number_entered",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.card_cvv_entered",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.billing_amount_due",
+              "cond": "gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#submit-payment"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENT_BACK_BILL_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BILL_PAYMENT",
+          "to": "BILL_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-bill-detail"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BILL_PAYMENT_SUCCESS",
+      "signature_schema": {
+        "payment_confirmation": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PAYMENT_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BILL_PAYMENT_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.payment_confirmation",
+              "value": "PAYCONF123"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#payment-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENT_SUCCESS_GO_DASH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BILL_PAYMENT_SUCCESS",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#payment-success-go-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BENEFITS_OVERVIEW",
+      "signature_schema": {
+        "plans": "array<object>|null",
+        "benefits_list_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_BENEFITS_FILTER_ELIGIBLE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "BENEFITS_OVERVIEW",
+          "to": "BENEFITS_OVERVIEW",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.benefits_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-eligible-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BENEFITS_OPEN_FILTERED_PLAN",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BENEFITS_OVERVIEW",
+          "to": "SETTINGS_INSURANCE",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.benefits_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.benefits_list_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#benefit-plan-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BENEFITS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BENEFITS_OVERVIEW",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SETTINGS_ACCOUNT",
+      "signature_schema": {
+        "full_name_entered": "string|null",
+        "phone_number_entered": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SETTINGS_TYPE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SETTINGS_ACCOUNT",
+          "to": "SETTINGS_ACCOUNT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.full_name_entered",
+              "value": "John Doe"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-full-name"
+            },
+            {
+              "op": "type_text",
+              "selector": "#settings-full-name",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_TYPE_PHONE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SETTINGS_ACCOUNT",
+          "to": "SETTINGS_ACCOUNT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.phone_number_entered",
+              "value": "5551234567"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-phone"
+            },
+            {
+              "op": "type_text",
+              "selector": "#settings-phone",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_SAVE",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SETTINGS_ACCOUNT",
+          "to": "SETTINGS_ACCOUNT",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.full_name_entered",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-save"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_GO_INSURANCE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SETTINGS_ACCOUNT",
+          "to": "SETTINGS_INSURANCE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-insurance-tab"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_BACK_DASH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SETTINGS_ACCOUNT",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SETTINGS_INSURANCE",
+      "signature_schema": {
+        "insurance_member_id_entered": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_INS_TYPE_MEMBER_ID",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SETTINGS_INSURANCE",
+          "to": "SETTINGS_INSURANCE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.insurance_member_id_entered",
+              "value": "ABC123456"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#insurance-member-id"
+            },
+            {
+              "op": "type_text",
+              "selector": "#insurance-member-id",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_INS_SAVE",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SETTINGS_INSURANCE",
+          "to": "SETTINGS_INSURANCE",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.insurance_member_id_entered",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#insurance-save"
+            }
+          ]
+        },
+        {
+          "id": "ACT_INS_BACK_ACCOUNT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SETTINGS_INSURANCE",
+          "to": "SETTINGS_ACCOUNT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-settings-account"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

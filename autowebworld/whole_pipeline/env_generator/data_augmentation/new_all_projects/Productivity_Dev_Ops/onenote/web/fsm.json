@@ -1,0 +1,2645 @@
+{
+  "meta": {
+    "app": "Note_taking-OneNote_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "NOTE_CREATE_SUCCESS",
+      "NOTE_UPDATE_SUCCESS",
+      "SECTION_CREATE_SUCCESS",
+      "NOTE_DELETE_SUCCESS",
+      "sign_up_new_account_success"
+    ],
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 25,
+        "max": 35
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover",
+        "menu"
+      ],
+      "home_nav_coverage": "any",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 4,
+        "two_step_parity": false,
+        "allowed_shapes": [
+          "checkboxes",
+          "sliders",
+          "sort"
+        ]
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "current_user_id": "string|null",
+        "cookie_consent_given": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_HOME_ACCEPT_COOKIES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cookie_consent_given",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_NOTEBOOKS_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "NOTEBOOK_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-notebooks-direct"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_RECENTS_HOVER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "RECENT_NOTES",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#nav-recents-menu"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-recents-menu-item"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_QUICK_NOTES_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "QUICK_NOTES",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-more"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-quick-notes-item"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_SETTINGS_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "SETTINGS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-account"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-settings-item"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "NOTEBOOK_LIST",
+      "signature_schema": {
+        "notebooks": "array<object>|null",
+        "location_permission_granted": "boolean|null",
+        "NOTEBOOK_LIST_filters_applied": "boolean|null",
+        "NOTEBOOK_LIST_viewport_anchor_id": "string|null",
+        "NOTEBOOK_LIST_matched_notebook_id": "string|null",
+        "NOTEBOOK_LIST_has_searched": "boolean|null",
+        "selected_notebook_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_NOTEBOOK_LIST_LOCATION_PERMISSION_ALLOW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "NOTEBOOK_LIST",
+          "to": "NOTEBOOK_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTEBOOK_LIST_FILTER_BY_SHARED_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "NOTEBOOK_LIST",
+          "to": "NOTEBOOK_LIST",
+          "parameters": {
+            "filter_shape": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.NOTEBOOK_LIST_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-shared-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTEBOOK_LIST_FILTER_BY_SIZE_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "NOTEBOOK_LIST",
+          "to": "NOTEBOOK_LIST",
+          "parameters": {
+            "widget": "slider",
+            "filter_shape": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.NOTEBOOK_LIST_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#notebook-size-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#notebook-size-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTEBOOK_LIST_SORT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "NOTEBOOK_LIST",
+          "to": "NOTEBOOK_LIST",
+          "parameters": {
+            "filter_shape": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.NOTEBOOK_LIST_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#notebook-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#notebook-sort-option-recent",
+              "ui_elements": {
+                "container": "#notebook-sort-dropdown",
+                "options": [
+                  {
+                    "value": "recent",
+                    "selector": "#notebook-sort-option-recent"
+                  },
+                  {
+                    "value": "name",
+                    "selector": "#notebook-sort-option-name"
+                  },
+                  {
+                    "value": "size",
+                    "selector": "#notebook-sort-option-size"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTEBOOK_LIST_OPEN_FILTERED_NOTEBOOK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTEBOOK_LIST",
+          "to": "SECTION_LIST",
+          "parameters": {
+            "notebook_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.NOTEBOOK_LIST_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.NOTEBOOK_LIST_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_notebook_id",
+              "value_ref": "{notebook_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#notebook-list .notebook-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTEBOOK_LIST_SEARCH_NOTEBOOK",
+          "name": "search",
+          "is_navigation": false,
+          "from": "NOTEBOOK_LIST",
+          "to": "NOTEBOOK_LIST",
+          "parameters": {
+            "notebook_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.NOTEBOOK_LIST_matched_notebook_id",
+              "value_ref": "{notebook_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.NOTEBOOK_LIST_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#notebook-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#notebook-search-input",
+              "text": "{ITEM_ANY}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTEBOOK_LIST_OPEN_MATCHED_NOTEBOOK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTEBOOK_LIST",
+          "to": "SECTION_LIST",
+          "parameters": {
+            "notebook_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.NOTEBOOK_LIST_matched_notebook_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.NOTEBOOK_LIST_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_notebook_id",
+              "value_ref": "{notebook_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.NOTEBOOK_LIST_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#notebook-list .notebook-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTEBOOK_LIST_SCROLL_NOTEBOOK_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "NOTEBOOK_LIST",
+          "to": "NOTEBOOK_LIST",
+          "parameters": {
+            "notebook_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.NOTEBOOK_LIST_viewport_anchor_id",
+              "value_ref": "{notebook_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#notebook-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#notebook-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTEBOOK_LIST_OPEN_ANY_NOTEBOOK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTEBOOK_LIST",
+          "to": "SECTION_LIST",
+          "parameters": {
+            "notebook_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.NOTEBOOK_LIST_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_notebook_id",
+              "value_ref": "{notebook_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.NOTEBOOK_LIST_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#notebook-list .notebook-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTEBOOK_LIST_NEW_NOTEBOOK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTEBOOK_LIST",
+          "to": "NOTEBOOK_CREATE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#new-notebook-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTEBOOK_LIST_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTEBOOK_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home-button"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "NOTEBOOK_CREATE",
+      "signature_schema": {
+        "new_notebook_name": "string|null",
+        "new_notebook_color": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_NOTEBOOK_CREATE_TYPE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "NOTEBOOK_CREATE",
+          "to": "NOTEBOOK_CREATE",
+          "parameters": {
+            "input_text": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_notebook_name",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#new-notebook-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#new-notebook-name-input",
+              "text": "{ITEM_ANY}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTEBOOK_CREATE_SELECT_COLOR",
+          "name": "click",
+          "is_navigation": false,
+          "from": "NOTEBOOK_CREATE",
+          "to": "NOTEBOOK_CREATE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_notebook_color",
+              "value": "blue"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#notebook-color-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#notebook-color-blue",
+              "ui_elements": {
+                "container": "#notebook-color-dropdown",
+                "options": [
+                  {
+                    "value": "blue",
+                    "selector": "#notebook-color-blue"
+                  },
+                  {
+                    "value": "green",
+                    "selector": "#notebook-color-green"
+                  },
+                  {
+                    "value": "red",
+                    "selector": "#notebook-color-red"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTEBOOK_CREATE_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTEBOOK_CREATE",
+          "to": "SECTION_CREATE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.new_notebook_name",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.new_notebook_color",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-notebook-submit"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTEBOOK_CREATE_BACK_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTEBOOK_CREATE",
+          "to": "NOTEBOOK_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-notebook-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SECTION_LIST",
+      "signature_schema": {
+        "selected_notebook_id": "string|null",
+        "sections": "array<object>|null",
+        "SECTION_LIST_filters_applied": "boolean|null",
+        "SECTION_LIST_viewport_anchor_id": "string|null",
+        "SECTION_LIST_matched_section_id": "string|null",
+        "SECTION_LIST_has_searched": "boolean|null",
+        "selected_section_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SECTION_LIST_FILTER_PINNED_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SECTION_LIST",
+          "to": "SECTION_LIST",
+          "parameters": {
+            "filter_shape": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.SECTION_LIST_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-section-pinned-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SECTION_LIST_FILTER_BY_ACTIVITY_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SECTION_LIST",
+          "to": "SECTION_LIST",
+          "parameters": {
+            "widget": "slider",
+            "filter_shape": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.SECTION_LIST_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#section-activity-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#section-activity-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SECTION_LIST_SORT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SECTION_LIST",
+          "to": "SECTION_LIST",
+          "parameters": {
+            "filter_shape": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.SECTION_LIST_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#section-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#section-sort-option-recent",
+              "ui_elements": {
+                "container": "#section-sort-dropdown",
+                "options": [
+                  {
+                    "value": "recent",
+                    "selector": "#section-sort-option-recent"
+                  },
+                  {
+                    "value": "name",
+                    "selector": "#section-sort-option-name"
+                  },
+                  {
+                    "value": "custom",
+                    "selector": "#section-sort-option-custom"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_SECTION_LIST_OPEN_FILTERED_SECTION",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SECTION_LIST",
+          "to": "PAGE_LIST",
+          "parameters": {
+            "section_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.SECTION_LIST_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.SECTION_LIST_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_section_id",
+              "value_ref": "{section_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#section-list .section-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SECTION_LIST_SEARCH_SECTION",
+          "name": "search",
+          "is_navigation": false,
+          "from": "SECTION_LIST",
+          "to": "SECTION_LIST",
+          "parameters": {
+            "section_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.SECTION_LIST_matched_section_id",
+              "value_ref": "{section_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.SECTION_LIST_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#section-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#section-search-input",
+              "text": "{ITEM_ANY}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SECTION_LIST_OPEN_MATCHED_SECTION",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SECTION_LIST",
+          "to": "PAGE_LIST",
+          "parameters": {
+            "section_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.SECTION_LIST_matched_section_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.SECTION_LIST_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_section_id",
+              "value_ref": "{section_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.SECTION_LIST_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#section-list .section-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SECTION_LIST_SCROLL_SECTION_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SECTION_LIST",
+          "to": "SECTION_LIST",
+          "parameters": {
+            "section_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.SECTION_LIST_viewport_anchor_id",
+              "value_ref": "{section_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#section-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#section-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SECTION_LIST_OPEN_ANY_SECTION",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SECTION_LIST",
+          "to": "PAGE_LIST",
+          "parameters": {
+            "section_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.SECTION_LIST_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_section_id",
+              "value_ref": "{section_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.SECTION_LIST_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#section-list .section-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SECTION_LIST_NEW_SECTION",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SECTION_LIST",
+          "to": "SECTION_CREATE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#new-section-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SECTION_LIST_BACK_NOTEBOOKS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SECTION_LIST",
+          "to": "NOTEBOOK_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-notebooks"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SECTION_CREATE",
+      "signature_schema": {
+        "new_section_name": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SECTION_CREATE_TYPE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SECTION_CREATE",
+          "to": "SECTION_CREATE",
+          "parameters": {
+            "input_text": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_section_name",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#new-section-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#new-section-name-input",
+              "text": "{ITEM_ANY}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SECTION_CREATE_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SECTION_CREATE",
+          "to": "SECTION_CREATE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.new_section_name",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-section-submit"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SECTION_CREATE_BACK_SECTIONS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SECTION_CREATE",
+          "to": "SECTION_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-section-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PAGE_LIST",
+      "signature_schema": {
+        "selected_notebook_id": "string|null",
+        "selected_section_id": "string|null",
+        "pages": "array<object>|null",
+        "PAGE_LIST_filters_applied": "boolean|null",
+        "PAGE_LIST_viewport_anchor_id": "string|null",
+        "PAGE_LIST_matched_page_id": "string|null",
+        "PAGE_LIST_has_searched": "boolean|null",
+        "selected_page_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PAGE_LIST_FILTER_FAVORITE_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PAGE_LIST",
+          "to": "PAGE_LIST",
+          "parameters": {
+            "filter_shape": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.PAGE_LIST_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-page-favorite-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAGE_LIST_FILTER_BY_LENGTH_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PAGE_LIST",
+          "to": "PAGE_LIST",
+          "parameters": {
+            "widget": "slider",
+            "filter_shape": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.PAGE_LIST_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#page-length-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#page-length-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAGE_LIST_SORT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PAGE_LIST",
+          "to": "PAGE_LIST",
+          "parameters": {
+            "filter_shape": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.PAGE_LIST_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#page-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#page-sort-option-recent",
+              "ui_elements": {
+                "container": "#page-sort-dropdown",
+                "options": [
+                  {
+                    "value": "recent",
+                    "selector": "#page-sort-option-recent"
+                  },
+                  {
+                    "value": "title",
+                    "selector": "#page-sort-option-title"
+                  },
+                  {
+                    "value": "created",
+                    "selector": "#page-sort-option-created"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAGE_LIST_OPEN_FILTERED_PAGE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PAGE_LIST",
+          "to": "NOTE_EDITOR",
+          "parameters": {
+            "page_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.PAGE_LIST_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.PAGE_LIST_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_page_id",
+              "value_ref": "{page_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#page-list .page-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAGE_LIST_SEARCH_PAGE",
+          "name": "search",
+          "is_navigation": false,
+          "from": "PAGE_LIST",
+          "to": "PAGE_LIST",
+          "parameters": {
+            "page_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.PAGE_LIST_matched_page_id",
+              "value_ref": "{page_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.PAGE_LIST_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#page-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#page-search-input",
+              "text": "{ITEM_ANY}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAGE_LIST_OPEN_MATCHED_PAGE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PAGE_LIST",
+          "to": "NOTE_EDITOR",
+          "parameters": {
+            "page_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.PAGE_LIST_matched_page_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.PAGE_LIST_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_page_id",
+              "value_ref": "{page_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.PAGE_LIST_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#page-list .page-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAGE_LIST_SCROLL_PAGE_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PAGE_LIST",
+          "to": "PAGE_LIST",
+          "parameters": {
+            "page_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.PAGE_LIST_viewport_anchor_id",
+              "value_ref": "{page_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#page-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#page-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAGE_LIST_OPEN_ANY_PAGE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PAGE_LIST",
+          "to": "NOTE_EDITOR",
+          "parameters": {
+            "page_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.PAGE_LIST_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_page_id",
+              "value_ref": "{page_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.PAGE_LIST_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#page-list .page-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAGE_LIST_NEW_PAGE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PAGE_LIST",
+          "to": "NOTE_EDITOR",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#new-page-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAGE_LIST_BACK_SECTIONS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PAGE_LIST",
+          "to": "SECTION_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-section-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "NOTE_EDITOR",
+      "signature_schema": {
+        "selected_page_id": "string|null",
+        "note_title": "string|null",
+        "note_body": "string|null",
+        "note_tag_color": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_NOTE_EDITOR_TYPE_TITLE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "NOTE_EDITOR",
+          "to": "NOTE_EDITOR",
+          "parameters": {
+            "title_text": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.note_title",
+              "value_ref": "{title_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#note-title-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#note-title-input",
+              "text": "{ITEM_ANY}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTE_EDITOR_TYPE_BODY",
+          "name": "type",
+          "is_navigation": false,
+          "from": "NOTE_EDITOR",
+          "to": "NOTE_EDITOR",
+          "parameters": {
+            "body_text": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.note_body",
+              "value_ref": "{body_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#note-body-editor"
+            },
+            {
+              "op": "type_text",
+              "selector": "#note-body-editor",
+              "text": "{ITEM_ANY}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTE_EDITOR_SELECT_TAG_COLOR",
+          "name": "click",
+          "is_navigation": false,
+          "from": "NOTE_EDITOR",
+          "to": "NOTE_EDITOR",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.note_tag_color",
+              "value": "yellow"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#note-tag-color-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#note-tag-color-yellow",
+              "ui_elements": {
+                "container": "#note-tag-color-dropdown",
+                "options": [
+                  {
+                    "value": "yellow",
+                    "selector": "#note-tag-color-yellow"
+                  },
+                  {
+                    "value": "blue",
+                    "selector": "#note-tag-color-blue"
+                  },
+                  {
+                    "value": "pink",
+                    "selector": "#note-tag-color-pink"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTE_EDITOR_SAVE_NOTE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTE_EDITOR",
+          "to": "NOTE_CREATE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.note_title",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.note_body",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#note-save-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTE_EDITOR_OPEN_UPDATE_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTE_EDITOR",
+          "to": "NOTE_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_page_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#note-review-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTE_EDITOR_OPEN_SHARE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTE_EDITOR",
+          "to": "NOTE_SHARE",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.note_title",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#note-share-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTE_EDITOR_OPEN_DELETE_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTE_EDITOR",
+          "to": "NOTE_DELETE_CONFIRM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_page_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#note-delete-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTE_EDITOR_BACK_PAGES",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTE_EDITOR",
+          "to": "PAGE_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-page-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "NOTE_REVIEW",
+      "signature_schema": {
+        "selected_page_id": "string|null",
+        "note_title": "string|null",
+        "note_body": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_NOTE_REVIEW_EDIT_TITLE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "NOTE_REVIEW",
+          "to": "NOTE_REVIEW",
+          "parameters": {
+            "updated_title": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.note_title",
+              "value_ref": "{updated_title}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#review-note-title-input"
+            },
+            {
+              "op": "key_press",
+              "key": "Ctrl+A"
+            },
+            {
+              "op": "key_press",
+              "key": "Delete"
+            },
+            {
+              "op": "type_text",
+              "selector": "#review-note-title-input",
+              "text": "{ITEM_ANY}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTE_REVIEW_EDIT_BODY",
+          "name": "type",
+          "is_navigation": false,
+          "from": "NOTE_REVIEW",
+          "to": "NOTE_REVIEW",
+          "parameters": {
+            "updated_body": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.note_body",
+              "value_ref": "{updated_body}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#review-note-body-editor"
+            },
+            {
+              "op": "key_press",
+              "key": "Ctrl+A"
+            },
+            {
+              "op": "key_press",
+              "key": "Delete"
+            },
+            {
+              "op": "type_text",
+              "selector": "#review-note-body-editor",
+              "text": "{ITEM_ANY}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTE_REVIEW_SUBMIT_UPDATE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTE_REVIEW",
+          "to": "NOTE_UPDATE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.note_title",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.note_body",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#review-note-save-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTE_REVIEW_BACK_EDITOR",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTE_REVIEW",
+          "to": "NOTE_EDITOR",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-note-editor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "NOTE_SHARE",
+      "signature_schema": {
+        "selected_page_id": "string|null",
+        "share_email": "string|null",
+        "share_permission_level": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_NOTE_SHARE_TYPE_EMAIL",
+          "name": "type",
+          "is_navigation": false,
+          "from": "NOTE_SHARE",
+          "to": "NOTE_SHARE",
+          "parameters": {
+            "email": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.share_email",
+              "value_ref": "{email}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#share-email-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#share-email-input",
+              "text": "{ITEM_ANY}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTE_SHARE_SELECT_PERMISSION",
+          "name": "click",
+          "is_navigation": false,
+          "from": "NOTE_SHARE",
+          "to": "NOTE_SHARE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.share_permission_level",
+              "value": "edit"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#share-permission-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#share-permission-edit",
+              "ui_elements": {
+                "container": "#share-permission-dropdown",
+                "options": [
+                  {
+                    "value": "view",
+                    "selector": "#share-permission-view"
+                  },
+                  {
+                    "value": "edit",
+                    "selector": "#share-permission-edit"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTE_SHARE_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTE_SHARE",
+          "to": "NOTE_SHARE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.share_email",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.share_permission_level",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#share-send-link-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTE_SHARE_BACK_EDITOR",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTE_SHARE",
+          "to": "NOTE_EDITOR",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-note-editor-from-share"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "NOTE_DELETE_CONFIRM",
+      "signature_schema": {
+        "selected_page_id": "string|null",
+        "delete_confirmation_checked": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_NOTE_DELETE_CONFIRM_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "NOTE_DELETE_CONFIRM",
+          "to": "NOTE_DELETE_CONFIRM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.delete_confirmation_checked",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#note-delete-confirm-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTE_DELETE_CONFIRM_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTE_DELETE_CONFIRM",
+          "to": "NOTE_DELETE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.delete_confirmation_checked",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#confirm-delete-note-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTE_DELETE_CONFIRM_BACK_EDITOR",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTE_DELETE_CONFIRM",
+          "to": "NOTE_EDITOR",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cancel-delete-note-button"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RECENT_NOTES",
+      "signature_schema": {
+        "recent_pages": "array<object>|null",
+        "RECENT_NOTES_filters_applied": "boolean|null",
+        "RECENT_NOTES_viewport_anchor_id": "string|null",
+        "RECENT_NOTES_matched_page_id": "string|null",
+        "RECENT_NOTES_has_searched": "boolean|null",
+        "selected_page_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_RECENT_NOTES_FILTER_PINNED_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "RECENT_NOTES",
+          "to": "RECENT_NOTES",
+          "parameters": {
+            "filter_shape": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.RECENT_NOTES_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#recent-filter-pinned-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RECENT_NOTES_FILTER_BY_RECENCY_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "RECENT_NOTES",
+          "to": "RECENT_NOTES",
+          "parameters": {
+            "widget": "slider",
+            "filter_shape": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.RECENT_NOTES_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#recent-recency-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#recent-recency-slider",
+              "to_value": "left"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RECENT_NOTES_SORT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "RECENT_NOTES",
+          "to": "RECENT_NOTES",
+          "parameters": {
+            "filter_shape": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.RECENT_NOTES_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#recent-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#recent-sort-option-recent-desc",
+              "ui_elements": {
+                "container": "#recent-sort-dropdown",
+                "options": [
+                  {
+                    "value": "recent",
+                    "selector": "#recent-sort-option-recent-desc"
+                  },
+                  {
+                    "value": "title",
+                    "selector": "#recent-sort-option-title"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_RECENT_NOTES_OPEN_FILTERED_NOTE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "RECENT_NOTES",
+          "to": "NOTE_EDITOR",
+          "parameters": {
+            "page_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.RECENT_NOTES_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.RECENT_NOTES_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_page_id",
+              "value_ref": "{page_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#recent-list .recent-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RECENT_NOTES_SEARCH_NOTE",
+          "name": "search",
+          "is_navigation": false,
+          "from": "RECENT_NOTES",
+          "to": "RECENT_NOTES",
+          "parameters": {
+            "page_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.RECENT_NOTES_matched_page_id",
+              "value_ref": "{page_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.RECENT_NOTES_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#recent-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#recent-search-input",
+              "text": "{ITEM_ANY}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RECENT_NOTES_OPEN_MATCHED_NOTE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "RECENT_NOTES",
+          "to": "NOTE_EDITOR",
+          "parameters": {
+            "page_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.RECENT_NOTES_matched_page_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.RECENT_NOTES_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_page_id",
+              "value_ref": "{page_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.RECENT_NOTES_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#recent-list .recent-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RECENT_NOTES_SCROLL_NOTE_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "RECENT_NOTES",
+          "to": "RECENT_NOTES",
+          "parameters": {
+            "page_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.RECENT_NOTES_viewport_anchor_id",
+              "value_ref": "{page_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#recent-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#recent-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RECENT_NOTES_OPEN_ANY_NOTE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "RECENT_NOTES",
+          "to": "NOTE_EDITOR",
+          "parameters": {
+            "page_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.RECENT_NOTES_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_page_id",
+              "value_ref": "{page_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.RECENT_NOTES_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#recent-list .recent-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RECENT_NOTES_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "RECENT_NOTES",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home-from-recents"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "QUICK_NOTES",
+      "signature_schema": {
+        "quick_notes": "array<object>|null",
+        "QUICK_NOTES_viewport_anchor_id": "string|null",
+        "selected_quick_note_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_QUICK_NOTES_SCROLL_NOTE_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "QUICK_NOTES",
+          "to": "QUICK_NOTES",
+          "parameters": {
+            "quick_note_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.QUICK_NOTES_viewport_anchor_id",
+              "value_ref": "{quick_note_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#quick-notes-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#quick-notes-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_QUICK_NOTES_OPEN_NOTE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "QUICK_NOTES",
+          "to": "NOTE_EDITOR",
+          "parameters": {
+            "quick_note_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.QUICK_NOTES_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_quick_note_id",
+              "value_ref": "{quick_note_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.QUICK_NOTES_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#quick-notes-list .quick-note-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_QUICK_NOTES_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "QUICK_NOTES",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home-from-quick-notes"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SETTINGS",
+      "signature_schema": {
+        "theme": "string|null",
+        "sync_enabled": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SETTINGS_SELECT_THEME",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SETTINGS",
+          "to": "SETTINGS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.theme",
+              "value": "dark"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#theme-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#theme-dark",
+              "ui_elements": {
+                "container": "#theme-dropdown",
+                "options": [
+                  {
+                    "value": "light",
+                    "selector": "#theme-light"
+                  },
+                  {
+                    "value": "dark",
+                    "selector": "#theme-dark"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_TOGGLE_SYNC",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SETTINGS",
+          "to": "SETTINGS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.sync_enabled",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sync-toggle"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_OPEN_SIGN_UP_SUCCESS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SETTINGS",
+          "to": "sign_up_new_account_success",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#open-sign-up-success"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SETTINGS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home-from-settings"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "NOTE_CREATE_SUCCESS",
+      "signature_schema": {
+        "selected_page_id": "string|null",
+        "note_title": "string|null",
+        "note_body": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_NOTE_CREATE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTE_CREATE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#note-create-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTE_CREATE_SUCCESS_BACK_EDITOR",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTE_CREATE_SUCCESS",
+          "to": "NOTE_EDITOR",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#note-create-success-back-editor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "NOTE_UPDATE_SUCCESS",
+      "signature_schema": {
+        "selected_page_id": "string|null",
+        "note_title": "string|null",
+        "note_body": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_NOTE_UPDATE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTE_UPDATE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#note-update-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTE_UPDATE_SUCCESS_BACK_EDITOR",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTE_UPDATE_SUCCESS",
+          "to": "NOTE_EDITOR",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#note-update-success-back-editor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SECTION_CREATE_SUCCESS",
+      "signature_schema": {
+        "new_section_name": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SECTION_CREATE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SECTION_CREATE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#section-create-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SECTION_CREATE_SUCCESS_GO_SECTIONS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SECTION_CREATE_SUCCESS",
+          "to": "SECTION_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#section-create-success-go-sections"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "NOTE_SHARE_SUCCESS",
+      "signature_schema": {
+        "selected_page_id": "string|null",
+        "share_email": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_NOTE_SHARE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTE_SHARE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#note-share-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTE_SHARE_SUCCESS_BACK_EDITOR",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTE_SHARE_SUCCESS",
+          "to": "NOTE_EDITOR",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#note-share-success-back-editor"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "NOTE_DELETE_SUCCESS",
+      "signature_schema": {
+        "selected_page_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_NOTE_DELETE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTE_DELETE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#note-delete-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTE_DELETE_SUCCESS_BACK_PAGES",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTE_DELETE_SUCCESS",
+          "to": "PAGE_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#note-delete-success-back-pages"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sign_up_new_account_success",
+      "signature_schema": {
+        "sign_up_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SIGN_UP_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "sign_up_new_account_success",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.sign_up_message",
+              "value": "Your new account has been created successfully."
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sign-up-success-go-home"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

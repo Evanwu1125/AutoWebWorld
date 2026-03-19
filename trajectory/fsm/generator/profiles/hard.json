@@ -19,7 +19,8 @@
   "path_length": {
     "len": [6, 8],
     "shortest_only": true,
-    "count_interceptors": false
+    "count_interceptors": false,
+    "strict": false
   },
   "home_nav_variants": ["direct", "hover", "menu"],
   "home_nav_coverage": "any",
@@ -27,7 +28,15 @@
     "enabled": true,
     "fields_max": 4,
     "two_step_parity": false,
-    "allowed_shapes": ["checkboxes", "sliders", "sort"]
+    "allowed_shapes": ["checkboxes", "sliders", "sort"],
+    "require_open_filtered": true
+  },
+  "policy": {
+    "home_policy": "navigation_first",
+    "back_policy": "recommended",
+    "interceptors": {
+      "cookie_placement": "home",
+      "permission_placement": "first_relevant_non_home"
+    }
   }
 }
-

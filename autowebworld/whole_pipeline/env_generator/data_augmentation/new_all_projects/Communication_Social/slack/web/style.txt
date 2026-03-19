@@ -1,0 +1,66 @@
+# Visual Style Guide - Team Chat & Channels (Slack Inspired)
+
+## Theme Overview
+The application follows a professional, clean, and organized "Team Collaboration" aesthetic, closely inspired by Slack. The design prioritizes content readability, efficient navigation, and a sense of "workspace" where work gets done. It balances a business-professional tone with friendly, approachable UI elements.
+
+## Color Palette
+- **Primary Brand Color (Sidebar/Header):** Deep Purple (#4A154B) - Used for the main sidebar and key brand elements.
+- **Secondary Brand Color (Active Items):** Cyan/Teal (#007a5a) or Blue (#1264A3) for links and primary actions.
+- **Backgrounds:**
+  - App Background: White (#FFFFFF)
+  - Sidebar Background: Dark Purple (#3F0E40)
+  - Hover States: Light Gray (#F8F8F8) or dimmed purple in sidebar.
+- **Text:**
+  - Primary Text: Almost Black (#1D1C1D)
+  - Secondary/Muted Text: Dark Gray (#616061)
+  - Sidebar Text: Light Gray/White (#CDC7CD)
+- **Borders/Dividers:** Light Gray (#DDDDDD)
+
+## Typography
+- **Font Family:** System fonts stack (San Francisco, Segoe UI, Roboto, Helvetica Neue, Arial) to feel native and fast.
+- **Headings:** Bold, clean, low letter-spacing.
+  - H1 (Page Titles): 24px - 28px, Bold (#1D1C1D)
+  - H2 (Section Headers): 18px - 20px, Bold
+  - H3 (Channel Names): 16px, Bold
+- **Body Text:** 15px, Regular for messages; 14px for UI elements.
+  - Line height: 1.5 for readability in messages.
+
+## Layout & Structure
+- **Global Layout:**
+  - **Sidebar (Left):** Fixed width (e.g., 260px), dark theme. Contains Workspace dropdown, Channels list, DMs list.
+  - **Main Content (Center):** Fluid width, white background. Contains Chat History, Composer, Headers.
+  - **Top Navigation:** Minimal, mostly for search and user profile.
+- **Card Design:**
+  - Subtle borders (1px solid #DDDDDD) instead of heavy shadows.
+  - Rounded corners: Small radius (4px - 6px) for a crisp, professional look.
+- **Lists:**
+  - Compact but breathable.
+  - Hover effects on list items are crucial (subtle gray background change).
+
+## Visual Components
+- **Buttons:**
+  - Primary: Green (#007a5a) or Blue (#005E93) with white text, rounded corners (4px).
+  - Secondary: White with gray border and text.
+  - Icon Buttons: Transparent background, dark gray icon, hover circle background.
+- **Inputs:**
+  - Large click areas, gray borders (#868686), focus ring (Blue/Cyan glow).
+- **Avatars:** Rounded squares or circles for user profiles.
+- **Status Indicators:** Small colored dots (Green=Active, Gray=Away) next to names.
+
+## Image Usage Strategy
+- **Hero/Background:** On the HOME page, use a high-quality "Modern Office" or "Team Collaboration" photo.
+- **User Avatars:** Use real portrait photos for mock users to make the chat feel alive.
+- **Channel Icons:** Use # (hash) icons or small graphics.
+- **Attachments:** If mock data includes file attachments, use realistic file type icons or thumbnails.
+
+## Animations
+- **Transitions:** Fast (100ms-200ms) and subtle. No bouncy or slow animations.
+- **Hover:** Immediate feedback on all interactive elements.
+- **Modals:** Quick fade-in/scale-up.
+
+## Z-Index Strategy
+- **Modals (Cookie, Permission):** z-[10000]
+- **Dropdowns/Popovers:** z-50
+- **Header:** z-40
+- **Sidebar:** z-30
+- **Main Content:** z-0

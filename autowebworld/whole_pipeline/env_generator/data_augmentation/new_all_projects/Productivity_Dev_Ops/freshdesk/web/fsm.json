@@ -1,0 +1,2400 @@
+{
+  "meta": {
+    "app": "Helpdesk/Ticketing-Freshdesk_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "TICKET_CREATION_SUCCESS",
+      "REPLY_SENT_SUCCESS",
+      "ASSIGN_SUCCESS",
+      "MERGE_SUCCESS",
+      "CONTACT_CREATION_SUCCESS"
+    ],
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 20,
+        "max": 35
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover",
+        "menu"
+      ],
+      "home_nav_coverage": "any",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 4,
+        "two_step_parity": false,
+        "allowed_shapes": [
+          "checkboxes",
+          "sliders",
+          "sort"
+        ]
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "current_agent_id": "string|null",
+        "cookie_consent_given": "boolean|null",
+        "home_nav_target": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_HOME_ACCEPT_COOKIES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cookie_consent_given",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_TICKETS_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "TICKETS_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.home_nav_target",
+              "value": "TICKETS_LIST"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-tickets-direct"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_TICKETS_HOVER",
+          "name": "select",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "TICKETS_LIST",
+          "parameters": {
+            "widget": "hover_menu"
+          },
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.home_nav_target",
+              "value": "TICKETS_LIST"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#menu-support"
+            },
+            {
+              "op": "click",
+              "selector": "#menu-support .tickets-link",
+              "ui_elements": {
+                "container": "#menu-support",
+                "options": [
+                  {
+                    "value": "tickets",
+                    "selector": "#menu-support .tickets-link"
+                  },
+                  {
+                    "value": "contacts",
+                    "selector": "#menu-support .contacts-link"
+                  },
+                  {
+                    "value": "reports",
+                    "selector": "#menu-support .reports-link"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_CONTACTS_MENU",
+          "name": "select",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "CONTACTS_LIST",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.home_nav_target",
+              "value": "CONTACTS_LIST"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-contacts-item",
+              "ui_elements": {
+                "container": "#nav-dropdown",
+                "options": [
+                  {
+                    "value": "tickets",
+                    "selector": "#nav-tickets-item"
+                  },
+                  {
+                    "value": "contacts",
+                    "selector": "#nav-contacts-item"
+                  },
+                  {
+                    "value": "reports",
+                    "selector": "#nav-reports-item"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_TO_DASHBOARD_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.home_nav_target",
+              "value": "DASHBOARD"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TICKETS_LIST",
+      "signature_schema": {
+        "tickets": "array<object>|null",
+        "location_permission_granted": "boolean|null",
+        "matched_ticket_id": "string|null",
+        "selected_ticket_id": "string|null",
+        "tickets_list_has_searched": "boolean|null",
+        "tickets_list_viewport_anchor_id": "string|null",
+        "tickets_list_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_TICKETS_GRANT_LOCATION",
+          "name": "click",
+          "is_navigation": false,
+          "from": "TICKETS_LIST",
+          "to": "TICKETS_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TICKETS_FILTER_STATUS",
+          "name": "select",
+          "is_navigation": false,
+          "from": "TICKETS_LIST",
+          "to": "TICKETS_LIST",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.tickets_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-status-open-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TICKETS_FILTER_PRIORITY",
+          "name": "select",
+          "is_navigation": false,
+          "from": "TICKETS_LIST",
+          "to": "TICKETS_LIST",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.tickets_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-priority-high-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TICKETS_FILTER_AGENT_LOAD",
+          "name": "select",
+          "is_navigation": false,
+          "from": "TICKETS_LIST",
+          "to": "TICKETS_LIST",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.tickets_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-agent-load-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#filter-agent-load-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TICKETS_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "TICKETS_LIST",
+          "to": "TICKETS_LIST",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.tickets_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#tickets-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#sort-option-newest-desc",
+              "ui_elements": {
+                "container": "#tickets-sort-dropdown",
+                "options": [
+                  {
+                    "value": "newest",
+                    "selector": "#sort-option-newest-desc"
+                  },
+                  {
+                    "value": "oldest",
+                    "selector": "#sort-option-oldest"
+                  },
+                  {
+                    "value": "priority",
+                    "selector": "#sort-option-priority"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_TICKETS_OPEN_FILTERED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TICKETS_LIST",
+          "to": "TICKET_DETAIL",
+          "parameters": {
+            "ticket_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.tickets_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_ticket_id",
+              "value_ref": "{ticket_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.tickets_list_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#tickets-table .row-filtered-first"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TICKETS_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "TICKETS_LIST",
+          "to": "TICKETS_LIST",
+          "parameters": {
+            "ticket_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_ticket_id",
+              "value_ref": "{ticket_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.tickets_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#tickets-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#tickets-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TICKETS_OPEN_MATCHED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TICKETS_LIST",
+          "to": "TICKET_DETAIL",
+          "parameters": {
+            "ticket_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_ticket_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.tickets_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_ticket_id",
+              "value_ref": "{ticket_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.tickets_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#tickets-table .row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TICKETS_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "TICKETS_LIST",
+          "to": "TICKETS_LIST",
+          "parameters": {
+            "ticket_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.tickets_list_viewport_anchor_id",
+              "value_ref": "{ticket_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#tickets-table"
+            },
+            {
+              "op": "drag",
+              "selector": "#tickets-table",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TICKETS_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TICKETS_LIST",
+          "to": "TICKET_DETAIL",
+          "parameters": {
+            "ticket_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.tickets_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_ticket_id",
+              "value_ref": "{ticket_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.tickets_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#tickets-table .row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TICKETS_GO_TO_NEW_TICKET",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TICKETS_LIST",
+          "to": "NEW_TICKET_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-new-ticket"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TICKETS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TICKETS_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TICKET_DETAIL",
+      "signature_schema": {
+        "selected_ticket_id": "string|null",
+        "ticket_reply_draft": "string|null",
+        "ticket_status": "string|null",
+        "ticket_priority": "string|null",
+        "ticket_assignee_id": "string|null",
+        "ticket_merge_target_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_TICKET_REPLY_TYPE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "TICKET_DETAIL",
+          "to": "TICKET_DETAIL",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_ticket_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.ticket_reply_draft",
+              "value": "has_content"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#reply-editor"
+            },
+            {
+              "op": "type_text",
+              "selector": "#reply-editor",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TICKET_SET_STATUS",
+          "name": "select",
+          "is_navigation": false,
+          "from": "TICKET_DETAIL",
+          "to": "TICKET_DETAIL",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [
+            {
+              "path": "$.selected_ticket_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.ticket_status",
+              "value": "Open"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#status-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#status-open",
+              "ui_elements": {
+                "container": "#status-dropdown",
+                "options": [
+                  {
+                    "value": "Open",
+                    "selector": "#status-open"
+                  },
+                  {
+                    "value": "Pending",
+                    "selector": "#status-pending"
+                  },
+                  {
+                    "value": "Resolved",
+                    "selector": "#status-resolved"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_TICKET_SET_PRIORITY",
+          "name": "select",
+          "is_navigation": false,
+          "from": "TICKET_DETAIL",
+          "to": "TICKET_DETAIL",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [
+            {
+              "path": "$.selected_ticket_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.ticket_priority",
+              "value": "High"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#priority-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#priority-high",
+              "ui_elements": {
+                "container": "#priority-dropdown",
+                "options": [
+                  {
+                    "value": "Low",
+                    "selector": "#priority-low"
+                  },
+                  {
+                    "value": "Medium",
+                    "selector": "#priority-medium"
+                  },
+                  {
+                    "value": "High",
+                    "selector": "#priority-high"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_TICKET_GO_TO_REPLY_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TICKET_DETAIL",
+          "to": "REPLY_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.ticket_reply_draft",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-review-reply"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TICKET_GO_TO_ASSIGN",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TICKET_DETAIL",
+          "to": "ASSIGN_TICKET",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-assign-ticket"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TICKET_GO_TO_MERGE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TICKET_DETAIL",
+          "to": "MERGE_TICKET_SELECT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-merge-ticket"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TICKET_BACK_TO_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TICKET_DETAIL",
+          "to": "TICKETS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-tickets-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "NEW_TICKET_FORM",
+      "signature_schema": {
+        "new_ticket_subject": "string|null",
+        "new_ticket_description": "string|null",
+        "new_ticket_priority": "string|null",
+        "new_ticket_group": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_NEW_TICKET_TYPE_SUBJECT",
+          "name": "type",
+          "is_navigation": false,
+          "from": "NEW_TICKET_FORM",
+          "to": "NEW_TICKET_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_ticket_subject",
+              "value": "has_subject"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#new-ticket-subject"
+            },
+            {
+              "op": "type_text",
+              "selector": "#new-ticket-subject",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NEW_TICKET_TYPE_DESCRIPTION",
+          "name": "type",
+          "is_navigation": false,
+          "from": "NEW_TICKET_FORM",
+          "to": "NEW_TICKET_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_ticket_description",
+              "value": "has_description"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#new-ticket-description"
+            },
+            {
+              "op": "type_text",
+              "selector": "#new-ticket-description",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NEW_TICKET_SELECT_PRIORITY",
+          "name": "select",
+          "is_navigation": false,
+          "from": "NEW_TICKET_FORM",
+          "to": "NEW_TICKET_FORM",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_ticket_priority",
+              "value": "Medium"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#new-ticket-priority-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#new-ticket-priority-medium",
+              "ui_elements": {
+                "container": "#new-ticket-priority-dropdown",
+                "options": [
+                  {
+                    "value": "Low",
+                    "selector": "#new-ticket-priority-low"
+                  },
+                  {
+                    "value": "Medium",
+                    "selector": "#new-ticket-priority-medium"
+                  },
+                  {
+                    "value": "High",
+                    "selector": "#new-ticket-priority-high"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_NEW_TICKET_SELECT_GROUP",
+          "name": "select",
+          "is_navigation": false,
+          "from": "NEW_TICKET_FORM",
+          "to": "NEW_TICKET_FORM",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_ticket_group",
+              "value": "Support"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#new-ticket-group-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#new-ticket-group-support",
+              "ui_elements": {
+                "container": "#new-ticket-group-dropdown",
+                "options": [
+                  {
+                    "value": "Support",
+                    "selector": "#new-ticket-group-support"
+                  },
+                  {
+                    "value": "Sales",
+                    "selector": "#new-ticket-group-sales"
+                  },
+                  {
+                    "value": "Billing",
+                    "selector": "#new-ticket-group-billing"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_NEW_TICKET_GO_TO_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NEW_TICKET_FORM",
+          "to": "NEW_TICKET_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.new_ticket_subject",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.new_ticket_description",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-new-ticket-review"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NEW_TICKET_BACK_TO_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NEW_TICKET_FORM",
+          "to": "TICKETS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-tickets"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "NEW_TICKET_REVIEW",
+      "signature_schema": {
+        "new_ticket_subject": "string|null",
+        "new_ticket_description": "string|null",
+        "new_ticket_priority": "string|null",
+        "new_ticket_group": "string|null",
+        "tickets": "array<object>|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_NEW_TICKET_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NEW_TICKET_REVIEW",
+          "to": "TICKET_CREATION_SUCCESS",
+          "parameters": {
+            "ticket_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.new_ticket_subject",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.new_ticket_description",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.tickets",
+              "value_expr": "append($.tickets, {\"id\": gen_id()})"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-submit-new-ticket"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NEW_TICKET_REVIEW_BACK_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NEW_TICKET_REVIEW",
+          "to": "NEW_TICKET_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-new-ticket-form"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TICKET_CREATION_SUCCESS",
+      "signature_schema": {
+        "created_ticket_id": "string|null",
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_TICKET_CREATION_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TICKET_CREATION_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Ticket created successfully"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#success-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REPLY_REVIEW",
+      "signature_schema": {
+        "selected_ticket_id": "string|null",
+        "ticket_reply_draft": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_REPLY_SEND",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REPLY_REVIEW",
+          "to": "REPLY_SENT_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.ticket_reply_draft",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-send-reply"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REPLY_BACK_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REPLY_REVIEW",
+          "to": "TICKET_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-ticket-detail"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REPLY_SENT_SUCCESS",
+      "signature_schema": {
+        "selected_ticket_id": "string|null",
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_REPLY_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REPLY_SENT_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Reply sent successfully"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#reply-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REPLY_SUCCESS_BACK_TICKET",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REPLY_SENT_SUCCESS",
+          "to": "TICKET_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#reply-success-back-ticket"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ASSIGN_TICKET",
+      "signature_schema": {
+        "selected_ticket_id": "string|null",
+        "ticket_assignee_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ASSIGN_SELECT_AGENT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "ASSIGN_TICKET",
+          "to": "ASSIGN_TICKET",
+          "parameters": {
+            "widget": "dropdown",
+            "agent_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.selected_ticket_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.ticket_assignee_id",
+              "value_ref": "{agent_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#assign-agent-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#agent-any",
+              "ui_elements": {
+                "container": "#assign-agent-dropdown",
+                "options": [
+                  {
+                    "value": "agent1",
+                    "selector": "#agent-1"
+                  },
+                  {
+                    "value": "agent2",
+                    "selector": "#agent-2"
+                  },
+                  {
+                    "value": "agent_any",
+                    "selector": "#agent-any"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_ASSIGN_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ASSIGN_TICKET",
+          "to": "ASSIGN_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.ticket_assignee_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-assign-confirm"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ASSIGN_BACK_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ASSIGN_TICKET",
+          "to": "TICKET_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-ticket-detail-from-assign"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ASSIGN_SUCCESS",
+      "signature_schema": {
+        "selected_ticket_id": "string|null",
+        "ticket_assignee_id": "string|null",
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ASSIGN_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ASSIGN_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Ticket assigned successfully"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#assign-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ASSIGN_SUCCESS_BACK_TICKET",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ASSIGN_SUCCESS",
+          "to": "TICKET_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#assign-success-back-ticket"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MERGE_TICKET_SELECT",
+      "signature_schema": {
+        "selected_ticket_id": "string|null",
+        "merge_search_has_searched": "boolean|null",
+        "merge_viewport_anchor_id": "string|null",
+        "matched_merge_ticket_id": "string|null",
+        "ticket_merge_target_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MERGE_SEARCH_TICKET",
+          "name": "search",
+          "is_navigation": false,
+          "from": "MERGE_TICKET_SELECT",
+          "to": "MERGE_TICKET_SELECT",
+          "parameters": {
+            "ticket_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_merge_ticket_id",
+              "value_ref": "{ticket_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.merge_search_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#merge-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#merge-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MERGE_OPEN_MATCHED",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MERGE_TICKET_SELECT",
+          "to": "MERGE_TICKET_SELECT",
+          "parameters": {
+            "ticket_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_merge_ticket_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.merge_search_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.ticket_merge_target_id",
+              "value_ref": "{ticket_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.merge_search_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#merge-results .row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MERGE_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MERGE_TICKET_SELECT",
+          "to": "MERGE_TICKET_SELECT",
+          "parameters": {
+            "ticket_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.merge_viewport_anchor_id",
+              "value_ref": "{ticket_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#merge-results"
+            },
+            {
+              "op": "drag",
+              "selector": "#merge-results",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MERGE_SELECT_ANY",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MERGE_TICKET_SELECT",
+          "to": "MERGE_TICKET_SELECT",
+          "parameters": {
+            "ticket_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.merge_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.ticket_merge_target_id",
+              "value_ref": "{ticket_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.merge_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#merge-results .row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MERGE_GO_TO_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MERGE_TICKET_SELECT",
+          "to": "MERGE_TICKET_CONFIRM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.ticket_merge_target_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-merge-next"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MERGE_SELECT_BACK_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MERGE_TICKET_SELECT",
+          "to": "TICKET_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#merge-select-back-ticket"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MERGE_TICKET_CONFIRM",
+      "signature_schema": {
+        "selected_ticket_id": "string|null",
+        "ticket_merge_target_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MERGE_CONFIRM_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MERGE_TICKET_CONFIRM",
+          "to": "MERGE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.ticket_merge_target_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-merge-confirm"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MERGE_CONFIRM_BACK_SELECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MERGE_TICKET_CONFIRM",
+          "to": "MERGE_TICKET_SELECT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#merge-confirm-back-select"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MERGE_SUCCESS",
+      "signature_schema": {
+        "selected_ticket_id": "string|null",
+        "ticket_merge_target_id": "string|null",
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MERGE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MERGE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Tickets merged successfully"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#merge-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MERGE_SUCCESS_BACK_TICKET",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MERGE_SUCCESS",
+          "to": "TICKET_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#merge-success-back-ticket"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CONTACTS_LIST",
+      "signature_schema": {
+        "contacts": "array<object>|null",
+        "contacts_list_filters_applied": "boolean|null",
+        "contacts_list_viewport_anchor_id": "string|null",
+        "contacts_list_has_searched": "boolean|null",
+        "matched_contact_id": "string|null",
+        "selected_contact_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CONTACTS_FILTER_SEGMENT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CONTACTS_LIST",
+          "to": "CONTACTS_LIST",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.contacts_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-segment-vip"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CONTACTS_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CONTACTS_LIST",
+          "to": "CONTACTS_LIST",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.contacts_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contacts-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#contacts-sort-name",
+              "ui_elements": {
+                "container": "#contacts-sort-dropdown",
+                "options": [
+                  {
+                    "value": "name",
+                    "selector": "#contacts-sort-name"
+                  },
+                  {
+                    "value": "recent",
+                    "selector": "#contacts-sort-recent"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_CONTACTS_OPEN_FILTERED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CONTACTS_LIST",
+          "to": "CONTACT_DETAIL",
+          "parameters": {
+            "contact_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.contacts_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_contact_id",
+              "value_ref": "{contact_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.contacts_list_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contacts-table .row-filtered-first"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CONTACTS_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "CONTACTS_LIST",
+          "to": "CONTACTS_LIST",
+          "parameters": {
+            "contact_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_contact_id",
+              "value_ref": "{contact_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.contacts_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contacts-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#contacts-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CONTACTS_OPEN_MATCHED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CONTACTS_LIST",
+          "to": "CONTACT_DETAIL",
+          "parameters": {
+            "contact_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_contact_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.contacts_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_contact_id",
+              "value_ref": "{contact_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.contacts_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contacts-table .row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CONTACTS_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CONTACTS_LIST",
+          "to": "CONTACTS_LIST",
+          "parameters": {
+            "contact_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.contacts_list_viewport_anchor_id",
+              "value_ref": "{contact_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contacts-table"
+            },
+            {
+              "op": "drag",
+              "selector": "#contacts-table",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CONTACTS_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CONTACTS_LIST",
+          "to": "CONTACT_DETAIL",
+          "parameters": {
+            "contact_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.contacts_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_contact_id",
+              "value_ref": "{contact_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.contacts_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contacts-table .row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CONTACTS_GO_TO_NEW_CONTACT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CONTACTS_LIST",
+          "to": "NEW_CONTACT_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-new-contact"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CONTACTS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CONTACTS_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contacts-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CONTACT_DETAIL",
+      "signature_schema": {
+        "selected_contact_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CONTACT_DETAIL_BACK_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CONTACT_DETAIL",
+          "to": "CONTACTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-contacts-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "NEW_CONTACT_FORM",
+      "signature_schema": {
+        "new_contact_name": "string|null",
+        "new_contact_email": "string|null",
+        "new_contact_segment": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_NEW_CONTACT_TYPE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "NEW_CONTACT_FORM",
+          "to": "NEW_CONTACT_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_contact_name",
+              "value": "has_name"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#new-contact-name"
+            },
+            {
+              "op": "type_text",
+              "selector": "#new-contact-name",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NEW_CONTACT_TYPE_EMAIL",
+          "name": "type",
+          "is_navigation": false,
+          "from": "NEW_CONTACT_FORM",
+          "to": "NEW_CONTACT_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_contact_email",
+              "value": "has_email"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#new-contact-email"
+            },
+            {
+              "op": "type_text",
+              "selector": "#new-contact-email",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NEW_CONTACT_SELECT_SEGMENT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "NEW_CONTACT_FORM",
+          "to": "NEW_CONTACT_FORM",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_contact_segment",
+              "value": "VIP"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#new-contact-segment-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#segment-vip",
+              "ui_elements": {
+                "container": "#new-contact-segment-dropdown",
+                "options": [
+                  {
+                    "value": "VIP",
+                    "selector": "#segment-vip"
+                  },
+                  {
+                    "value": "Standard",
+                    "selector": "#segment-standard"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_NEW_CONTACT_GO_TO_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NEW_CONTACT_FORM",
+          "to": "NEW_CONTACT_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.new_contact_name",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.new_contact_email",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-new-contact-review"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NEW_CONTACT_BACK_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NEW_CONTACT_FORM",
+          "to": "CONTACTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#new-contact-back-contacts"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "NEW_CONTACT_REVIEW",
+      "signature_schema": {
+        "new_contact_name": "string|null",
+        "new_contact_email": "string|null",
+        "new_contact_segment": "string|null",
+        "contacts": "array<object>|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_NEW_CONTACT_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NEW_CONTACT_REVIEW",
+          "to": "CONTACT_CREATION_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.new_contact_name",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.new_contact_email",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.contacts",
+              "value_expr": "append($.contacts, {\"id\": gen_id()})"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#btn-submit-new-contact"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NEW_CONTACT_REVIEW_BACK_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NEW_CONTACT_REVIEW",
+          "to": "NEW_CONTACT_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#new-contact-review-back-form"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CONTACT_CREATION_SUCCESS",
+      "signature_schema": {
+        "created_contact_id": "string|null",
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CONTACT_CREATION_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CONTACT_CREATION_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Contact created successfully"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contact-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CONTACT_CREATION_BACK_CONTACTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CONTACT_CREATION_SUCCESS",
+          "to": "CONTACTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contact-success-back-contacts"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DASHBOARD",
+      "signature_schema": {
+        "location_permission_granted": "boolean|null",
+        "dashboard_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_DASHBOARD_GRANT_LOCATION",
+          "name": "click",
+          "is_navigation": false,
+          "from": "DASHBOARD",
+          "to": "DASHBOARD",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DASHBOARD_FILTER_CHANNEL",
+          "name": "select",
+          "is_navigation": false,
+          "from": "DASHBOARD",
+          "to": "DASHBOARD",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.dashboard_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-channel-email"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DASHBOARD_FILTER_SAT_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "DASHBOARD",
+          "to": "DASHBOARD",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.dashboard_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-satisfaction-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#filter-satisfaction-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DASHBOARD_SORT_WIDGET",
+          "name": "select",
+          "is_navigation": false,
+          "from": "DASHBOARD",
+          "to": "DASHBOARD",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.dashboard_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dashboard-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#dashboard-sort-volume",
+              "ui_elements": {
+                "container": "#dashboard-sort-dropdown",
+                "options": [
+                  {
+                    "value": "volume",
+                    "selector": "#dashboard-sort-volume"
+                  },
+                  {
+                    "value": "satisfaction",
+                    "selector": "#dashboard-sort-satisfaction"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_DASHBOARD_OPEN_FILTERED_TICKETS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD",
+          "to": "TICKETS_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.dashboard_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.dashboard_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dashboard-widget-tickets"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DASHBOARD_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DASHBOARD",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dashboard-back-home"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

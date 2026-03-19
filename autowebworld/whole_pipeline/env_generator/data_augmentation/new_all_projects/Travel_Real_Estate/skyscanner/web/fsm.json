@@ -1,0 +1,3608 @@
+{
+  "meta": {
+    "app": "Flights_Meta_search-Skyscanner_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "BOOKING_COMPLETE_DIRECT",
+      "BOOKING_COMPLETE_MULTI",
+      "BOOKING_COMPLETE_HOTEL",
+      "BOOKING_COMPLETE_CAR",
+      "PRICE_ALERT_CREATED"
+    ],
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 25,
+        "max": 35
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover",
+        "menu"
+      ],
+      "home_nav_coverage": "any",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 4,
+        "two_step_parity": false,
+        "allowed_shapes": [
+          "checkboxes",
+          "sliders",
+          "sort"
+        ]
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "cookie_consent_given": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "HOME_ACCEPT_COOKIES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cookie_consent_given",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_TO_FLIGHTS_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "FLIGHTS_SEARCH",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-flights-direct"
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_TO_FLIGHTS_HOVER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "FLIGHTS_SEARCH",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#nav-travel"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-flights-hover"
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_TO_FLIGHTS_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "FLIGHTS_SEARCH",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-more-toggle"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-more-flights"
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_TO_HOTELS_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "HOTELS_SEARCH",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-more-toggle"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-more-hotels"
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_TO_CARS_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "CARS_SEARCH",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-more-toggle"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-more-cars"
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_TO_LOGIN",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "LOGIN",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-sign-in"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LOGIN",
+      "signature_schema": {
+        "login_email_entered": "boolean|null",
+        "login_password_entered": "boolean|null",
+        "login_form_valid": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "LOGIN_TYPE_EMAIL",
+          "name": "type",
+          "is_navigation": false,
+          "from": "LOGIN",
+          "to": "LOGIN",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.login_email_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#login-email-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#login-email-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "LOGIN_TYPE_PASSWORD",
+          "name": "type",
+          "is_navigation": false,
+          "from": "LOGIN",
+          "to": "LOGIN",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.login_password_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#login-password-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#login-password-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "LOGIN_VALIDATE_FORM",
+          "name": "click",
+          "is_navigation": false,
+          "from": "LOGIN",
+          "to": "LOGIN",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.login_email_entered",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.login_password_entered",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.login_form_valid",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#login-validate-button"
+            }
+          ]
+        },
+        {
+          "id": "LOGIN_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "LOGIN",
+          "to": "ACCOUNT_OVERVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.login_form_valid",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#login-submit-button"
+            }
+          ]
+        },
+        {
+          "id": "LOGIN_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "LOGIN",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ACCOUNT_OVERVIEW",
+      "signature_schema": {
+        "saved_trips": "array<object>|null"
+      },
+      "actions": [
+        {
+          "id": "ACCOUNT_GO_TO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_OVERVIEW",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#logo-home"
+            }
+          ]
+        },
+        {
+          "id": "ACCOUNT_GO_TO_FLIGHTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_OVERVIEW",
+          "to": "FLIGHTS_SEARCH",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#account-nav-flights"
+            }
+          ]
+        },
+        {
+          "id": "ACCOUNT_GO_TO_ALERTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_OVERVIEW",
+          "to": "PRICE_ALERTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#account-nav-price-alerts"
+            }
+          ]
+        },
+        {
+          "id": "ACCOUNT_BACK_LOGIN",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_OVERVIEW",
+          "to": "LOGIN",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-login"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FLIGHTS_SEARCH",
+      "signature_schema": {
+        "location_permission_granted": "boolean|null",
+        "trip_type": "string|null",
+        "origin_entered": "boolean|null",
+        "destination_entered": "boolean|null",
+        "dates_selected": "boolean|null",
+        "cabin_selected": "boolean|null",
+        "search_ready": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "FLIGHTS_PERMISSION_ALLOW_LOCATION",
+          "name": "click",
+          "is_navigation": false,
+          "from": "FLIGHTS_SEARCH",
+          "to": "FLIGHTS_SEARCH",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "FLIGHTS_SELECT_TRIP_TYPE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "FLIGHTS_SEARCH",
+          "to": "FLIGHTS_SEARCH",
+          "parameters": {
+            "widget": "dropdown",
+            "trip_type": "return"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.trip_type",
+              "value": "return"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#trip-type-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#trip-type-return",
+              "ui_elements": {
+                "container": "#trip-type-dropdown",
+                "options": [
+                  {
+                    "value": "oneway",
+                    "selector": "#trip-type-oneway"
+                  },
+                  {
+                    "value": "return",
+                    "selector": "#trip-type-return"
+                  },
+                  {
+                    "value": "multicity",
+                    "selector": "#trip-type-multicity"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "FLIGHTS_TYPE_ORIGIN",
+          "name": "type",
+          "is_navigation": false,
+          "from": "FLIGHTS_SEARCH",
+          "to": "FLIGHTS_SEARCH",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.origin_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#origin-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#origin-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "FLIGHTS_TYPE_DESTINATION",
+          "name": "type",
+          "is_navigation": false,
+          "from": "FLIGHTS_SEARCH",
+          "to": "FLIGHTS_SEARCH",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.destination_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#destination-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#destination-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "FLIGHTS_SELECT_DATES",
+          "name": "select",
+          "is_navigation": false,
+          "from": "FLIGHTS_SEARCH",
+          "to": "FLIGHTS_SEARCH",
+          "parameters": {
+            "widget": "date_picker",
+            "year": 2025,
+            "month": 10,
+            "day": 22
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.dates_selected",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#date-picker1"
+            },
+            {
+              "op": "click",
+              "selector": ".year-2025"
+            },
+            {
+              "op": "click",
+              "selector": ".month-10"
+            },
+            {
+              "op": "click",
+              "selector": ".day-22"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "FLIGHTS_SELECT_CABIN",
+          "name": "select",
+          "is_navigation": false,
+          "from": "FLIGHTS_SEARCH",
+          "to": "FLIGHTS_SEARCH",
+          "parameters": {
+            "widget": "dropdown",
+            "cabin": "economy"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cabin_selected",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cabin-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#cabin-economy",
+              "ui_elements": {
+                "container": "#cabin-dropdown",
+                "options": [
+                  {
+                    "value": "economy",
+                    "selector": "#cabin-economy"
+                  },
+                  {
+                    "value": "premium",
+                    "selector": "#cabin-premium"
+                  },
+                  {
+                    "value": "business",
+                    "selector": "#cabin-business"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "FLIGHTS_VALIDATE_SEARCH",
+          "name": "click",
+          "is_navigation": false,
+          "from": "FLIGHTS_SEARCH",
+          "to": "FLIGHTS_SEARCH",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.origin_entered",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.destination_entered",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.dates_selected",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.cabin_selected",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.search_ready",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#search-validate-button"
+            }
+          ]
+        },
+        {
+          "id": "FLIGHTS_SUBMIT_SEARCH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FLIGHTS_SEARCH",
+          "to": "FLIGHTS_RESULTS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.search_ready",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#search-flights-button"
+            }
+          ]
+        },
+        {
+          "id": "FLIGHTS_GO_TO_MULTI_CITY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FLIGHTS_SEARCH",
+          "to": "MULTI_CITY_SEARCH",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#trip-type-multicity-tab"
+            }
+          ]
+        },
+        {
+          "id": "FLIGHTS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FLIGHTS_SEARCH",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MULTI_CITY_SEARCH",
+      "signature_schema": {
+        "leg1_filled": "boolean|null",
+        "leg2_filled": "boolean|null",
+        "multi_city_valid": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "MULTI_TYPE_LEG1",
+          "name": "type",
+          "is_navigation": false,
+          "from": "MULTI_CITY_SEARCH",
+          "to": "MULTI_CITY_SEARCH",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.leg1_filled",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#leg1-origin-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#leg1-origin-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "MULTI_TYPE_LEG2",
+          "name": "type",
+          "is_navigation": false,
+          "from": "MULTI_CITY_SEARCH",
+          "to": "MULTI_CITY_SEARCH",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.leg2_filled",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#leg2-destination-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#leg2-destination-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "MULTI_VALIDATE",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MULTI_CITY_SEARCH",
+          "to": "MULTI_CITY_SEARCH",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.leg1_filled",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.leg2_filled",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.multi_city_valid",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#multi-validate-button"
+            }
+          ]
+        },
+        {
+          "id": "MULTI_SUBMIT_SEARCH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MULTI_CITY_SEARCH",
+          "to": "MULTI_CITY_RESULTS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.multi_city_valid",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#search-multicity-button"
+            }
+          ]
+        },
+        {
+          "id": "MULTI_BACK_FLIGHTS_SEARCH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MULTI_CITY_SEARCH",
+          "to": "FLIGHTS_SEARCH",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-flights-search"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FLIGHTS_RESULTS",
+      "signature_schema": {
+        "flight_options": "array<object>|null",
+        "matched_item_id": "string|null",
+        "selected_item_id": "string|null",
+        "flights_results_has_searched": "boolean|null",
+        "flights_results_viewport_anchor_id": "string|null",
+        "flights_results_filters_applied": "boolean|null",
+        "sort_option": "string|null",
+        "stops_filter_nonstop": "boolean|null",
+        "times_slider_used": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "FLIGHTS_RESULTS_FILTER_NONSTOP",
+          "name": "click",
+          "is_navigation": false,
+          "from": "FLIGHTS_RESULTS",
+          "to": "FLIGHTS_RESULTS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.stops_filter_nonstop",
+              "value": true
+            },
+            {
+              "op": "set",
+              "path": "$.flights_results_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-nonstop-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "FLIGHTS_RESULTS_FILTER_TIME_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "FLIGHTS_RESULTS",
+          "to": "FLIGHTS_RESULTS",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.times_slider_used",
+              "value": true
+            },
+            {
+              "op": "set",
+              "path": "$.flights_results_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#departure-time-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#departure-time-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "FLIGHTS_RESULTS_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "FLIGHTS_RESULTS",
+          "to": "FLIGHTS_RESULTS",
+          "parameters": {
+            "widget": "sort",
+            "sort_by": "cheapest"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.sort_option",
+              "value": "cheapest"
+            },
+            {
+              "op": "set",
+              "path": "$.flights_results_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#sort-option-cheapest",
+              "ui_elements": {
+                "container": "#sort-dropdown",
+                "options": [
+                  {
+                    "value": "cheapest",
+                    "selector": "#sort-option-cheapest"
+                  },
+                  {
+                    "value": "fastest",
+                    "selector": "#sort-option-fastest"
+                  },
+                  {
+                    "value": "best",
+                    "selector": "#sort-option-best"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "FLIGHTS_RESULTS_OPEN_FILTERED_OPTION",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FLIGHTS_RESULTS",
+          "to": "FLIGHT_DETAILS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.flights_results_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.flights_results_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_item_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#results-list .flight-option-filtered"
+            }
+          ]
+        },
+        {
+          "id": "FLIGHTS_RESULTS_SEARCH_BAR",
+          "name": "search",
+          "is_navigation": false,
+          "from": "FLIGHTS_RESULTS",
+          "to": "FLIGHTS_RESULTS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.flights_results_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#results-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#results-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "FLIGHTS_RESULTS_OPEN_MATCHED_FLIGHT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FLIGHTS_RESULTS",
+          "to": "FLIGHT_DETAILS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_item_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.flights_results_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.flights_results_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#results-list .flight-option-matched"
+            }
+          ]
+        },
+        {
+          "id": "FLIGHTS_RESULTS_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "FLIGHTS_RESULTS",
+          "to": "FLIGHTS_RESULTS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.flights_results_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#results-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#results-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "FLIGHTS_RESULTS_OPEN_ANY_VISIBLE_FLIGHT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FLIGHTS_RESULTS",
+          "to": "FLIGHT_DETAILS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.flights_results_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.flights_results_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#results-list .flight-option-visible"
+            }
+          ]
+        },
+        {
+          "id": "FLIGHTS_RESULTS_BACK_SEARCH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FLIGHTS_RESULTS",
+          "to": "FLIGHTS_SEARCH",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-flights-search"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FLIGHT_DETAILS",
+      "signature_schema": {
+        "selected_item_id": "string|null",
+        "selected_baggage_option": "string|null",
+        "selected_seat_option": "string|null",
+        "extras_form_valid": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "DETAILS_SELECT_BAGGAGE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "FLIGHT_DETAILS",
+          "to": "FLIGHT_DETAILS",
+          "parameters": {
+            "widget": "dropdown",
+            "baggage": "standard"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_baggage_option",
+              "value": "standard"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#baggage-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#baggage-standard",
+              "ui_elements": {
+                "container": "#baggage-dropdown",
+                "options": [
+                  {
+                    "value": "no_bag",
+                    "selector": "#baggage-none"
+                  },
+                  {
+                    "value": "standard",
+                    "selector": "#baggage-standard"
+                  },
+                  {
+                    "value": "extra",
+                    "selector": "#baggage-extra"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "DETAILS_SELECT_SEAT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "FLIGHT_DETAILS",
+          "to": "FLIGHT_DETAILS",
+          "parameters": {
+            "widget": "dropdown",
+            "seat": "standard"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_seat_option",
+              "value": "standard"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#seat-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#seat-standard",
+              "ui_elements": {
+                "container": "#seat-dropdown",
+                "options": [
+                  {
+                    "value": "standard",
+                    "selector": "#seat-standard"
+                  },
+                  {
+                    "value": "extra_legroom",
+                    "selector": "#seat-extra"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "DETAILS_VALIDATE_EXTRAS",
+          "name": "click",
+          "is_navigation": false,
+          "from": "FLIGHT_DETAILS",
+          "to": "FLIGHT_DETAILS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_baggage_option",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.selected_seat_option",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.extras_form_valid",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#extras-validate-button"
+            }
+          ]
+        },
+        {
+          "id": "DETAILS_GO_TO_BOOKING_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FLIGHT_DETAILS",
+          "to": "BOOKING_FORM_DIRECT",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.extras_form_valid",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#continue-to-booking"
+            }
+          ]
+        },
+        {
+          "id": "DETAILS_CREATE_PRICE_ALERT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FLIGHT_DETAILS",
+          "to": "PRICE_ALERT_FORM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_item_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-price-alert-button"
+            }
+          ]
+        },
+        {
+          "id": "DETAILS_BACK_RESULTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FLIGHT_DETAILS",
+          "to": "FLIGHTS_RESULTS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-results"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BOOKING_FORM_DIRECT",
+      "signature_schema": {
+        "passenger_first_name_entered": "boolean|null",
+        "passenger_last_name_entered": "boolean|null",
+        "contact_email_entered": "boolean|null",
+        "payment_card_entered": "boolean|null",
+        "booking_form_valid": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "BOOKING_DIRECT_TYPE_FIRST_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "BOOKING_FORM_DIRECT",
+          "to": "BOOKING_FORM_DIRECT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.passenger_first_name_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#first-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#first-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "BOOKING_DIRECT_TYPE_LAST_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "BOOKING_FORM_DIRECT",
+          "to": "BOOKING_FORM_DIRECT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.passenger_last_name_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#last-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#last-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "BOOKING_DIRECT_TYPE_CONTACT_EMAIL",
+          "name": "type",
+          "is_navigation": false,
+          "from": "BOOKING_FORM_DIRECT",
+          "to": "BOOKING_FORM_DIRECT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.contact_email_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contact-email-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#contact-email-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "BOOKING_DIRECT_TYPE_CARD",
+          "name": "type",
+          "is_navigation": false,
+          "from": "BOOKING_FORM_DIRECT",
+          "to": "BOOKING_FORM_DIRECT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.payment_card_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#card-number-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#card-number-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "BOOKING_DIRECT_VALIDATE",
+          "name": "click",
+          "is_navigation": false,
+          "from": "BOOKING_FORM_DIRECT",
+          "to": "BOOKING_FORM_DIRECT",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.passenger_first_name_entered",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.passenger_last_name_entered",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.contact_email_entered",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.payment_card_entered",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.booking_form_valid",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#booking-validate-button"
+            }
+          ]
+        },
+        {
+          "id": "BOOKING_DIRECT_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BOOKING_FORM_DIRECT",
+          "to": "BOOKING_REVIEW_DIRECT",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.booking_form_valid",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#continue-to-review"
+            }
+          ]
+        },
+        {
+          "id": "BOOKING_DIRECT_BACK_DETAILS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BOOKING_FORM_DIRECT",
+          "to": "FLIGHT_DETAILS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-flight-details"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BOOKING_REVIEW_DIRECT",
+      "signature_schema": {
+        "terms_checked": "boolean|null",
+        "review_ready": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "REVIEW_DIRECT_CHECK_TERMS",
+          "name": "click",
+          "is_navigation": false,
+          "from": "BOOKING_REVIEW_DIRECT",
+          "to": "BOOKING_REVIEW_DIRECT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.terms_checked",
+              "value": true
+            },
+            {
+              "op": "set",
+              "path": "$.review_ready",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#terms-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "REVIEW_DIRECT_CONFIRM_BOOKING",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BOOKING_REVIEW_DIRECT",
+          "to": "BOOKING_COMPLETE_DIRECT",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.review_ready",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#confirm-booking-button"
+            }
+          ]
+        },
+        {
+          "id": "REVIEW_DIRECT_BACK_BOOKING_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BOOKING_REVIEW_DIRECT",
+          "to": "BOOKING_FORM_DIRECT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-booking-form"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BOOKING_COMPLETE_DIRECT",
+      "signature_schema": {
+        "confirmation_number": "string|null"
+      },
+      "actions": [
+        {
+          "id": "COMPLETE_DIRECT_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BOOKING_COMPLETE_DIRECT",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-home"
+            }
+          ]
+        },
+        {
+          "id": "COMPLETE_DIRECT_VIEW_TRIP",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BOOKING_COMPLETE_DIRECT",
+          "to": "TRIP_SUMMARY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#view-trip-button"
+            }
+          ]
+        },
+        {
+          "id": "COMPLETE_DIRECT_BACK_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BOOKING_COMPLETE_DIRECT",
+          "to": "BOOKING_REVIEW_DIRECT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-review"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MULTI_CITY_RESULTS",
+      "signature_schema": {
+        "multi_flight_options": "array<object>|null",
+        "multi_results_viewport_anchor_id": "string|null",
+        "multi_results_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "MULTI_RESULTS_FILTER_NONSTOP",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MULTI_CITY_RESULTS",
+          "to": "MULTI_CITY_RESULTS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.multi_results_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#multi-filter-nonstop"
+            }
+          ]
+        },
+        {
+          "id": "MULTI_RESULTS_SCROLL",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MULTI_CITY_RESULTS",
+          "to": "MULTI_CITY_RESULTS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.multi_results_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#multi-results-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#multi-results-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "MULTI_RESULTS_OPEN_OPTION",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MULTI_CITY_RESULTS",
+          "to": "MULTI_CITY_INTRO",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.multi_results_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.multi_results_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#multi-results-list .multi-option-visible"
+            }
+          ]
+        },
+        {
+          "id": "MULTI_RESULTS_BACK_SEARCH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MULTI_CITY_RESULTS",
+          "to": "MULTI_CITY_SEARCH",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-multi-search"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MULTI_CITY_INTRO",
+      "signature_schema": {
+        "segments_summary_viewed": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "MULTI_INTRO_VIEW_SEGMENTS",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MULTI_CITY_INTRO",
+          "to": "MULTI_CITY_INTRO",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.segments_summary_viewed",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#expand-segments"
+            }
+          ]
+        },
+        {
+          "id": "MULTI_INTRO_GO_TO_BOOKING",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MULTI_CITY_INTRO",
+          "to": "BOOKING_FORM_MULTI",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.segments_summary_viewed",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#continue-multi-booking"
+            }
+          ]
+        },
+        {
+          "id": "MULTI_INTRO_BACK_RESULTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MULTI_CITY_INTRO",
+          "to": "MULTI_CITY_RESULTS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-multi-results"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BOOKING_FORM_MULTI",
+      "signature_schema": {
+        "primary_passenger_entered": "boolean|null",
+        "second_passenger_entered": "boolean|null",
+        "multi_payment_entered": "boolean|null",
+        "multi_booking_valid": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "BOOKING_MULTI_TYPE_PRIMARY",
+          "name": "type",
+          "is_navigation": false,
+          "from": "BOOKING_FORM_MULTI",
+          "to": "BOOKING_FORM_MULTI",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.primary_passenger_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#primary-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#primary-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "BOOKING_MULTI_TYPE_SECOND",
+          "name": "type",
+          "is_navigation": false,
+          "from": "BOOKING_FORM_MULTI",
+          "to": "BOOKING_FORM_MULTI",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.second_passenger_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#second-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#second-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "BOOKING_MULTI_TYPE_CARD",
+          "name": "type",
+          "is_navigation": false,
+          "from": "BOOKING_FORM_MULTI",
+          "to": "BOOKING_FORM_MULTI",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.multi_payment_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#multi-card-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#multi-card-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "BOOKING_MULTI_VALIDATE",
+          "name": "click",
+          "is_navigation": false,
+          "from": "BOOKING_FORM_MULTI",
+          "to": "BOOKING_FORM_MULTI",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.primary_passenger_entered",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.second_passenger_entered",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.multi_payment_entered",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.multi_booking_valid",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#multi-booking-validate-button"
+            }
+          ]
+        },
+        {
+          "id": "BOOKING_MULTI_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BOOKING_FORM_MULTI",
+          "to": "BOOKING_REVIEW_MULTI",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.multi_booking_valid",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#continue-multi-review"
+            }
+          ]
+        },
+        {
+          "id": "BOOKING_MULTI_BACK_INTRO",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BOOKING_FORM_MULTI",
+          "to": "MULTI_CITY_INTRO",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-multi-intro"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BOOKING_REVIEW_MULTI",
+      "signature_schema": {
+        "multi_terms_checked": "boolean|null",
+        "multi_review_ready": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "REVIEW_MULTI_CHECK_TERMS",
+          "name": "click",
+          "is_navigation": false,
+          "from": "BOOKING_REVIEW_MULTI",
+          "to": "BOOKING_REVIEW_MULTI",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.multi_terms_checked",
+              "value": true
+            },
+            {
+              "op": "set",
+              "path": "$.multi_review_ready",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#multi-terms-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "REVIEW_MULTI_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BOOKING_REVIEW_MULTI",
+          "to": "BOOKING_COMPLETE_MULTI",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.multi_review_ready",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#confirm-multi-booking"
+            }
+          ]
+        },
+        {
+          "id": "REVIEW_MULTI_BACK_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BOOKING_REVIEW_MULTI",
+          "to": "BOOKING_FORM_MULTI",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-multi-booking-form"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BOOKING_COMPLETE_MULTI",
+      "signature_schema": {
+        "multi_confirmation_number": "string|null"
+      },
+      "actions": [
+        {
+          "id": "COMPLETE_MULTI_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BOOKING_COMPLETE_MULTI",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-home-multi"
+            }
+          ]
+        },
+        {
+          "id": "COMPLETE_MULTI_VIEW_TRIP",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BOOKING_COMPLETE_MULTI",
+          "to": "TRIP_SUMMARY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#view-multi-trip"
+            }
+          ]
+        },
+        {
+          "id": "COMPLETE_MULTI_BACK_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BOOKING_COMPLETE_MULTI",
+          "to": "BOOKING_REVIEW_MULTI",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-multi-review"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TRIP_SUMMARY",
+      "signature_schema": {
+        "trip_items": "array<object>|null"
+      },
+      "actions": [
+        {
+          "id": "TRIP_SUMMARY_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TRIP_SUMMARY",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#trip-summary-home"
+            }
+          ]
+        },
+        {
+          "id": "TRIP_SUMMARY_BACK_COMPLETE_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TRIP_SUMMARY",
+          "to": "BOOKING_COMPLETE_DIRECT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-complete-direct"
+            }
+          ]
+        },
+        {
+          "id": "TRIP_SUMMARY_BACK_COMPLETE_MULTI",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TRIP_SUMMARY",
+          "to": "BOOKING_COMPLETE_MULTI",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-complete-multi"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PRICE_ALERT_FORM",
+      "signature_schema": {
+        "alert_email_entered": "boolean|null",
+        "alert_name_entered": "boolean|null",
+        "alert_form_valid": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ALERT_TYPE_EMAIL",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PRICE_ALERT_FORM",
+          "to": "PRICE_ALERT_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.alert_email_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#alert-email-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#alert-email-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ALERT_TYPE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PRICE_ALERT_FORM",
+          "to": "PRICE_ALERT_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.alert_name_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#alert-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#alert-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ALERT_VALIDATE",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PRICE_ALERT_FORM",
+          "to": "PRICE_ALERT_FORM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.alert_email_entered",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.alert_name_entered",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.alert_form_valid",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#alert-validate-button"
+            }
+          ]
+        },
+        {
+          "id": "ALERT_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRICE_ALERT_FORM",
+          "to": "PRICE_ALERT_CREATED",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.alert_form_valid",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-alert-button"
+            }
+          ]
+        },
+        {
+          "id": "ALERT_BACK_DETAILS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRICE_ALERT_FORM",
+          "to": "FLIGHT_DETAILS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-flight-details-from-alert"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PRICE_ALERT_CREATED",
+      "signature_schema": {
+        "alert_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ALERT_CREATED_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRICE_ALERT_CREATED",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#alert-created-home"
+            }
+          ]
+        },
+        {
+          "id": "ALERT_CREATED_GO_TO_ALERTS_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRICE_ALERT_CREATED",
+          "to": "PRICE_ALERTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#view-all-alerts"
+            }
+          ]
+        },
+        {
+          "id": "ALERT_CREATED_BACK_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRICE_ALERT_CREATED",
+          "to": "PRICE_ALERT_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-alert-form"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PRICE_ALERTS_LIST",
+      "signature_schema": {
+        "alerts": "array<object>|null",
+        "alerts_list_filters_applied": "boolean|null",
+        "alerts_list_viewport_anchor_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ALERTS_LIST_FILTER_ACTIVE",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PRICE_ALERTS_LIST",
+          "to": "PRICE_ALERTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.alerts_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#alerts-filter-active-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ALERTS_LIST_SCROLL",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PRICE_ALERTS_LIST",
+          "to": "PRICE_ALERTS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.alerts_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#alerts-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#alerts-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ALERTS_LIST_OPEN_FILTERED_ALERT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRICE_ALERTS_LIST",
+          "to": "ALERT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.alerts_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.alerts_list_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#alerts-list .alert-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ALERTS_LIST_OPEN_ANY_ALERT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRICE_ALERTS_LIST",
+          "to": "ALERT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.alerts_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.alerts_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#alerts-list .alert-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ALERTS_LIST_BACK_ACCOUNT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRICE_ALERTS_LIST",
+          "to": "ACCOUNT_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-account-overview"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ALERT_DETAIL",
+      "signature_schema": {
+        "alert_selected_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ALERT_DETAIL_BACK_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ALERT_DETAIL",
+          "to": "PRICE_ALERTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-alerts-list"
+            }
+          ]
+        },
+        {
+          "id": "ALERT_DETAIL_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ALERT_DETAIL",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#alert-detail-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HOTELS_SEARCH",
+      "signature_schema": {
+        "hotel_destination_entered": "boolean|null",
+        "hotel_dates_selected": "boolean|null",
+        "hotel_search_ready": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "HOTELS_TYPE_DESTINATION",
+          "name": "type",
+          "is_navigation": false,
+          "from": "HOTELS_SEARCH",
+          "to": "HOTELS_SEARCH",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.hotel_destination_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#hotel-destination-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#hotel-destination-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "HOTELS_SELECT_DATES",
+          "name": "select",
+          "is_navigation": false,
+          "from": "HOTELS_SEARCH",
+          "to": "HOTELS_SEARCH",
+          "parameters": {
+            "widget": "date_picker",
+            "year": 2025,
+            "month": 11,
+            "day": 5
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.hotel_dates_selected",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#date-picker2"
+            },
+            {
+              "op": "click",
+              "selector": ".year-2025"
+            },
+            {
+              "op": "click",
+              "selector": ".month-11"
+            },
+            {
+              "op": "click",
+              "selector": ".day-5"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "HOTELS_VALIDATE_SEARCH",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOTELS_SEARCH",
+          "to": "HOTELS_SEARCH",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.hotel_destination_entered",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.hotel_dates_selected",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.hotel_search_ready",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#hotel-search-validate-button"
+            }
+          ]
+        },
+        {
+          "id": "HOTELS_SUBMIT_SEARCH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOTELS_SEARCH",
+          "to": "HOTELS_RESULTS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.hotel_search_ready",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#search-hotels-button"
+            }
+          ]
+        },
+        {
+          "id": "HOTELS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOTELS_SEARCH",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home-from-hotels"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HOTELS_RESULTS",
+      "signature_schema": {
+        "hotel_options": "array<object>|null",
+        "hotels_results_filters_applied": "boolean|null",
+        "hotels_results_viewport_anchor_id": "string|null",
+        "hotels_sort_option": "string|null"
+      },
+      "actions": [
+        {
+          "id": "HOTELS_RESULTS_FILTER_FREE_CANCELLATION",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOTELS_RESULTS",
+          "to": "HOTELS_RESULTS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.hotels_results_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-free-cancellation-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "HOTELS_RESULTS_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "HOTELS_RESULTS",
+          "to": "HOTELS_RESULTS",
+          "parameters": {
+            "widget": "sort",
+            "sort_by": "recommended"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.hotels_sort_option",
+              "value": "recommended"
+            },
+            {
+              "op": "set",
+              "path": "$.hotels_results_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#hotels-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#hotels-sort-recommended",
+              "ui_elements": {
+                "container": "#hotels-sort-dropdown",
+                "options": [
+                  {
+                    "value": "recommended",
+                    "selector": "#hotels-sort-recommended"
+                  },
+                  {
+                    "value": "price_low",
+                    "selector": "#hotels-sort-price-low"
+                  },
+                  {
+                    "value": "price_high",
+                    "selector": "#hotels-sort-price-high"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "HOTELS_RESULTS_SCROLL",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOTELS_RESULTS",
+          "to": "HOTELS_RESULTS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.hotels_results_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#hotels-results-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#hotels-results-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "HOTELS_RESULTS_OPEN_FILTERED_HOTEL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOTELS_RESULTS",
+          "to": "HOTEL_DETAILS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.hotels_results_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.hotels_results_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#hotels-results-list .hotel-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "HOTELS_RESULTS_OPEN_ANY_HOTEL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOTELS_RESULTS",
+          "to": "HOTEL_DETAILS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.hotels_results_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.hotels_results_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#hotels-results-list .hotel-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "HOTELS_RESULTS_BACK_SEARCH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOTELS_RESULTS",
+          "to": "HOTELS_SEARCH",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-hotels-search"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HOTEL_DETAILS",
+      "signature_schema": {
+        "hotel_selected_id": "string|null",
+        "room_type_selected": "boolean|null",
+        "guest_name_entered": "boolean|null",
+        "hotel_form_valid": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "HOTEL_DETAILS_SELECT_ROOM",
+          "name": "select",
+          "is_navigation": false,
+          "from": "HOTEL_DETAILS",
+          "to": "HOTEL_DETAILS",
+          "parameters": {
+            "widget": "dropdown",
+            "room_type": "standard"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.room_type_selected",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#room-type-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#room-type-standard",
+              "ui_elements": {
+                "container": "#room-type-dropdown",
+                "options": [
+                  {
+                    "value": "standard",
+                    "selector": "#room-type-standard"
+                  },
+                  {
+                    "value": "deluxe",
+                    "selector": "#room-type-deluxe"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "HOTEL_DETAILS_TYPE_GUEST_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "HOTEL_DETAILS",
+          "to": "HOTEL_DETAILS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.guest_name_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#guest-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#guest-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "HOTEL_DETAILS_VALIDATE",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOTEL_DETAILS",
+          "to": "HOTEL_DETAILS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.room_type_selected",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.guest_name_entered",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.hotel_form_valid",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#hotel-validate-button"
+            }
+          ]
+        },
+        {
+          "id": "HOTEL_DETAILS_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOTEL_DETAILS",
+          "to": "BOOKING_COMPLETE_HOTEL",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.hotel_form_valid",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#confirm-hotel-booking"
+            }
+          ]
+        },
+        {
+          "id": "HOTEL_DETAILS_BACK_RESULTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOTEL_DETAILS",
+          "to": "HOTELS_RESULTS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-hotels-results"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BOOKING_COMPLETE_HOTEL",
+      "signature_schema": {
+        "hotel_confirmation_number": "string|null"
+      },
+      "actions": [
+        {
+          "id": "COMPLETE_HOTEL_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BOOKING_COMPLETE_HOTEL",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#hotel-complete-home"
+            }
+          ]
+        },
+        {
+          "id": "COMPLETE_HOTEL_BACK_DETAILS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BOOKING_COMPLETE_HOTEL",
+          "to": "HOTEL_DETAILS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-hotel-details"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CARS_SEARCH",
+      "signature_schema": {
+        "car_pickup_entered": "boolean|null",
+        "car_dates_selected": "boolean|null",
+        "car_search_ready": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "CARS_TYPE_PICKUP",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CARS_SEARCH",
+          "to": "CARS_SEARCH",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.car_pickup_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#car-pickup-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#car-pickup-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "CARS_SELECT_DATES",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CARS_SEARCH",
+          "to": "CARS_SEARCH",
+          "parameters": {
+            "widget": "date_picker",
+            "year": 2025,
+            "month": 12,
+            "day": 20
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.car_dates_selected",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#date-picker3"
+            },
+            {
+              "op": "click",
+              "selector": ".year-2025"
+            },
+            {
+              "op": "click",
+              "selector": ".month-12"
+            },
+            {
+              "op": "click",
+              "selector": ".day-20"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "CARS_VALIDATE_SEARCH",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CARS_SEARCH",
+          "to": "CARS_SEARCH",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.car_pickup_entered",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.car_dates_selected",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.car_search_ready",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#car-search-validate-button"
+            }
+          ]
+        },
+        {
+          "id": "CARS_SUBMIT_SEARCH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CARS_SEARCH",
+          "to": "CARS_RESULTS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.car_search_ready",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#search-cars-button"
+            }
+          ]
+        },
+        {
+          "id": "CARS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CARS_SEARCH",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home-from-cars"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CARS_RESULTS",
+      "signature_schema": {
+        "car_options": "array<object>|null",
+        "cars_results_filters_applied": "boolean|null",
+        "cars_results_viewport_anchor_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "CARS_RESULTS_FILTER_AUTOMATIC",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CARS_RESULTS",
+          "to": "CARS_RESULTS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cars_results_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-automatic-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "CARS_RESULTS_SCROLL",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CARS_RESULTS",
+          "to": "CARS_RESULTS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cars_results_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cars-results-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#cars-results-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "CARS_RESULTS_OPEN_FILTERED_CAR",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CARS_RESULTS",
+          "to": "CAR_DETAILS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.cars_results_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.cars_results_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cars-results-list .car-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "CARS_RESULTS_OPEN_ANY_CAR",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CARS_RESULTS",
+          "to": "CAR_DETAILS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.cars_results_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.cars_results_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cars-results-list .car-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "CARS_RESULTS_BACK_SEARCH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CARS_RESULTS",
+          "to": "CARS_SEARCH",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-cars-search"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CAR_DETAILS",
+      "signature_schema": {
+        "car_selected_id": "string|null",
+        "driver_name_entered": "boolean|null",
+        "car_form_valid": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "CAR_DETAILS_TYPE_DRIVER_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CAR_DETAILS",
+          "to": "CAR_DETAILS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.driver_name_entered",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#driver-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#driver-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "CAR_DETAILS_VALIDATE",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CAR_DETAILS",
+          "to": "CAR_DETAILS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.driver_name_entered",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.car_form_valid",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#car-validate-button"
+            }
+          ]
+        },
+        {
+          "id": "CAR_DETAILS_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CAR_DETAILS",
+          "to": "BOOKING_COMPLETE_CAR",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.car_form_valid",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#confirm-car-booking"
+            }
+          ]
+        },
+        {
+          "id": "CAR_DETAILS_BACK_RESULTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CAR_DETAILS",
+          "to": "CARS_RESULTS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-cars-results"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BOOKING_COMPLETE_CAR",
+      "signature_schema": {
+        "car_confirmation_number": "string|null"
+      },
+      "actions": [
+        {
+          "id": "COMPLETE_CAR_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BOOKING_COMPLETE_CAR",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#car-complete-home"
+            }
+          ]
+        },
+        {
+          "id": "COMPLETE_CAR_BACK_DETAILS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BOOKING_COMPLETE_CAR",
+          "to": "CAR_DETAILS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-car-details"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

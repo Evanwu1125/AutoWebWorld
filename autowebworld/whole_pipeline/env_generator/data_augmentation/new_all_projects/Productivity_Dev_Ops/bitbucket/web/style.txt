@@ -1,0 +1,48 @@
+# Visual Style Guide - Bitbucket Clone
+
+## Theme Overview
+Professional, clean code hosting platform tailored for teams. The design emphasizes clarity, efficiency, and a structured hierarchy typical of developer tools.
+
+## Color Palette
+- **Primary:** #0052CC (Atlassian Blue) - Used for primary buttons, active states, and links.
+- **Secondary:** #172B4D (Dark Navy) - Used for primary text, headings, and sidebars.
+- **Accent:** #00B8D9 (Cyan) or #36B37E (Green) - Used for success states, merge indicators.
+- **Error:** #FF5630 (Red) - Used for errors, failed pipelines.
+- **Background:** #FAFBFC (Off-white) - Main page background.
+- **Surface:** #FFFFFF (White) - Cards, content areas, dropdowns.
+- **Border:** #DFE1E6 (Light Gray) - Separators, card borders.
+
+## Typography
+- **Font Family:** -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif.
+- **Sizes:**
+  - Headings: 24px (h1), 20px (h2), 16px (h3)
+  - Body: 14px
+  - Small: 12px
+
+## Layout & Components
+- **Navigation:**
+  - Sidebar or Topbar navigation with clear hierarchy.
+  - Collapsible menus for nested items.
+- **Cards:**
+  - Clean white cards with subtle borders (border-gray-200) and minimal shadows (shadow-sm).
+  - Rounded corners (rounded-md).
+- **Lists:**
+  - Row-based layouts for repositories, PRs, and pipelines.
+  - Hover effects (bg-gray-50) on interactive rows.
+  - Avatars and status icons on the left.
+- **Forms:**
+  - Standard vertical form layouts.
+  - Input fields with gray borders, focusing to blue.
+  - Clear distinction between primary (Submit) and secondary (Cancel) actions.
+
+## Interactive Elements
+- **Buttons:**
+  - Primary: Solid Blue, White Text, Rounded.
+  - Secondary: Gray Background, Dark Text, or Transparent with Hover.
+- **Feedback:**
+  - Loading skeletons for data fetching.
+  - Toast notifications for success/error (implied by terminal pages).
+
+## Visual Assets
+- Use ImageGetter for realistic avatars, project logos, and empty state illustrations.
+- Placeholder images for repositories (tech/code related).

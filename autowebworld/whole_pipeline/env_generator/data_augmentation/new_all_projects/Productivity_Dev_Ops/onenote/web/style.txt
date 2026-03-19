@@ -1,0 +1,43 @@
+# Visual Style Guide - Note Taking App (OneNote Inspired)
+
+## Theme & Target Audience
+- **Theme:** Modern Productivity / OneNote-inspired
+- **Audience:** Students, Professionals, Creatives
+- **Visual Tone:** Clean, Organized, Efficient, but visually engaging with rich imagery.
+
+## Color Palette
+- **Primary:** #7719AA (OneNote Purple)
+- **Secondary:** #F3F2F1 (Light Gray background)
+- **Accent:** #C28FE5 (Light Purple for highlights)
+- **Text:** #201F1E (Dark Gray for readability)
+- **Success:** #107C10 (Green)
+- **Warning:** #D83B01 (Orange/Red)
+
+## Typography
+- **Font Family:** Inter, system-ui, sans-serif (Clean, modern look)
+- **Headings:** Bold, clear hierarchy.
+- **Body:** Readable, comfortable line height (1.6).
+
+## Layout & Components
+- **Cards:** White background, subtle shadow (shadow-sm), rounded corners (rounded-lg).
+- **Navigation:** Purple accents on active items.
+- **Buttons:**
+  - Primary: Purple background, white text, rounded-md, hover:bg-purple-700.
+  - Secondary: Gray background, dark text, hover:bg-gray-200.
+- **Lists:**
+  - Rich lists with thumbnail images for notes/notebooks.
+  - Hover effects on rows (bg-gray-50).
+
+## Image Strategy
+- **Hero Images:** Use high-quality abstract or productivity-themed photos for the Home page.
+- **Thumbnails:**
+  - Notebooks: Images representing the notebook subject (Travel, Work, Recipes).
+  - Notes: Preview images or relevant icons.
+- **Backgrounds:** Subtle patterns or clean gradients for app backgrounds.
+- **Empty States:** Friendly illustrations.
+
+## Z-Index Management
+- Modals (Cookie, Permission): z-50
+- Dropdowns: z-40
+- Sticky Headers: z-30
+- Content: z-0

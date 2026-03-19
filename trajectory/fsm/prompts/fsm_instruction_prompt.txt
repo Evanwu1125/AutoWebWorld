@@ -19,12 +19,12 @@ For example, if theme is "Email client-gmail":
 Complexity Profile JSON:
 {COMPLEXITY_PROFILE_JSON}
 
-YOU MUST Follow this Complexity Profile. Unspecified fields follow system prompt defaults.
+Use this Complexity Profile as the primary guidance. Keep protocol-level execution constraints strict, and treat style/topology constraints as profile-driven preferences.
 
 **Profile interpretation**:
 - `pages:{min,max}` → Generate pages within [min,max] range
 - `terminals:{count}` → Number of terminal success pages
-- `path_length:{len[min,max],shortest_only,count_interceptors}` → Ensure >=1 HOME→terminal trajectory within [min,max]
+- `path_length:{len[min,max],shortest_only,count_interceptors}` → Prefer at least one HOME→terminal trajectory within [min,max]
 - `home_nav_variants` → Navigation patterns from HOME (refer to system prompt for GUI patterns)
 - `list_filters:{enabled,fields_max,two_step_parity,allowed_shapes}` → Filter configuration
 - `interceptors:{cookie,permission}` → Gate actions configuration
@@ -35,7 +35,7 @@ YOU MUST Follow this Complexity Profile. Unspecified fields follow system prompt
 
 * **IMPORTANT: MUST generate pages within the profile range.**
   - Add intermediate pages as needed: category pages, subcategory pages, detail pages, review pages, confirmation pages, etc.
-* Ensure at least one HOME→terminal trajectory length falls within path_length.len=[min,max] when provided.
+* Prefer at least one HOME→terminal trajectory length within path_length.len=[min,max] when provided.
 * For each page, define `signature_schema` with only essential runtime state (include any shared collections needed on this page).
 * **Follow system prompt constraint [D1-D5]** for collections and list/detail pages.
 
@@ -89,9 +89,9 @@ For each page, list semantic actions. Each action MUST include:
 
 ### Home Constraints
 
-* Generate navigation-only actions on HOME.
-* Do not generate business actions on HOME (create/delete/edit/submit/select/filter/search).
-* **EXCEPTION**: Cookie consent action is allowed on HOME (refer to **system prompt §Interceptor Actions**).
+* Default policy: keep HOME mostly navigation-first.
+* If profile requires HOME interceptors (e.g., cookie), place them as lightweight non-navigation gates.
+* Allow business actions on HOME only when the theme strongly requires it and execution remains clear.
 
 ### Navigation Policy
 
@@ -99,7 +99,7 @@ For each page, list semantic actions. Each action MUST include:
 
 ### Path Length Strategy
 
-**CRITICAL FOR ALL COMPLEXITY LEVELS**: If `path_length.len=[min,max]` is provided, ensure there EXISTS >=1 valid HOME→terminal trajectory within [min,max]; apply `count_interceptors` as specified.
+If `path_length.len=[min,max]` is provided, optimize for having >=1 valid HOME→terminal trajectory within [min,max]; apply `count_interceptors` as specified.
 
 **Design strategy for different complexity levels**:
 - Add intermediate pages between HOME and terminals (e.g., list → detail → form → review → success)
@@ -109,38 +109,37 @@ For each page, list semantic actions. Each action MUST include:
 - Interceptor actions (cookie, permissions) may add extra steps depending on `count_interceptors` policy
 
 **Key principles**:
-- Cookie consent: Always on HOME page, as the FIRST action before any navigation (refer to **system prompt §Interceptor Actions**)
-- Permission (location only): Define on the FIRST non-HOME page that user navigates to from HOME (refer to **system prompt §Interceptor Actions**)
+- Cookie consent: follow profile policy; default placement is HOME when enabled
+- Permission (location only): follow profile policy; default placement is the first relevant non-HOME page
   * This is a non-navigation action that appears as a modal/dialog
   * Uses global flag $.location_permission_granted to ensure one-time display
 - Date+Time: Combine into single date_picker action (not separate actions)
 
 **Avoid common mistakes**:
-- Do NOT create direct HOME → TERMINAL edges (results in 1-hop paths, too short)
-- Do NOT skip intermediate pages (e.g., HOME → LIST → SUCCESS is only 2 hops, insufficient)
-- Do NOT place cookie consent on pages other than HOME
-- Do NOT place permission action on multiple pages (only on first non-HOME page visited from HOME)
+- Avoid trivial direct HOME → TERMINAL edges unless explicitly intended by profile/theme.
+- Prefer meaningful intermediate pages when the target complexity is medium/hard.
+- Keep interceptor placement consistent with profile policy.
 - Do NOT split date and time into separate actions (use single date_picker widget)
 - Ensure all terminal pages are reachable through paths within [min,max]
 
 ### Home Navigation Variants
 
 * Variants allowed: {direct, hover, menu, scroll}.
-* If provided in profile, enforce coverage="each" per target from HOME.
+* If provided in profile, prioritize requested variant coverage from HOME.
 * **Follow system prompt Home Navigation Variants** for GUI procedure patterns.
 
 ### Interceptors (Profile-Driven)
 
 * {cookie, permission (location only)} → **Follow system prompt §Interceptor Actions**
 * All interceptor actions are non-navigation gates
-* Cookie: Place on HOME page (first action users encounter)
-* Permission (location only): Place on the FIRST non-HOME page that user navigates to from HOME
+* Cookie: follow profile placement policy (default HOME)
+* Permission (location only): follow profile placement policy (default first relevant non-HOME page)
 
 ### List Filters (Profile-Driven)
 
 * When enabled, use `allowed_shapes` if provided; otherwise default to {text_inputs, checkboxes, sliders, sort}
 * **Follow system prompt §List Filter Actions** for each shape's GUI procedure
-* **Always** generate OPEN_FILTERED_* navigation action for pages with filter/sort actions
+* Prefer generating OPEN_FILTERED_* navigation action for pages with filter/sort actions
 * Use **page-scoped** flag: `$.{page}_filters_applied` (e.g., `$.issues_list_filters_applied`), NOT generic `$.filters_applied`
 * If `two_step_parity=true`: combine all filter shapes into one APPLY_FILTERS action
 * If `two_step_parity=false`: create separate actions for each filter shape
@@ -155,13 +154,13 @@ For each page, list semantic actions. Each action MUST include:
 
 * **Follow system prompt §Data & Collections [D1-D5]**
 * Model persistent collections (lists) and list/detail pages for any CRUD-like theme
-* CRUD submit actions must persist to the relevant collection via `effects` (append / update / remove_where)
+* CRUD submit actions must persist to the relevant collection via explicit supported `effects` operations.
 * Reuse the SAME JSONPath for any shared collection fields across pages (e.g., always `$.groups`)
 * List pages must remain usable when the collection is empty (provide a first-action path like Create)
 
 ### Finalize/Submit Flows
 
-* Finalize/Submit flows MUST gate on a non-empty selection/collection using `length_gt(...,0)`; do not rely on `value_expr` to satisfy the gate.
+* Finalize/Submit flows MUST gate on a non-empty selection/collection using `length_gt(...,0)`.
 * **Follow system prompt §Pre-success Form Realism [FR1-FR4]** for form entry requirements.
 
 ### Search & Scroll
@@ -172,16 +171,16 @@ For each page, list semantic actions. Each action MUST include:
 
 ### Back & Terminals
 
-* Every **non-initial** page MUST include a Back action to the previous page (effects may be empty).
+* Every non-initial page should include a Back action to the previous page unless the page is intentionally terminal-only.
 * Every terminal page MUST show a success message and provide a "Go Home" action to `HOME` (effects may be empty). Display-only fields should be optional (`"string|null"`) or set locally.
 
 ## Generation-Specific Self-Check
 
 Before output, verify:
 
-* **Path length**: At least one HOME→terminal trajectory exists within path_length.len=[min,max] if specified
+* **Path length**: Prefer at least one HOME→terminal trajectory within path_length.len=[min,max] if specified
 * **Terminal coverage**: All `meta.terminal_pages` match the Complexity Profile if specified; all terminals are reachable
-* **Home constraints**: HOME has only navigation actions (plus optional cookie consent)
+* **Home constraints**: HOME should remain navigation-first; allow profile/theme exceptions
 * **Interceptor placement**:
   - Cookie consent on HOME (if enabled)
   - Permission on first non-HOME page (if enabled)
@@ -369,7 +368,7 @@ Before output, verify:
           "to": "SCHEDULE_SUCCESS",
           "parameters": { "widget": "date_picker", "year": 2025, "month": 10, "day": 22, "hour": 10, "minute": 30 },
           "preconditions": [{ "path": "$.selected_item_id", "cond": "length_gt", "value": 0 }],
-          "effects": [{ "op": "set", "path": "$.selected_date", "value_expr": "date(2025,10,22.10:30)" }],
+          "effects": [{ "op": "set", "path": "$.selected_date", "value": "2025-10-22T10:30:00Z" }],
           "gui_procedure": [
             { "op": "click", "selector": "#date-picker" },
             { "op": "click", "selector": ".year-2025" },
@@ -416,4 +415,3 @@ Before output, verify:
   ]
 }
 ```
-

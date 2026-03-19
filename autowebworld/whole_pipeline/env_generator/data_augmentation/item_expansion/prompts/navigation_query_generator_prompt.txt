@@ -1,0 +1,145 @@
+You are a query generation assistant. Given an expanded trajectory with a specific item, generate:
+1. A natural language query that a user would ask to trigger this trajectory
+   - Use diverse, natural expressions
+   - Avoid repetitive patterns (e.g., don't always start with "Help me")
+   - Make it sound like real user requests
+2. Input text replacements for placeholder values in the trajectory
+
+## Input Trajectory
+
+```json
+{trajectory_json}
+```
+
+## Mockdata
+
+```json
+{mockdata_json}
+```
+
+## Current Item
+
+- ID: {item_id}
+- Name: {item_name}
+- Rank: {rank}
+- Data: {item_json}
+
+## Trajectory Info
+
+- Type: {trajectory_type}
+- Filter Field: {filter_field}
+- Target Value: {target_value}
+- Sort Order: {sort_order}
+- Terminal State: {terminal_state}
+
+## Query Generation Rules
+
+The query should be a COMPLETE natural language description of the user's task.
+
+**Key principles**:
+1. **Completeness**: Include ALL key operations in the trajectory, not just filter/search and final action
+   - Navigation/filtering (how to find items)
+   - Item selection (which one to pick)
+   - Product configuration (SKU, quantity, etc.)
+   - Checkout steps (address, payment method)
+   - Final action (submit, add to cart, etc.)
+
+2. **Flexibility**: The query order does NOT need to follow trajectory execution order
+   - Organize information in any natural way
+   - Users don't think in UI steps, they think in task goals
+   - Example: "Buy 2 pieces of the first product over $5, ship to usual address, cash on delivery"
+
+3. **Naturalness**: Use conversational language, avoid technical terms
+   - Avoid first person expressions like "I want", "Show me", "Help me"
+   - Use imperative verbs: "Find", "Get", "Buy", "Order", "Purchase"
+   - Avoid subjective opinions like "looks good" or "is perfect"
+   - Use casual phrases like "usual address" instead of "select default address"
+   - For SKU selection: say "first option" or omit, not "sku1" or "SKU option 1"
+
+4. **Diversity**: Vary expressions to avoid repetitive patterns
+   - Use different verbs: "Find", "Get", "Buy", "Order", "Purchase"
+   - Use different phrasings for the same concept
+
+5. **CRITICAL: Include all filled text values in the query**
+   - If the trajectory contains type_text operations with specific values (not {{input_text}} placeholder)
+   - You MUST include these concrete values in the query to make it specific and realistic
+   - Examples:
+     * Registration: "Create account with username john_doe_2024, password SecurePass123!, and phone +1-555-123-4567"
+     * Login: "Login with email user@example.com and password MyPass123"
+     * Form filling: "Fill out the form with name John Smith, address 123 Main St, and zip code 12345"
+     * Long text: "Book a mental health session with the third therapist who has over 10 years of experience, schedule for August 20, 2020 at 4:00 PM, and explain: 'I've been struggling with substance use and need professional support to develop healthier coping strategies and work on long-term recovery.'"
+   - This makes the query match the actual actions performed in the trajectory
+
+### Query Templates by Type
+
+**CRITICAL RULE - DO NOT use specific item names for CHECKBOX/SLIDER/SORT**:
+- For CHECKBOX/SLIDER/SORT types: DO NOT use the item name (e.g., "whole milk", "iPhone 15")
+- MUST use generic terms: "item", "product", "one"
+- MUST use ordinal numbers based on rank={rank}:
+  * rank=1 → "first"
+  * rank=2 → "second"
+  * rank=3 → "third"
+  * rank=4+ → "fourth", "fifth", etc.
+- Only SEARCH/SCROLL types can use specific item names
+
+**CHECKBOX** (filter by specific attribute):
+- Template: "Get <quantity> of the <ordinal> <filter_field> item, <other actions>"
+- Example (rank=2, filter_field="organic"): "Get 3 of the second organic item, deliver to regular address, cash on delivery"
+
+
+**SLIDER** (filter by range, always >= semantics):
+- Template: "Buy <quantity> of the <ordinal> product with <field> above <target_value>, <other actions>"
+- Example (rank=1, target_value=4): "Buy 2 pieces of the first product with rating above 4, ship to usual address, cash on delivery"
+
+
+**SORT** (sort by field):
+- Template: "From items sorted by <field> <order>, get the <ordinal> one, <other actions>"
+- Example (rank=3, sort_order="desc"): "From items sorted by price high to low, get the third one, 5 pieces, deliver to saved address, card payment"
+
+
+**SEARCH & SCROLL** (CAN use specific item name):
+- Template: "Find <item_name>, <other actions>"
+- Example: "Find Samsung Galaxy S24, buy 2, deliver to regular address, charge the card"
+
+**Key patterns to extract from trajectory**:
+- **Type text values**: If any type_text operation has a specific value (not {{input_text}}), MUST include that exact value in the query. For long text (>50 chars), include the COMPLETE text without summarization.
+- SKU selection: Look at selector (e.g., #sku-option-1). In the query, say "first option" or omit if not semantically important. Do not use technical terms like "sku1" or "SKU option 1".
+- Quantity: Look at type_text value in quantity input
+- Address: Look at selector (.address-item-default means "usual address")
+- Payment: Look at selector (.payment-option-cod means "cash on delivery", .payment-option-card means "card payment")
+
+### Final Action (based on terminal state)
+
+- CHECKOUT_*_SUCCESS → "buy <quantity> pieces"
+- CART → "add to cart"
+- PRODUCT_DETAIL → "view details"
+- Other → infer from trajectory
+
+### Input Text Replacements
+
+Find all actions with `type_text` operation and determine appropriate values:
+- Quantity input (`#quantity-input`, `ACT_*_SET_QUANTITY`): random value between 2-5 (NOT 1)
+- Search input (`#search-input`, `ACT_*_SEARCH`):
+  - MUST use current item name
+  - MUST include in replacements even if trajectory already has a value
+  - This ensures search text matches the current item being expanded
+- Phone number input: Use 11-digit Chinese phone format WITHOUT dashes (e.g., "13812345678", NOT "138-1234-5678")
+- Other inputs: generate realistic values based on context
+
+**IMPORTANT for SEARCH/SCROLL types**: Always include search input in input_text_replacements with current item name, regardless of existing values in the trajectory.
+
+## Output Format
+
+Return only a JSON object, no other text:
+
+```json
+{{{{
+  "query": "<natural language task description in English>",
+  "input_text_replacements": [
+    {{{{"action_id": "<action id>", "selector": "<selector>", "value": "<filled value>"}}}}
+  ]
+}}}}
+```
+
+**Note**: The slider configuration (target_value, direction, rank, sort_order) has been pre-calculated in the previous stage and will be used directly. You only need to generate the query and input_text_replacements.
+

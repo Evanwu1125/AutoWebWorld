@@ -1,0 +1,1838 @@
+{
+  "meta": {
+    "app": "Q&A Community-Quora_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "ASK_QUESTION_SUCCESS",
+      "ANSWER_QUESTION_SUCCESS",
+      "FOLLOW_TOPIC_SUCCESS",
+      "UPVOTE_SUCCESS",
+      "EDIT_PROFILE_SUCCESS"
+    ],
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 20,
+        "max": 35
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover",
+        "menu"
+      ],
+      "home_nav_coverage": "any",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 4,
+        "two_step_parity": false,
+        "allowed_shapes": [
+          "checkboxes",
+          "sliders",
+          "sort"
+        ]
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "current_user_id": "string|null",
+        "cookie_consent_given": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ACCEPT_COOKIES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cookie_consent_given",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ]
+        },
+        {
+          "id": "ACT_GO_FEED_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "FEED",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-feed-direct"
+            }
+          ]
+        },
+        {
+          "id": "ACT_GO_TOPICS_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "TOPIC_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-menu"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-menu-topics"
+            }
+          ]
+        },
+        {
+          "id": "ACT_GO_PROFILE_HOVER",
+          "name": "select",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "PROFILE",
+          "parameters": {
+            "widget": "hover_menu"
+          },
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#user-menu"
+            },
+            {
+              "op": "click",
+              "selector": "#user-menu-profile",
+              "ui_elements": {
+                "container": "#user-menu",
+                "options": [
+                  {
+                    "value": "profile",
+                    "selector": "#user-menu-profile"
+                  },
+                  {
+                    "value": "settings",
+                    "selector": "#user-menu-settings"
+                  },
+                  {
+                    "value": "logout",
+                    "selector": "#user-menu-logout"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FEED",
+      "signature_schema": {
+        "questions": "array<object>|null",
+        "location_permission_granted": "boolean|null",
+        "feed_filters_applied": "boolean|null",
+        "matched_question_id": "string|null",
+        "selected_question_id": "string|null",
+        "feed_has_searched": "boolean|null",
+        "feed_viewport_anchor_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_GRANT_LOCATION_FEED",
+          "name": "click",
+          "is_navigation": false,
+          "from": "FEED",
+          "to": "FEED",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FEED_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "FEED",
+          "to": "FEED",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.feed_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-answered-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FEED_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "FEED",
+          "to": "FEED",
+          "parameters": {
+            "widget": "slider"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.feed_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-time-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#filter-time-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FEED_FILTER_SORT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "FEED",
+          "to": "FEED",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.feed_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#feed-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#feed-sort-newest-inc",
+              "ui_elements": {
+                "container": "#feed-sort-dropdown",
+                "options": [
+                  {
+                    "value": "newest",
+                    "selector": "#feed-sort-newest-inc"
+                  },
+                  {
+                    "value": "top",
+                    "selector": "#feed-sort-top"
+                  },
+                  {
+                    "value": "unanswered",
+                    "selector": "#feed-sort-unanswered"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_FEED_OPEN_FILTERED_QUESTION",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FEED",
+          "to": "QUESTION_DETAIL",
+          "parameters": {
+            "question_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.feed_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.feed_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_question_id",
+              "value_ref": "{question_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#feed-list .question-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FEED_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "FEED",
+          "to": "FEED",
+          "parameters": {
+            "question_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_question_id",
+              "value_ref": "{question_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.feed_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#feed-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#feed-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FEED_OPEN_MATCHED_QUESTION",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FEED",
+          "to": "QUESTION_DETAIL",
+          "parameters": {
+            "question_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_question_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.feed_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_question_id",
+              "value_ref": "{question_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.feed_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#feed-list .question-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FEED_SCROLL_QUESTION_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "FEED",
+          "to": "FEED",
+          "parameters": {
+            "question_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.feed_viewport_anchor_id",
+              "value_ref": "{question_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#feed-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#feed-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FEED_OPEN_ANY_QUESTION",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FEED",
+          "to": "QUESTION_DETAIL",
+          "parameters": {
+            "question_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.feed_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_question_id",
+              "value_ref": "{question_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.feed_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#feed-list .question-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FEED_GO_ASK_QUESTION",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FEED",
+          "to": "ASK_QUESTION_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#ask-question-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FEED_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FEED",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#logo-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TOPIC_LIST",
+      "signature_schema": {
+        "topics": "array<object>|null",
+        "topics_filters_applied": "boolean|null",
+        "matched_topic_id": "string|null",
+        "selected_topic_id": "string|null",
+        "topics_has_searched": "boolean|null",
+        "topics_viewport_anchor_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_TOPICS_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "TOPIC_LIST",
+          "to": "TOPIC_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.topics_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#topics-filter-followed-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TOPICS_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "TOPIC_LIST",
+          "to": "TOPIC_LIST",
+          "parameters": {
+            "widget": "slider"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.topics_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#topics-activity-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#topics-activity-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TOPICS_FILTER_SORT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "TOPIC_LIST",
+          "to": "TOPIC_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.topics_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#topics-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#topics-sort-popular-desc",
+              "ui_elements": {
+                "container": "#topics-sort-dropdown",
+                "options": [
+                  {
+                    "value": "popular",
+                    "selector": "#topics-sort-popular-desc"
+                  },
+                  {
+                    "value": "alphabetical",
+                    "selector": "#topics-sort-alpha-inc"
+                  },
+                  {
+                    "value": "most_active",
+                    "selector": "#topics-sort-most-active-desc"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_TOPICS_OPEN_FILTERED_TOPIC",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TOPIC_LIST",
+          "to": "TOPIC_DETAIL",
+          "parameters": {
+            "topic_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.topics_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.topics_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_topic_id",
+              "value_ref": "{topic_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#topics-list .topic-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TOPICS_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "TOPIC_LIST",
+          "to": "TOPIC_LIST",
+          "parameters": {
+            "topic_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_topic_id",
+              "value_ref": "{topic_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.topics_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#topics-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#topics-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TOPICS_OPEN_MATCHED_TOPIC",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TOPIC_LIST",
+          "to": "TOPIC_DETAIL",
+          "parameters": {
+            "topic_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_topic_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.topics_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_topic_id",
+              "value_ref": "{topic_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.topics_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#topics-list .topic-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TOPICS_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "TOPIC_LIST",
+          "to": "TOPIC_LIST",
+          "parameters": {
+            "topic_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.topics_viewport_anchor_id",
+              "value_ref": "{topic_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#topics-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#topics-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TOPICS_OPEN_ANY_TOPIC",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TOPIC_LIST",
+          "to": "TOPIC_DETAIL",
+          "parameters": {
+            "topic_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.topics_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_topic_id",
+              "value_ref": "{topic_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.topics_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#topics-list .topic-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TOPICS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TOPIC_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TOPIC_DETAIL",
+      "signature_schema": {
+        "selected_topic_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_TOPIC_GO_ASK_FROM_TOPIC",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TOPIC_DETAIL",
+          "to": "ASK_QUESTION_FORM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_topic_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#topic-ask-question"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TOPIC_FOLLOW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TOPIC_DETAIL",
+          "to": "FOLLOW_TOPIC_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_topic_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#topic-follow-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TOPIC_BACK_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TOPIC_DETAIL",
+          "to": "TOPIC_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#topic-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ASK_QUESTION_FORM",
+      "signature_schema": {
+        "questions": "array<object>|null",
+        "draft_question_title": "string|null",
+        "draft_question_details": "string|null",
+        "draft_question_topic_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ASK_SELECT_TOPIC_DROPDOWN",
+          "name": "select",
+          "is_navigation": false,
+          "from": "ASK_QUESTION_FORM",
+          "to": "ASK_QUESTION_FORM",
+          "parameters": {
+            "widget": "dropdown",
+            "topic_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.draft_question_topic_id",
+              "value_ref": "{topic_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#ask-topic-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#ask-topic-option1",
+              "ui_elements": {
+                "container": "#ask-topic-dropdown",
+                "options": [
+                  {
+                    "value": "topic_any",
+                    "selector": "#ask-topic-option1"
+                  },
+                  {
+                    "value": "topic_other",
+                    "selector": "#ask-topic-option2"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_ASK_TYPE_TITLE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "ASK_QUESTION_FORM",
+          "to": "ASK_QUESTION_FORM",
+          "parameters": {
+            "input_text": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.draft_question_title",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#ask-title-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#ask-title-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ASK_TYPE_DETAILS",
+          "name": "type",
+          "is_navigation": false,
+          "from": "ASK_QUESTION_FORM",
+          "to": "ASK_QUESTION_FORM",
+          "parameters": {
+            "input_text": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.draft_question_details",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#ask-details-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#ask-details-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ASK_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ASK_QUESTION_FORM",
+          "to": "ASK_QUESTION_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.draft_question_title",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.draft_question_details",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.draft_question_topic_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#ask-next-review"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ASK_BACK_FEED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ASK_QUESTION_FORM",
+          "to": "FEED",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#ask-cancel"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ASK_QUESTION_REVIEW",
+      "signature_schema": {
+        "questions": "array<object>|null",
+        "draft_question_title": "string|null",
+        "draft_question_details": "string|null",
+        "draft_question_topic_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ASK_REVIEW_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ASK_QUESTION_REVIEW",
+          "to": "ASK_QUESTION_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.draft_question_title",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.draft_question_details",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.draft_question_topic_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.questions",
+              "value_expr": "append($.questions, {\"id\": gen_id(), \"title\": $.draft_question_title, \"details\": $.draft_question_details, \"topic_id\": $.draft_question_topic_id})"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#ask-submit"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ASK_REVIEW_BACK_FORM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ASK_QUESTION_REVIEW",
+          "to": "ASK_QUESTION_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#ask-back-edit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ASK_QUESTION_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ASK_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ASK_QUESTION_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Your question has been posted."
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#ask-success-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "QUESTION_DETAIL",
+      "signature_schema": {
+        "questions": "array<object>|null",
+        "selected_question_id": "string|null",
+        "answers": "array<object>|null",
+        "answer_body_draft": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_QUESTION_WRITE_ANSWER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "QUESTION_DETAIL",
+          "to": "ANSWER_FORM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_question_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#write-answer-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_QUESTION_UPVOTE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "QUESTION_DETAIL",
+          "to": "UPVOTE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_question_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#question-upvote-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_QUESTION_BACK_FEED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "QUESTION_DETAIL",
+          "to": "FEED",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#question-back-feed"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ANSWER_FORM",
+      "signature_schema": {
+        "answers": "array<object>|null",
+        "selected_question_id": "string|null",
+        "answer_body_draft": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ANSWER_TYPE_BODY",
+          "name": "type",
+          "is_navigation": false,
+          "from": "ANSWER_FORM",
+          "to": "ANSWER_FORM",
+          "parameters": {
+            "input_text": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.answer_body_draft",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#answer-body-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#answer-body-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ANSWER_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ANSWER_FORM",
+          "to": "ANSWER_QUESTION_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_question_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.answer_body_draft",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.answers",
+              "value_expr": "append($.answers, {\"id\": gen_id(), \"question_id\": $.selected_question_id, \"body\": $.answer_body_draft})"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#answer-submit"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ANSWER_BACK_QUESTION",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ANSWER_FORM",
+          "to": "QUESTION_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#answer-cancel"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ANSWER_QUESTION_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ANSWER_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ANSWER_QUESTION_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Your answer has been submitted."
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#answer-success-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FOLLOW_TOPIC_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_FOLLOW_TOPIC_SUCCESS_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FOLLOW_TOPIC_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "You are now following this topic."
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#follow-topic-success-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UPVOTE_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_UPVOTE_SUCCESS_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "UPVOTE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Your upvote has been recorded."
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#upvote-success-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROFILE",
+      "signature_schema": {
+        "profile_name": "string|null",
+        "profile_bio": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PROFILE_EDIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE",
+          "to": "PROFILE_EDIT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-edit-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROFILE_EDIT",
+      "signature_schema": {
+        "profile_name": "string|null",
+        "profile_bio": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PROFILE_EDIT_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PROFILE_EDIT",
+          "to": "PROFILE_EDIT",
+          "parameters": {
+            "input_text": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.profile_name",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#profile-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_EDIT_BIO",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PROFILE_EDIT",
+          "to": "PROFILE_EDIT",
+          "parameters": {
+            "input_text": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.profile_bio",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-bio-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#profile-bio-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_SAVE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_EDIT",
+          "to": "EDIT_PROFILE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.profile_name",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-save-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PROFILE_EDIT_BACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_EDIT",
+          "to": "PROFILE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-edit-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EDIT_PROFILE_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_EDIT_PROFILE_SUCCESS_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EDIT_PROFILE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Your profile has been updated."
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#edit-profile-success-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "NOTIFICATIONS",
+      "signature_schema": {
+        "notifications": "array<object>|null",
+        "notifications_filters_applied": "boolean|null",
+        "notifications_viewport_anchor_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_NOTIF_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "NOTIFICATIONS",
+          "to": "NOTIFICATIONS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.notifications_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#notif-filter-unread-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTIF_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "NOTIFICATIONS",
+          "to": "NOTIFICATIONS",
+          "parameters": {
+            "widget": "slider"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.notifications_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#notif-time-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#notif-time-slider",
+              "to_value": "left"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTIF_FILTER_SORT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "NOTIFICATIONS",
+          "to": "NOTIFICATIONS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.notifications_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#notif-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#notif-sort-newest",
+              "ui_elements": {
+                "container": "#notif-sort-dropdown",
+                "options": [
+                  {
+                    "value": "newest",
+                    "selector": "#notif-sort-newest"
+                  },
+                  {
+                    "value": "oldest",
+                    "selector": "#notif-sort-oldest"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTIF_SCROLL",
+          "name": "click",
+          "is_navigation": false,
+          "from": "NOTIFICATIONS",
+          "to": "NOTIFICATIONS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.notifications_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#notif-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#notif-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_NOTIF_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NOTIFICATIONS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#notif-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BOOKMARKS",
+      "signature_schema": {
+        "bookmarked_questions": "array<object>|null",
+        "bookmarks_filters_applied": "boolean|null",
+        "bookmarks_viewport_anchor_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_BOOKMARKS_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "BOOKMARKS",
+          "to": "BOOKMARKS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.bookmarks_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#bookmarks-filter-questions-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BOOKMARKS_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "BOOKMARKS",
+          "to": "BOOKMARKS",
+          "parameters": {
+            "widget": "slider"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.bookmarks_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#bookmarks-time-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#bookmarks-time-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BOOKMARKS_FILTER_SORT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "BOOKMARKS",
+          "to": "BOOKMARKS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.bookmarks_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#bookmarks-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#bookmarks-sort-recent",
+              "ui_elements": {
+                "container": "#bookmarks-sort-dropdown",
+                "options": [
+                  {
+                    "value": "recent",
+                    "selector": "#bookmarks-sort-recent"
+                  },
+                  {
+                    "value": "top",
+                    "selector": "#bookmarks-sort-top"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_BOOKMARKS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BOOKMARKS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#bookmarks-back-home"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

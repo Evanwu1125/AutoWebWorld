@@ -1,0 +1,60 @@
+# Visual Style Guide - Asana Inspired Project Management App
+
+## Application Theme & Target Audience
+- **Theme**: Professional Project Management. Clean, organized, and focus-oriented.
+- **Reference App**: Asana.
+- **Target Audience**: Professionals, teams, and project managers seeking efficiency and clarity.
+- **Visual Tone**: Modern, trustworthy, vibrant but not distracting.
+
+## Color Scheme
+- **Primary**: #F06A6A (Coral/Salmon - Asana-like accent) or #4F46E5 (Indigo - Modern SaaS). Let's go with Indigo/Violet for a modern "Asana" feel.
+  - Primary: `bg-indigo-600` text-white
+  - Hover: `hover:bg-indigo-700`
+- **Secondary**: `bg-white` (Cards, Backgrounds)
+- **Background**: `bg-gray-50` (App background)
+- **Text**:
+  - Headings: `text-gray-900`
+  - Body: `text-gray-600`
+  - Muted: `text-gray-400`
+- **Borders**: `border-gray-200`
+
+## Typography
+- **Font Family**: Inter, system-ui, sans-serif.
+- **Sizes**:
+  - Page Titles: `text-2xl font-bold`
+  - Section Headers: `text-lg font-semibold`
+  - Body: `text-sm` or `text-base`
+  - Small: `text-xs`
+
+## Layout Style
+- **Structure**:
+  - Top Navigation Bar (white, shadow-sm).
+  - Main Content Area (centered or full-width with padding).
+  - Sidebar (optional, or part of navigation).
+- **Cards**:
+  - White background, rounded-lg, shadow-sm, border border-gray-100.
+  - Hover effects: `hover:shadow-md transition-shadow`.
+- **Lists**:
+  - Clean rows with ample padding.
+  - `flex` layouts for alignment.
+- **Board View**:
+  - Horizontal scrolling columns (`flex-row`, `overflow-x-auto`).
+  - Kanban-style task cards.
+
+## Component Styling
+- **Buttons**:
+  - Primary: Rounded-md, px-4 py-2, font-medium.
+  - Secondary/Outline: Border, bg-transparent, hover:bg-gray-50.
+- **Inputs**:
+  - Rounded-md, border-gray-300, focus:ring-indigo-500.
+- **Modals**:
+  - Centered, backdrop-blur, rounded-xl, shadow-2xl.
+- **Images**:
+  - User Avatars: Circular, `rounded-full`.
+  - Project/Task Thumbnails: `rounded-md`, object-cover.
+  - Empty States: Illustration style.
+
+## Interaction Design
+- **Hover Effects**: Subtle color shifts, shadow increases.
+- **Transitions**: Smooth fade-ins and slide-ins.
+- **Feedback**: Clear success/error messages (using Terminal pages or toast-like styling within pages).

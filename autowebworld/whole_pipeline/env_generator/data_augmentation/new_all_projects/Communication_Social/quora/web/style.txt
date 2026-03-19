@@ -1,0 +1,44 @@
+# Visual Style Guide - Quora Inspired
+
+## Theme & Atmosphere
+- **Reference App:** Quora
+- **Core Aesthetic:** Clean, content-centric, professional yet community-driven.
+- **Color Palette:**
+  - Primary: Quora Red (#B92B27) - Used for primary buttons, active states, logo.
+  - Background: Light Gray (#F1F2F2) - Application background.
+  - Surface: White (#FFFFFF) - Cards, content areas.
+  - Text Primary: Dark Gray (#282829) - Headings, main content.
+  - Text Secondary: Medium Gray (#636466) - Metadata, secondary actions.
+  - Accent: Blue (#2E69FF) - Links, secondary buttons.
+
+## Typography
+- **Font Family:** -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif.
+- **Headings:** Serif (e.g., Georgia or Times New Roman) for question titles to emulate Quora's distinct look, Sans-serif for everything else.
+- **Weights:** 
+  - Bold (700) for primary actions and titles.
+  - Medium (500) for navigation.
+  - Regular (400) for body text.
+
+## Layout & Components
+- **Container:** Centered max-width container (max-w-5xl) for desktop.
+- **Cards:** White background, subtle border (border-gray-200) or soft shadow-sm. Rounded corners (rounded-lg).
+- **Navigation:** Sticky top bar, white background, shadow-sm.
+- **Buttons:**
+  - Primary: Red background, white text, rounded-full.
+  - Secondary: Transparent or light gray background, gray/blue text, rounded-full.
+- **Lists:** Vertical feed style. Each item is a distinct card.
+- **Images:** High-quality realistic images. 
+  - User avatars: Circular.
+  - Content images: Full width within cards, rounded corners.
+
+## Interactive Elements
+- **Hover Effects:** Subtle background color shift (bg-gray-50) on cards/list items.
+- **Modals:** Center-aligned, backdrop blur, clean white styling.
+- **Feedback:** Toast notifications or dedicated success pages (as per FSM) with clear messaging.
+
+## Image Strategy
+- Extensive use of realistic images for:
+  - User avatars (essential for community feel).
+  - Topic icons/thumbnails.
+  - Content headers (where applicable).
+  - Empty states.

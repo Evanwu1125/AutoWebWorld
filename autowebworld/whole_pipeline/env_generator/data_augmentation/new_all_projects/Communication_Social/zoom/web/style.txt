@@ -1,0 +1,43 @@
+# Visual Style Guide - Zoom Clone
+
+## Theme Overview
+Professional video conferencing application inspired by Zoom. The design should be clean, minimalist, and trustworthy. Focus on usability, clear typography, and a "business-first" aesthetic.
+
+## Color Palette
+- **Primary Blue**: #0b5cff (Zoom Blue) - Used for primary buttons, active states, links.
+- **Hover Blue**: #0050e0 - darker shade for hover states.
+- **Background**: #FFFFFF (White) - Main background.
+- **Surface**: #F5F5F5 (Light Gray) - Secondary backgrounds, cards.
+- **Text Dark**: #232333 - Primary text.
+- **Text Gray**: #747487 - Secondary text, placeholders.
+- **Success**: #0E723C - Success messages, confirmations.
+- **Danger**: #E01E5A - Delete, hang up, critical errors.
+
+## Typography
+- **Font Family**: System UI (Inter, Roboto, San Francisco).
+- **Headings**: Bold, clean. h1 (text-2xl/3xl), h2 (text-xl).
+- **Body**: Legible, good contrast. text-base or text-sm for density.
+
+## UI Components
+- **Buttons**:
+  - Primary: Rounded-full or rounded-lg, solid blue background, white text.
+  - Secondary: Gray background, dark text, or outlined.
+  - Size: Comfortable touch targets (min 44px height).
+- **Cards**: White background, subtle shadow (shadow-sm or shadow-md), rounded-xl.
+- **Inputs**: Gray border (border-gray-300), rounded-md, focus ring blue.
+- **Modals**: Centered, backdrop blur, rounded-xl, shadow-2xl.
+
+## Layout
+- **Container**: Max-width centered (max-w-7xl), padding (px-4 sm:px-6 lg:px-8).
+- **Grid**: Responsive grids for lists (1 col mobile, 2-3 cols desktop).
+- **Spacing**: Consistent scaling using Tailwind spacing (4, 8, 16, 24, 32px).
+
+## Imagery
+- **Hero**: High-quality professional image for HOME page (office, collaboration).
+- **Avatars**: Rounded-full user avatars.
+- **Thumbnails**: 16:9 aspect ratio for meeting previews.
+- **Icons**: Simple, outlined icons (Lucide or Heroicons style).
+
+## Animations
+- **Transitions**: Smooth fade-in/out for modals and page transitions.
+- **Hover**: Subtle scale or color shift on interactive elements.

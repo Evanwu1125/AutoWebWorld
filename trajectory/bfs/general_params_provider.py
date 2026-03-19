@@ -1,14 +1,14 @@
 # general_params_provider.py
-# 提供基于类型与 effects 映射的通用参数生成器（不依赖具体领域字段名）
+# Provides a generic parameter generator based on type and effects mapping (domain-field-name agnostic)
 
 from typing import Dict, Any, Tuple, List
 import hashlib
 import random
 
-# ---- 类型工具 ----
+# ---- Type utilities ----
 def type_category(tp: str) -> Tuple[str, str]:
     """
-    返回 (kind, spec):
+    Returns (kind, spec):
       kind: 'array' | 'scalar'
       spec: 'string' | 'number' | 'integer' | 'integer_ge1' | 'boolean' | 'any'
     """
@@ -35,14 +35,14 @@ def element_type_of(tp_tuple: Tuple[str,str]) -> Tuple[str,str]:
     if tp_tuple[0] != 'array': return ('scalar','any')
     return ('scalar', tp_tuple[1] if tp_tuple[1] in ('string','number') else 'any')
 
-# ---- 值生成（稳定、可复现）----
+# ---- Value generation (stable and reproducible) ----
 def _token(seed_bytes: bytes, n=8) -> str:
     return hashlib.sha256(seed_bytes).hexdigest()[:n]
 
 def _gen_scalar(kind_spec: Tuple[str,str], uniq_key: str) -> Any:
     kind, spec = kind_spec
     h = _token(uniq_key.encode())
-    if spec == 'boolean':      return True              # 更容易满足 gating
+    if spec == 'boolean':      return True              # More likely to satisfy gating conditions
     if spec == 'integer_ge1':  return 1
     if spec == 'integer':      return 0
     if spec == 'number':       return 0.0
@@ -51,16 +51,16 @@ def _gen_scalar(kind_spec: Tuple[str,str], uniq_key: str) -> Any:
 def _gen_value_for_type(tp_tuple: Tuple[str,str], uniq_key: str) -> Any:
     if tp_tuple[0] == 'array':
         elem_type = element_type_of(tp_tuple)
-        # 默认产生非空数组，便于满足 length_gt > 0
+        # Produce a non-empty array by default to satisfy length_gt > 0
         return [_gen_scalar(elem_type, uniq_key+"#0")]
     else:
         return _gen_scalar(tp_tuple, uniq_key)
 
-# ---- 由 effects 反推参数类型 ----
+# ---- Infer parameter types from effects ----
 def _map_param_expected_types(action: Dict[str, Any], page_schema_lookup: Dict[str,str]) -> Dict[str, Tuple[str,str]]:
     """
-    返回 {param_name: (kind, spec)}
-    依据：effects[].value_ref -> 对应 path 的 schema 类型
+    Returns {param_name: (kind, spec)}
+    Based on: effects[].value_ref -> schema type of the corresponding path
     """
     m: Dict[str, List[Tuple[str,str]]] = {}
     for ef in action.get('effects', []) or []:
@@ -72,17 +72,17 @@ def _map_param_expected_types(action: Dict[str, Any], page_schema_lookup: Dict[s
             m.setdefault(pname, []).append(tp)
     return {p: most_specific_type(tps) for p, tps in m.items()}
 
-# ---- 对外主函数 ----
+# ---- Public entry point ----
 def params_for_action(action: Dict[str,Any],
                       page_id: str,
                       schema_lookup: Dict[str, Dict[str,str]],
                       signature: Dict[str,Any],
                       seed: int = 42) -> Dict[str,Any]:
     """
-    输入：当前动作/页id/全局schema_lookup/当前签名
-    输出：{param_name: value}，与领域无关
+    Input: current action / page id / global schema_lookup / current signature
+    Output: {param_name: value}, domain-agnostic
     """
-    # 只依赖类型，不看具体字段名
+    # Rely only on types, not specific field names
     page_schema = schema_lookup.get(page_id, {})
     p2t = _map_param_expected_types(action, page_schema)
     out: Dict[str,Any] = {}

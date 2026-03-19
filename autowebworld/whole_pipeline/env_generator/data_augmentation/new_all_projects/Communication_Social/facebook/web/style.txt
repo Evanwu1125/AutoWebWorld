@@ -1,0 +1,43 @@
+# Visual Style Guide - Facebook Clone
+
+## Theme & Target Audience
+- **Reference App:** Facebook (Web)
+- **Target Audience:** General public, social networking users seeking connection and content sharing.
+- **Visual Tone:** Clean, professional, user-friendly, and content-centric. The design should feel familiar, trustworthy, and modern.
+
+## Color Scheme
+- **Primary:** Facebook Blue (#1877F2) - Used for primary buttons, active states, links, and branding.
+- **Secondary:** Gray (#E4E6EB) - Used for secondary buttons, backgrounds, and hover states.
+- **Accent:** Green (#42B72A) - Used for success states and "new" indicators.
+- **Background:** Light Gray (#F0F2F5) - Main application background color.
+- **Surface:** White (#FFFFFF) - Used for cards, posts, modals, and headers.
+- **Text:**
+  - Primary: #050505 (Almost Black)
+  - Secondary: #65676B (Dark Gray)
+- **Error:** Red (#F02849)
+
+## Typography
+- **Font Family:** system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif.
+- **Weights:** Regular (400), Medium (500), Bold (600/700).
+- **Sizes:**
+  - Headings: 24px (h1), 20px (h2).
+  - Body: 15px (standard post text), 13px (metadata).
+
+## Layout & Components
+- **Card Design:** All content (posts, profiles, events) resides in white cards with `rounded-lg` and subtle shadow `shadow-sm`.
+- **Navigation:** Fixed top navigation bar (white, shadow-md) with centered icons and right-aligned profile/settings.
+- **Grid System:** Responsive 3-column layout on desktop:
+  - Left: Navigation/Menu (fixed)
+  - Center: Feed/Main Content (scrollable)
+  - Right: Sponsored/Contacts (fixed)
+- **Spacing:** Generous padding (p-4) within cards; gap-4 between elements.
+- **Interactive Elements:**
+  - Buttons: Pill-shaped or rounded-md. Primary buttons have blue bg/white text. Secondary buttons have gray bg/black text.
+  - Inputs: Light gray background (#F0F2F5) with rounded-full shape for search and comments.
+
+## Image Usage Strategy
+- **Hero/Background:** High-quality, realistic images for covers and events.
+- **Avatars:** Circular user profile pictures (`rounded-full`).
+- **Post Content:** Large, full-width images within feed cards (`w-full object-cover`).
+- **Icons:** Minimalist, filled or outlined SVG icons.
+- **Implementation:** Use `ImageGetter` to fetch diverse, realistic images for users, posts, and events.

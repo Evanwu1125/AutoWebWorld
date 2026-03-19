@@ -1,0 +1,60 @@
+# Visual Design Style Guide - Airtable Clone
+
+## Theme & Vibe
+- **Core Concept**: "Friendly Database" - Powerful yet approachable, colorful, and highly interactive.
+- **Target Audience**: Professionals, project managers, creative teams.
+- **Visual Tone**: Clean, modern, vibrant, organized. Uses bold colors for organization (bases, tags) against a neutral UI backdrop.
+
+## Color Palette
+- **Primary**: Airtable Blue (`#2D7FF9`) - Used for primary buttons, active states, links.
+- **Backgrounds**:
+    - Main App: White (`#FFFFFF`) or very light gray (`#F5F7FA`).
+    - Sidebar/Panels: Light Gray (`#F7F7F7`).
+- **Text**:
+    - Headings: Dark Gray (`#111111`).
+    - Body: Slate Gray (`#333333`).
+    - Muted: Light Slate (`#666666`).
+- **Accents (Base/Status Colors)**:
+    - Success/Done: Green (`#20C933`).
+    - Warning/In Progress: Yellow/Orange (`#FCB400`).
+    - Error/Stop: Red (`#F82B60`).
+    - Tags: Purple, Teal, Pink (pastel backgrounds with darker text).
+
+## Typography
+- **Font Family**: Inter, system-ui, -apple-system, sans-serif.
+- **Weights**:
+    - Headers: Bold (700) or SemiBold (600).
+    - UI Elements: Medium (500).
+    - Body: Regular (400).
+- **Sizes**:
+    - Page Titles: 24px-32px.
+    - Section Headers: 18px-20px.
+    - Body/Grid Data: 13px-14px (dense for data display).
+
+## UI Components & Layout
+- **Cards (Bases)**: White background, rounded corners (8px), subtle shadow (`shadow-sm` hover: `shadow-md`). Large colorful icons/areas representing the base color.
+- **Buttons**:
+    - Primary: Solid Blue, rounded-md, white text.
+    - Secondary: Gray background, dark text, hover effect.
+    - Ghost: Transparent background, hover gray.
+- **Data Grid (Table)**:
+    - Sticky header row.
+    - Cell borders: Light gray (`border-gray-200`).
+    - Row hover: Very light blue (`bg-blue-50`).
+    - Compact spacing (py-1 px-2).
+- **Kanban Board**:
+    - Gray columns (`bg-gray-100` rounded).
+    - White cards with shadows.
+    - Status indicators (color bars).
+- **Modals**: Centered, rounded-xl, heavy shadow (`shadow-2xl`), backdrop blur.
+
+## Image Usage
+- **Hero/Dashboard**: Warm, welcoming background image for the Home page (e.g., "creative team collaboration" or "abstract geometric shapes").
+- **Icons**: Use generic icons (SVGs or emojis) for Base icons.
+- **Avatars**: User profiles in collaborators list.
+- **Thumbnails**: For "Gallery" style views or record attachments.
+
+## Interactions
+- **Hover**: Immediate feedback on all interactive elements (buttons, rows, cards).
+- **Transitions**: Smooth fades for modals and page transitions.
+- **Drag & Drop**: Visual cues for drag operations (Kanban, Sliders).

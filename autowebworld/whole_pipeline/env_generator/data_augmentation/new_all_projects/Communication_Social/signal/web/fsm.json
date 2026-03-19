@@ -1,0 +1,2996 @@
+{
+  "meta": {
+    "app": "Secure_Messaging-Signal_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "SEND_MESSAGE_SUCCESS",
+      "CREATE_GROUP_SUCCESS",
+      "START_CALL_SUCCESS",
+      "BLOCK_USER_SUCCESS",
+      "UPDATE_SETTINGS_SUCCESS"
+    ],
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 25,
+        "max": 35
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover",
+        "menu"
+      ],
+      "home_nav_coverage": "any",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 4,
+        "two_step_parity": false,
+        "allowed_shapes": [
+          "checkboxes",
+          "sliders",
+          "sort"
+        ]
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "current_user_id": "string|null",
+        "cookie_consent_given": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "HOME_ACCEPT_COOKIES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cookie_consent_given",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_TO_CHATS_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "CHATS_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-chats-direct"
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_TO_CHATS_HOVER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "CHATS_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#nav-main"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-main-chats"
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_TO_CHATS_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "CHATS_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-menu-toggle"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-menu-chats"
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_TO_CONTACTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "CONTACTS_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-contacts"
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_TO_SETTINGS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "SETTINGS_PRIVACY",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-settings"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHATS_LIST",
+      "signature_schema": {
+        "chats": "array<object>|null",
+        "location_permission_granted": "boolean|null",
+        "matched_chat_id": "string|null",
+        "selected_chat_id": "string|null",
+        "chats_list_has_searched": "boolean|null",
+        "chats_list_viewport_anchor_id": "string|null",
+        "chats_list_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "CHATS_LIST_GRANT_LOCATION",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CHATS_LIST",
+          "to": "CHATS_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "CHATS_LIST_FILTER_UNREAD_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CHATS_LIST",
+          "to": "CHATS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.chats_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-unread-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "CHATS_LIST_FILTER_MUTED_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CHATS_LIST",
+          "to": "CHATS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.chats_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-muted-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "CHATS_LIST_FILTER_PINNED_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CHATS_LIST",
+          "to": "CHATS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.chats_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-pinned-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "CHATS_LIST_SORT_DROPDOWN",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CHATS_LIST",
+          "to": "CHATS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.chats_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#sort-option-name-inc",
+              "ui_elements": {
+                "container": "#sort-dropdown",
+                "options": [
+                  {
+                    "value": "recent",
+                    "selector": "#sort-option-recent-desc"
+                  },
+                  {
+                    "value": "unread",
+                    "selector": "#sort-option-unread-desc"
+                  },
+                  {
+                    "value": "name",
+                    "selector": "#sort-option-name-inc"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "CHATS_LIST_OPEN_FILTERED_CHAT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHATS_LIST",
+          "to": "CHAT_THREAD",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.chats_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_chat_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.chats_list_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#chat-list .chat-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "CHATS_LIST_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "CHATS_LIST",
+          "to": "CHATS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_chat_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.chats_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#chat-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#chat-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "CHATS_LIST_OPEN_MATCHED_CHAT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHATS_LIST",
+          "to": "CHAT_THREAD",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_chat_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.chats_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_chat_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.chats_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#chat-list .chat-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "CHATS_LIST_SCROLL_CHAT_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CHATS_LIST",
+          "to": "CHATS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.chats_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#chat-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#chat-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "CHATS_LIST_OPEN_ANY_CHAT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHATS_LIST",
+          "to": "CHAT_THREAD",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.chats_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_chat_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.chats_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#chat-list .chat-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "CHATS_LIST_GO_TO_NEW_CHAT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHATS_LIST",
+          "to": "NEW_CHAT_CHOOSE_CONTACT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#new-chat-button"
+            }
+          ]
+        },
+        {
+          "id": "CHATS_LIST_GO_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHATS_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        },
+        {
+          "id": "CHATS_LIST_GO_TO_CALLS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHATS_LIST",
+          "to": "CALL_HISTORY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-calls"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHAT_THREAD",
+      "signature_schema": {
+        "selected_chat_id": "string|null",
+        "draft_message_text": "string|null"
+      },
+      "actions": [
+        {
+          "id": "CHAT_THREAD_TYPE_MESSAGE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CHAT_THREAD",
+          "to": "CHAT_THREAD",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.draft_message_text",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#message-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "CHAT_THREAD_OPEN_SEND_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHAT_THREAD",
+          "to": "SEND_MESSAGE_CONFIRM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.draft_message_text",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.selected_chat_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#send-message-button"
+            }
+          ]
+        },
+        {
+          "id": "CHAT_THREAD_GO_TO_CHAT_INFO",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHAT_THREAD",
+          "to": "CHAT_INFO",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_chat_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#chat-info-button"
+            }
+          ]
+        },
+        {
+          "id": "CHAT_THREAD_GO_BACK_CHATS_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHAT_THREAD",
+          "to": "CHATS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-chats-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SEND_MESSAGE_CONFIRM",
+      "signature_schema": {
+        "selected_chat_id": "string|null",
+        "draft_message_text": "string|null",
+        "send_read_receipts": "boolean|null",
+        "send_disappearing_timer_seconds": "number|null"
+      },
+      "actions": [
+        {
+          "id": "SEND_CONFIRM_TOGGLE_READ_RECEIPT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SEND_MESSAGE_CONFIRM",
+          "to": "SEND_MESSAGE_CONFIRM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.send_read_receipts",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#read-receipt-toggle"
+            }
+          ]
+        },
+        {
+          "id": "SEND_CONFIRM_SET_DISAPPEARING_TIMER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SEND_MESSAGE_CONFIRM",
+          "to": "SEND_MESSAGE_CONFIRM",
+          "parameters": {
+            "widget": "slider",
+            "seconds": 86400
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.send_disappearing_timer_seconds",
+              "value": 86400
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#disappearing-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#disappearing-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "SEND_CONFIRM_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SEND_MESSAGE_CONFIRM",
+          "to": "SEND_MESSAGE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.draft_message_text",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.selected_chat_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#confirm-send"
+            }
+          ]
+        },
+        {
+          "id": "SEND_CONFIRM_BACK_TO_THREAD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SEND_MESSAGE_CONFIRM",
+          "to": "CHAT_THREAD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-thread"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SEND_MESSAGE_SUCCESS",
+      "signature_schema": {
+        "selected_chat_id": "string|null",
+        "draft_message_text": "string|null"
+      },
+      "actions": [
+        {
+          "id": "SEND_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SEND_MESSAGE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-home"
+            }
+          ]
+        },
+        {
+          "id": "SEND_SUCCESS_BACK_TO_THREAD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SEND_MESSAGE_SUCCESS",
+          "to": "CHAT_THREAD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-to-thread"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "NEW_CHAT_CHOOSE_CONTACT",
+      "signature_schema": {
+        "contacts": "array<object>|null",
+        "matched_contact_id": "string|null",
+        "selected_contact_id": "string|null",
+        "new_chat_has_searched": "boolean|null",
+        "new_chat_viewport_anchor_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "NEW_CHAT_SEARCH_CONTACT",
+          "name": "search",
+          "is_navigation": false,
+          "from": "NEW_CHAT_CHOOSE_CONTACT",
+          "to": "NEW_CHAT_CHOOSE_CONTACT",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_contact_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.new_chat_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contact-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#contact-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "NEW_CHAT_OPEN_MATCHED_CONTACT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NEW_CHAT_CHOOSE_CONTACT",
+          "to": "NEW_CHAT_COMPOSE",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_contact_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.new_chat_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_contact_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.new_chat_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contact-list .contact-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "NEW_CHAT_SCROLL_CONTACT_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "NEW_CHAT_CHOOSE_CONTACT",
+          "to": "NEW_CHAT_CHOOSE_CONTACT",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.new_chat_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contact-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#contact-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "NEW_CHAT_OPEN_ANY_CONTACT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NEW_CHAT_CHOOSE_CONTACT",
+          "to": "NEW_CHAT_COMPOSE",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.new_chat_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_contact_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.new_chat_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contact-list .contact-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "NEW_CHAT_BACK_TO_CHATS_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NEW_CHAT_CHOOSE_CONTACT",
+          "to": "CHATS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-chats"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "NEW_CHAT_COMPOSE",
+      "signature_schema": {
+        "selected_contact_id": "string|null",
+        "draft_message_text": "string|null",
+        "disappearing_timer_seconds": "number|null"
+      },
+      "actions": [
+        {
+          "id": "NEW_CHAT_TYPE_MESSAGE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "NEW_CHAT_COMPOSE",
+          "to": "NEW_CHAT_COMPOSE",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.draft_message_text",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#new-message-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#new-message-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "NEW_CHAT_SET_DISAPPEARING_TIMER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "NEW_CHAT_COMPOSE",
+          "to": "NEW_CHAT_COMPOSE",
+          "parameters": {
+            "widget": "slider",
+            "seconds": 3600
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.disappearing_timer_seconds",
+              "value": 3600
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#compose-disappearing-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#compose-disappearing-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "NEW_CHAT_OPEN_SEND_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NEW_CHAT_COMPOSE",
+          "to": "SEND_MESSAGE_CONFIRM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_contact_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.draft_message_text",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#compose-send-button"
+            }
+          ]
+        },
+        {
+          "id": "NEW_CHAT_BACK_TO_CHOOSE_CONTACT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NEW_CHAT_COMPOSE",
+          "to": "NEW_CHAT_CHOOSE_CONTACT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-choose-contact"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CONTACTS_LIST",
+      "signature_schema": {
+        "contacts": "array<object>|null",
+        "contacts_list_filters_applied": "boolean|null",
+        "contacts_list_viewport_anchor_id": "string|null",
+        "matched_contact_id": "string|null",
+        "contacts_list_has_searched": "boolean|null",
+        "selected_contact_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "CONTACTS_FILTER_BLOCKED_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CONTACTS_LIST",
+          "to": "CONTACTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.contacts_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-blocked-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "CONTACTS_FILTER_FAVORITES_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CONTACTS_LIST",
+          "to": "CONTACTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.contacts_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-favorites-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "CONTACTS_SORT_DROPDOWN",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CONTACTS_LIST",
+          "to": "CONTACTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.contacts_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contacts-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#contacts-sort-option-name-inc",
+              "ui_elements": {
+                "container": "#contacts-sort-dropdown",
+                "options": [
+                  {
+                    "value": "name",
+                    "selector": "#contacts-sort-option-name-inc"
+                  },
+                  {
+                    "value": "blocked",
+                    "selector": "#contacts-sort-option-blocked"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "CONTACTS_OPEN_FILTERED_CONTACT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CONTACTS_LIST",
+          "to": "CONTACT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.contacts_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_contact_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.contacts_list_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contacts-list .contact-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "CONTACTS_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "CONTACTS_LIST",
+          "to": "CONTACTS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_contact_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.contacts_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contacts-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#contacts-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "CONTACTS_OPEN_MATCHED_CONTACT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CONTACTS_LIST",
+          "to": "CONTACT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_contact_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.contacts_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_contact_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.contacts_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contacts-list .contact-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "CONTACTS_SCROLL_CONTACT_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CONTACTS_LIST",
+          "to": "CONTACTS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.contacts_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contacts-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#contacts-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "CONTACTS_OPEN_ANY_CONTACT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CONTACTS_LIST",
+          "to": "CONTACT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.contacts_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_contact_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.contacts_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contacts-list .contact-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "CONTACTS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CONTACTS_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contacts-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CONTACT_DETAIL",
+      "signature_schema": {
+        "selected_contact_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "CONTACT_DETAIL_OPEN_CHAT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CONTACT_DETAIL",
+          "to": "CHAT_THREAD",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_contact_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contact-open-chat"
+            }
+          ]
+        },
+        {
+          "id": "CONTACT_DETAIL_GO_TO_BLOCK_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CONTACT_DETAIL",
+          "to": "BLOCK_USER_CONFIRM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_contact_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contact-block-button"
+            }
+          ]
+        },
+        {
+          "id": "CONTACT_DETAIL_BACK_TO_CONTACTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CONTACT_DETAIL",
+          "to": "CONTACTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contact-back-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BLOCK_USER_CONFIRM",
+      "signature_schema": {
+        "selected_contact_id": "string|null",
+        "block_report_reason": "string|null"
+      },
+      "actions": [
+        {
+          "id": "BLOCK_USER_TYPE_REASON",
+          "name": "type",
+          "is_navigation": false,
+          "from": "BLOCK_USER_CONFIRM",
+          "to": "BLOCK_USER_CONFIRM",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.block_report_reason",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#block-reason-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#block-reason-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "BLOCK_USER_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BLOCK_USER_CONFIRM",
+          "to": "BLOCK_USER_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_contact_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.block_report_reason",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#block-confirm-button"
+            }
+          ]
+        },
+        {
+          "id": "BLOCK_USER_BACK_CONTACT_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BLOCK_USER_CONFIRM",
+          "to": "CONTACT_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#block-back-contact"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BLOCK_USER_SUCCESS",
+      "signature_schema": {
+        "selected_contact_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "BLOCK_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BLOCK_USER_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#block-go-home"
+            }
+          ]
+        },
+        {
+          "id": "BLOCK_SUCCESS_BACK_CONTACTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BLOCK_USER_SUCCESS",
+          "to": "CONTACTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#block-back-contacts"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GROUPS_LIST",
+      "signature_schema": {
+        "groups": "array<object>|null",
+        "groups_list_filters_applied": "boolean|null",
+        "groups_list_viewport_anchor_id": "string|null",
+        "matched_group_id": "string|null",
+        "groups_list_has_searched": "boolean|null",
+        "selected_group_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "GROUPS_FILTER_MUTED_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "GROUPS_LIST",
+          "to": "GROUPS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.groups_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#groups-filter-muted-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "GROUPS_SORT_DROPDOWN",
+          "name": "click",
+          "is_navigation": false,
+          "from": "GROUPS_LIST",
+          "to": "GROUPS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.groups_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#groups-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#groups-sort-option-name-inc",
+              "ui_elements": {
+                "container": "#groups-sort-dropdown",
+                "options": [
+                  {
+                    "value": "name",
+                    "selector": "#groups-sort-option-name-inc"
+                  },
+                  {
+                    "value": "member_count",
+                    "selector": "#groups-sort-option-members-desc"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "GROUPS_OPEN_FILTERED_GROUP",
+          "name": "click",
+          "is_navigation": true,
+          "from": "GROUPS_LIST",
+          "to": "GROUP_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.groups_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_group_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.groups_list_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#groups-list .group-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "GROUPS_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "GROUPS_LIST",
+          "to": "GROUPS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_group_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.groups_list_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#groups-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#groups-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "GROUPS_OPEN_MATCHED_GROUP",
+          "name": "click",
+          "is_navigation": true,
+          "from": "GROUPS_LIST",
+          "to": "GROUP_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_group_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.groups_list_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_group_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.groups_list_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#groups-list .group-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "GROUPS_SCROLL_GROUP_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "GROUPS_LIST",
+          "to": "GROUPS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.groups_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#groups-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#groups-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "GROUPS_OPEN_ANY_GROUP",
+          "name": "click",
+          "is_navigation": true,
+          "from": "GROUPS_LIST",
+          "to": "GROUP_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.groups_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_group_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.groups_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#groups-list .group-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "GROUPS_GO_TO_CREATE_GROUP",
+          "name": "click",
+          "is_navigation": true,
+          "from": "GROUPS_LIST",
+          "to": "GROUP_CREATE_DETAILS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-group-button"
+            }
+          ]
+        },
+        {
+          "id": "GROUPS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "GROUPS_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#groups-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GROUP_DETAIL",
+      "signature_schema": {
+        "selected_group_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "GROUP_DETAIL_OPEN_THREAD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "GROUP_DETAIL",
+          "to": "CHAT_THREAD",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_group_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#group-open-thread"
+            }
+          ]
+        },
+        {
+          "id": "GROUP_DETAIL_BACK_TO_GROUPS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "GROUP_DETAIL",
+          "to": "GROUPS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#group-back-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GROUP_CREATE_DETAILS",
+      "signature_schema": {
+        "group_name": "string|null",
+        "group_description": "string|null"
+      },
+      "actions": [
+        {
+          "id": "GROUP_CREATE_TYPE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "GROUP_CREATE_DETAILS",
+          "to": "GROUP_CREATE_DETAILS",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.group_name",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#group-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#group-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "GROUP_CREATE_TYPE_DESCRIPTION",
+          "name": "type",
+          "is_navigation": false,
+          "from": "GROUP_CREATE_DETAILS",
+          "to": "GROUP_CREATE_DETAILS",
+          "parameters": {
+            "input_text": "{input_text}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.group_description",
+              "value_ref": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#group-description-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#group-description-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "GROUP_CREATE_NEXT_ADD_MEMBERS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "GROUP_CREATE_DETAILS",
+          "to": "GROUP_CREATE_ADD_MEMBERS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.group_name",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#group-next-add-members"
+            }
+          ]
+        },
+        {
+          "id": "GROUP_CREATE_DETAILS_BACK_GROUPS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "GROUP_CREATE_DETAILS",
+          "to": "GROUPS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#group-details-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GROUP_CREATE_ADD_MEMBERS",
+      "signature_schema": {
+        "selected_member_ids": "array<string>|null",
+        "add_members_viewport_anchor_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "GROUP_ADD_MEMBERS_SCROLL",
+          "name": "click",
+          "is_navigation": false,
+          "from": "GROUP_CREATE_ADD_MEMBERS",
+          "to": "GROUP_CREATE_ADD_MEMBERS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.add_members_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#add-members-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#add-members-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "GROUP_ADD_MEMBERS_SELECT_ANY",
+          "name": "click",
+          "is_navigation": false,
+          "from": "GROUP_CREATE_ADD_MEMBERS",
+          "to": "GROUP_CREATE_ADD_MEMBERS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.add_members_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_member_ids",
+              "value_expr": "append($.selected_member_ids, {\"id\": \"{ITEM_ANY}\"})"
+            },
+            {
+              "op": "clear",
+              "path": "$.add_members_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#add-members-list .member-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "GROUP_ADD_MEMBERS_NEXT_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "GROUP_CREATE_ADD_MEMBERS",
+          "to": "GROUP_CREATE_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_member_ids",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#group-add-members-next"
+            }
+          ]
+        },
+        {
+          "id": "GROUP_ADD_MEMBERS_BACK_DETAILS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "GROUP_CREATE_ADD_MEMBERS",
+          "to": "GROUP_CREATE_DETAILS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#group-add-members-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GROUP_CREATE_REVIEW",
+      "signature_schema": {
+        "group_name": "string|null",
+        "selected_member_ids": "array<string>|null"
+      },
+      "actions": [
+        {
+          "id": "GROUP_REVIEW_CREATE_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "GROUP_CREATE_REVIEW",
+          "to": "CREATE_GROUP_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.group_name",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.selected_member_ids",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#group-create-submit"
+            }
+          ]
+        },
+        {
+          "id": "GROUP_REVIEW_BACK_ADD_MEMBERS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "GROUP_CREATE_REVIEW",
+          "to": "GROUP_CREATE_ADD_MEMBERS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#group-review-back-add-members"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_GROUP_SUCCESS",
+      "signature_schema": {
+        "group_name": "string|null"
+      },
+      "actions": [
+        {
+          "id": "CREATE_GROUP_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_GROUP_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#group-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "CREATE_GROUP_SUCCESS_GO_TO_GROUPS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_GROUP_SUCCESS",
+          "to": "GROUPS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#group-success-go-groups"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CALL_HISTORY",
+      "signature_schema": {
+        "calls": "array<object>|null",
+        "call_history_filters_applied": "boolean|null",
+        "call_history_viewport_anchor_id": "string|null",
+        "matched_call_id": "string|null",
+        "call_history_has_searched": "boolean|null",
+        "selected_call_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "CALLS_FILTER_MISSED_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CALL_HISTORY",
+          "to": "CALL_HISTORY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.call_history_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-missed-calls-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "CALLS_SORT_DROPDOWN",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CALL_HISTORY",
+          "to": "CALL_HISTORY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.call_history_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#calls-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#calls-sort-option-name-inc",
+              "ui_elements": {
+                "container": "#calls-sort-dropdown",
+                "options": [
+                  {
+                    "value": "recent",
+                    "selector": "#calls-sort-option-recent-desc"
+                  },
+                  {
+                    "value": "name",
+                    "selector": "#calls-sort-option-name-inc"
+                  },
+                  {
+                    "value": "incoming",
+                    "selector": "#calls-sort-option-incoming"
+                  },
+                  {
+                    "value": "outgoing",
+                    "selector": "#calls-sort-option-outgoing"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "CALLS_OPEN_FILTERED_CALL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CALL_HISTORY",
+          "to": "START_CALL_SETUP",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.call_history_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_call_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.call_history_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#call-history-list .call-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "CALLS_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "CALL_HISTORY",
+          "to": "CALL_HISTORY",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_call_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.call_history_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#calls-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#calls-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "CALLS_OPEN_MATCHED_CALL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CALL_HISTORY",
+          "to": "START_CALL_SETUP",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_call_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.call_history_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_call_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.call_history_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#call-history-list .call-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "CALLS_SCROLL_CALL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CALL_HISTORY",
+          "to": "CALL_HISTORY",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.call_history_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#call-history-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#call-history-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "CALLS_OPEN_ANY_CALL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CALL_HISTORY",
+          "to": "START_CALL_SETUP",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.call_history_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_call_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.call_history_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#call-history-list .call-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "CALLS_BACK_CHATS_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CALL_HISTORY",
+          "to": "CHATS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#calls-back-chats"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "START_CALL_SETUP",
+      "signature_schema": {
+        "selected_call_id": "string|null",
+        "call_type": "string|null"
+      },
+      "actions": [
+        {
+          "id": "START_CALL_SELECT_TYPE",
+          "name": "click",
+          "is_navigation": false,
+          "from": "START_CALL_SETUP",
+          "to": "START_CALL_SETUP",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.call_type",
+              "value": "voice"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#call-type-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#call-type-option-voice",
+              "ui_elements": {
+                "container": "#call-type-dropdown",
+                "options": [
+                  {
+                    "value": "voice",
+                    "selector": "#call-type-option-voice"
+                  },
+                  {
+                    "value": "video",
+                    "selector": "#call-type-option-video"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "START_CALL_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "START_CALL_SETUP",
+          "to": "START_CALL_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_call_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.call_type",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#start-call-button"
+            }
+          ]
+        },
+        {
+          "id": "START_CALL_BACK_CALL_HISTORY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "START_CALL_SETUP",
+          "to": "CALL_HISTORY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#start-call-back-history"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "START_CALL_SUCCESS",
+      "signature_schema": {
+        "selected_call_id": "string|null",
+        "call_type": "string|null"
+      },
+      "actions": [
+        {
+          "id": "START_CALL_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "START_CALL_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#call-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "START_CALL_SUCCESS_BACK_HISTORY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "START_CALL_SUCCESS",
+          "to": "CALL_HISTORY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#call-success-back-history"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHAT_INFO",
+      "signature_schema": {
+        "selected_chat_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "CHAT_INFO_OPEN_DISAPPEARING_SETTINGS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHAT_INFO",
+          "to": "DISAPPEARING_MESSAGES_SETTINGS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_chat_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#chat-info-disappearing"
+            }
+          ]
+        },
+        {
+          "id": "CHAT_INFO_BACK_THREAD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHAT_INFO",
+          "to": "CHAT_THREAD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#chat-info-back-thread"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DISAPPEARING_MESSAGES_SETTINGS",
+      "signature_schema": {
+        "selected_chat_id": "string|null",
+        "disappearing_timer_seconds": "number|null"
+      },
+      "actions": [
+        {
+          "id": "DISAPPEARING_SET_TIMER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "DISAPPEARING_MESSAGES_SETTINGS",
+          "to": "DISAPPEARING_MESSAGES_SETTINGS",
+          "parameters": {
+            "widget": "slider",
+            "seconds": 604800
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.disappearing_timer_seconds",
+              "value": 604800
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dm-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#dm-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "DISAPPEARING_SAVE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DISAPPEARING_MESSAGES_SETTINGS",
+          "to": "CHAT_THREAD",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.disappearing_timer_seconds",
+              "cond": "gt",
+              "value": 0
+            },
+            {
+              "path": "$.selected_chat_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dm-save"
+            }
+          ]
+        },
+        {
+          "id": "DISAPPEARING_BACK_CHAT_INFO",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DISAPPEARING_MESSAGES_SETTINGS",
+          "to": "CHAT_INFO",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#dm-back-info"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SETTINGS_PRIVACY",
+      "signature_schema": {
+        "read_receipts_enabled": "boolean|null",
+        "typing_indicators_enabled": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "SETTINGS_PRIVACY_TOGGLE_READ_RECEIPTS",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SETTINGS_PRIVACY",
+          "to": "SETTINGS_PRIVACY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.read_receipts_enabled",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#toggle-read-receipts"
+            }
+          ]
+        },
+        {
+          "id": "SETTINGS_PRIVACY_TOGGLE_TYPING",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SETTINGS_PRIVACY",
+          "to": "SETTINGS_PRIVACY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.typing_indicators_enabled",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#toggle-typing-indicators"
+            }
+          ]
+        },
+        {
+          "id": "SETTINGS_PRIVACY_GO_TO_NOTIFICATIONS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SETTINGS_PRIVACY",
+          "to": "SETTINGS_NOTIFICATIONS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-nav-notifications"
+            }
+          ]
+        },
+        {
+          "id": "SETTINGS_PRIVACY_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SETTINGS_PRIVACY",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-privacy-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SETTINGS_NOTIFICATIONS",
+      "signature_schema": {
+        "notification_sound": "string|null",
+        "notification_vibrate": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "SETTINGS_NOTIFICATIONS_SELECT_SOUND",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SETTINGS_NOTIFICATIONS",
+          "to": "SETTINGS_NOTIFICATIONS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.notification_sound",
+              "value": "chime"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#notification-sound-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#sound-option-chime",
+              "ui_elements": {
+                "container": "#notification-sound-dropdown",
+                "options": [
+                  {
+                    "value": "chime",
+                    "selector": "#sound-option-chime"
+                  },
+                  {
+                    "value": "ding",
+                    "selector": "#sound-option-ding"
+                  },
+                  {
+                    "value": "silent",
+                    "selector": "#sound-option-silent"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "SETTINGS_NOTIFICATIONS_TOGGLE_VIBRATE",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SETTINGS_NOTIFICATIONS",
+          "to": "SETTINGS_NOTIFICATIONS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.notification_vibrate",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#notification-vibrate-toggle"
+            }
+          ]
+        },
+        {
+          "id": "SETTINGS_NOTIFICATIONS_SAVE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SETTINGS_NOTIFICATIONS",
+          "to": "UPDATE_SETTINGS_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.notification_sound",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-notifications-save"
+            }
+          ]
+        },
+        {
+          "id": "SETTINGS_NOTIFICATIONS_BACK_PRIVACY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SETTINGS_NOTIFICATIONS",
+          "to": "SETTINGS_PRIVACY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-notifications-back-privacy"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UPDATE_SETTINGS_SUCCESS",
+      "signature_schema": {
+        "notification_sound": "string|null"
+      },
+      "actions": [
+        {
+          "id": "SETTINGS_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "UPDATE_SETTINGS_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "SETTINGS_SUCCESS_BACK_NOTIFICATIONS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "UPDATE_SETTINGS_SUCCESS",
+          "to": "SETTINGS_NOTIFICATIONS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-success-back-notifications"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

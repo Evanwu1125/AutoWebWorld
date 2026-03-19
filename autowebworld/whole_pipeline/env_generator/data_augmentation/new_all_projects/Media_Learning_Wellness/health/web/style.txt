@@ -1,0 +1,40 @@
+# Visual Style Guide - Teladoc Health Inspired App
+
+## Theme & Audience
+- **Theme**: Telemedicine / Healthcare
+- **Reference App**: Teladoc Health
+- **Target Audience**: Patients seeking convenient, professional medical care.
+- **Visual Tone**: Trustworthy, Clean, Professional, Calming, Modern, Accessible.
+
+## Color Palette
+- **Primary**: #005DAA (Deep Blue - Trust, Professionalism)
+- **Secondary**: #009CDE (Light Blue - Friendliness, Action)
+- **Accent**: #722282 (Purple - Mental Health, Premium)
+- **Background**: #F8F9FA (Light Gray - Cleanliness)
+- **Surface**: #FFFFFF (White - Card backgrounds)
+- **Text**: #333333 (Dark Gray - Readability)
+- **Error**: #D32F2F (Red)
+- **Success**: #2E7D32 (Green)
+
+## Typography
+- **Font Family**: 'Inter', system-ui, -apple-system, sans-serif
+- **Headings**: Bold, Clear, Dark Blue (e.g., text-2xl font-bold text-[#005DAA])
+- **Body**: Regular, Readable, Dark Gray (e.g., text-base text-gray-700)
+- **Buttons**: Semi-bold, rounded-full or rounded-md.
+
+## Layout & Components
+- **Container**: Max-width 1200px, centered.
+- **Cards**: White background, subtle shadow (shadow-md), rounded-lg (rounded-xl).
+- **Navigation**: Clean top bar with logo and clear menu items. Mobile-responsive.
+- **Buttons**:
+  - Primary: Background Primary Blue, Text White, Hover Darker Blue.
+  - Secondary: Border Primary Blue, Text Primary Blue.
+- **Inputs**: Rounded borders, clear focus states (ring-2 ring-blue-500).
+- **Images**:
+  - High-quality photos of doctors, patients, and lifestyle.
+  - Rounded corners for images.
+  - Use ImageGetter for realistic placeholders.
+
+## Interceptors & Modals
+- **Cookie Consent**: Bottom fixed banner or centered modal. Friendly, not intrusive.
+- **Location Permission**: Centered modal, explanation of why location is needed (finding local providers).

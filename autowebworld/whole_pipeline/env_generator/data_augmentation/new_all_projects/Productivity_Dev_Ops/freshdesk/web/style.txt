@@ -1,0 +1,47 @@
+# Visual Design Style Guide - Modern Helpdesk (Freshdesk Inspired)
+
+## Theme & Target Audience
+- **Theme:** Professional Customer Support SaaS. Clean, organized, trustworthy, and efficient.
+- **Inspiration:** Freshdesk, Zendesk, Intercom.
+- **Audience:** Customer support agents, managers, and administrators.
+
+## Color Palette
+- **Primary:** #2C5CC5 (Freshdesk Blue) - Used for primary actions, links, and active states.
+- **Secondary:** #12344D (Deep Navy) - Used for sidebars, headers, and strong contrast elements.
+- **Accent:** #264966 (Muted Blue) - Used for secondary text and borders.
+- **Success:** #107C10 (Green) - Used for success states, "Open" status.
+- **Warning:** #F18D13 (Orange) - Used for "Pending" status, medium priority.
+- **Danger:** #D93025 (Red) - Used for "High" priority, destructive actions.
+- **Background:** #F3F5F7 (Light Gray) - Main application background to reduce eye strain.
+- **Surface:** #FFFFFF (White) - Cards, tables, and content areas.
+
+## Typography
+- **Font Family:** Inter, system-ui, -apple-system, sans-serif.
+- **Headings:** Bold, dark slate (#183247). H1 (24px), H2 (20px), H3 (16px).
+- **Body:** Regular (14px), slate gray (#475867).
+- **Labels:** Medium weight (12px), uppercase or muted.
+
+## Layout & Components
+- **Structure:** Dashboard-style layout. Sidebar navigation (if applicable) or top navigation bar.
+- **Cards:** White background, subtle shadow (shadow-sm), rounded corners (rounded-lg), padding (p-6).
+- **Buttons:**
+  - Primary: Solid blue, rounded-md, px-4 py-2, hover:bg-blue-700 transition.
+  - Secondary: Outline gray or ghost, hover:bg-gray-50.
+- **Inputs:** White background, border-gray-300, focus:ring-2 focus:ring-blue-500 rounded-md.
+- **Tables:** Clean rows, hover effects (hover:bg-gray-50), subtle borders.
+
+## Visual Design Principles
+- **"Wow" Factor:** Smooth transitions between pages. Micro-interactions on hover.
+- **Images:** High-quality avatars for users/agents. 
+- **Icons:** Use Lucide-vue-next or similar clean SVG icons (simulated via text/emoji if library missing, but preferably SVGs).
+- **Whitespace:** Generous spacing to prevent clutter.
+- **Z-Index Strategy:**
+  - Modals: z-50
+  - Dropdowns: z-40
+  - Sticky Headers: z-30
+  - Content: z-0
+
+## Image Usage
+- **Hero/Dashboard:** Use abstract SaaS illustrations or clean office photography.
+- **Avatars:** Real human faces for agents and contacts.
+- **Empty States:** Friendly illustrations.

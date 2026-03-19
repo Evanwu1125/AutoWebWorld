@@ -1,0 +1,90 @@
+You are a question generation assistant. Given an item's features, generate diverse questions that can be answered from a detail page screenshot.
+
+**Item Information:**
+{item_json}
+
+**Visual Description:**
+- Caption: {caption}
+- Keywords: {keyword}
+
+**CRITICAL Rules:**
+1. Do NOT ask about the item ID (e.g., "th_3", "id_123")
+2. Do NOT mention ID numbers in the questions
+3. Do NOT ask about image URLs or file paths
+4. All other features are valid for questioning
+
+**⚠️ MOST IMPORTANT - Answer Consistency:**
+**Your answers MUST use the EXACT same wording as in the features.**
+- If feature says "blue" → answer MUST say "blue" (NOT "light blue", "dark blue", "blue color")
+- If feature says "Family Therapy" → answer MUST say "Family Therapy" (NOT "family therapy services", "family counseling")
+- If feature says "8" → answer MUST say "8" or "8 years" (NOT "eight", "around 8", "approximately 8")
+- Do NOT paraphrase, do NOT add adjectives, do NOT change capitalization
+- Copy the exact values from the features directly into your answers
+
+**Examples of CORRECT answers:**
+- Feature: {{"color": "blue"}} → Answer: "blue" ✓
+- Feature: {{"specialty": "Family Therapy"}} → Answer: "Family Therapy" ✓
+- Feature: {{"experience": 8}} → Answer: "8 years" ✓
+
+**Examples of WRONG answers:**
+- Feature: {{"color": "blue"}} → Answer: "light blue" ✗ (added adjective)
+- Feature: {{"specialty": "Family Therapy"}} → Answer: "family therapy" ✗ (changed capitalization)
+- Feature: {{"experience": 8}} → Answer: "eight" ✗ (changed number format)
+
+**Generate 6-9 questions in THREE categories:**
+
+**Category 1: Single Feature Questions (2-3 questions)**
+- Ask about ONE specific feature
+- Answer contains the EXACT value from that feature
+- Examples:
+  * Q: "What is the specialty?" → A: "Family Therapy" (exact match)
+  * Q: "How many years of experience?" → A: "8 years" (use exact number)
+
+**Category 2: Visual Description Questions (2-3 questions)**
+- Ask about visual elements from the caption/keywords
+- Answer uses EXACT phrases from caption/keywords
+- If caption says "light blue", answer must say "light blue"
+- If caption says "stylized family figures", answer must say "stylized family figures"
+- Examples:
+  * Q: "What does the illustration represent?" 
+    → A: Use exact wording from caption
+  * Q: "What color is shown in the illustration?"
+    → A: Use exact color from caption/keyword
+
+**Category 3: Composite Answer Questions (2-3 questions)**
+- Ask about MULTIPLE features in ONE question
+- Answer combines EXACT values from multiple features
+- Each part of the answer must match the original feature exactly
+- Can combine: feature + feature, or feature + visual description
+- Examples:
+  * Q: "What is the therapist's name and specialty?" 
+    → A: "[exact name], specializing in [exact specialty]"
+  * Q: "What are the therapist's specialty and years of experience?"
+    → A: "[exact specialty] with [exact number] years of experience"
+  * Q: "What is the therapist's name and what does the illustration show?"
+    → A: "[exact name]. The illustration shows [exact description from caption]"
+
+**Output Format (JSON only):**
+[
+  {{
+    "question": "What is the therapist's specialty?",
+    "answer": "Family Therapy",
+    "type": "single_feature",
+    "features_used": ["specialty"]
+  }},
+  {{
+    "question": "What does the illustration represent?",
+    "answer": "A group of stylized family figures representing family therapy",
+    "type": "visual_description",
+    "features_used": ["caption"]
+  }},
+  {{
+    "question": "What is the therapist's name and specialty?",
+    "answer": "Catherine Moore, LCSW, specializing in Family Therapy",
+    "type": "composite_answer",
+    "features_used": ["name", "specialty"]
+  }}
+]
+
+**REMINDER: Every value in your answers must be copied EXACTLY from the features. Do not modify, paraphrase, or change any values.**
+

@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-BFS Mapping 筛选工具
+BFS Mapping Filter Tool
 
-功能：
-1. 收集旧 bfs_mapping 的所有文件路径（作为白名单）
-2. 筛选新生成的 bfs_mapping，只保留白名单中的文件
-3. 生成详细报告，显示保留、删除、丢失的文件
+Features:
+1. Collect all file paths from the old bfs_mapping (used as a whitelist)
+2. Filter the newly generated bfs_mapping, keeping only files present in the whitelist
+3. Generate a detailed report showing kept, deleted, and missing files
 
-使用场景：
-当 fsm.json 的 selector 被修改后，需要重新生成 BFS 以获取最新的 selector，
-但只想保留原有的轨迹范围，不增加新的轨迹。
+Use case:
+After modifying the selector in fsm.json, regenerate BFS to get the latest selectors
+while retaining only the original trajectory scope without adding new trajectories.
 """
 
 import argparse
@@ -21,21 +21,22 @@ from typing import Set, Tuple, List, Dict
 
 def normalize_path(path: str) -> str:
     """
-    规范化路径，只保留最后两级（目标状态/文件名）
+    Normalize a path, keeping only the last two levels (target_state/filename).
 
-    这样可以忽略顶层目录的差异（如 home_initial），只关注实际的目标状态和文件名。
+    This allows ignoring differences in the top-level directory (e.g. home_initial),
+    focusing only on the actual target state and filename.
 
-    例如:
+    Examples:
     - home_initial/SESSION_COMPLETED_SUCCESS/macro_001.json
-      → SESSION_COMPLETED_SUCCESS/macro_001.json
+      -> SESSION_COMPLETED_SUCCESS/macro_001.json
     - SESSION_COMPLETED_SUCCESS/macro_001.json
-      → SESSION_COMPLETED_SUCCESS/macro_001.json
+      -> SESSION_COMPLETED_SUCCESS/macro_001.json
 
     Args:
-        path: 原始相对路径
+        path: Original relative path
 
     Returns:
-        规范化后的路径（最后两级）
+        Normalized path (last two levels)
     """
     parts = Path(path).parts
     if len(parts) >= 2:
@@ -45,17 +46,17 @@ def normalize_path(path: str) -> str:
 
 def collect_file_paths(bfs_mapping_dir: Path) -> Set[str]:
     """
-    收集 bfs_mapping 目录下所有 JSON 文件的规范化路径
+    Collect normalized paths of all JSON files under the bfs_mapping directory.
 
     Args:
-        bfs_mapping_dir: bfs_mapping 目录路径
+        bfs_mapping_dir: Path to the bfs_mapping directory
 
     Returns:
-        规范化文件路径的集合（只保留最后两级：目标状态/文件名）
-        例如: {"SESSION_COMPLETED_SUCCESS/macro_002_00_HOME__SESSION_COMPLETED_SUCCESS.json"}
+        Set of normalized file paths (last two levels only: target_state/filename)
+        Example: {"SESSION_COMPLETED_SUCCESS/macro_002_00_HOME__SESSION_COMPLETED_SUCCESS.json"}
     """
     if not bfs_mapping_dir.exists():
-        print(f"[ERROR] 目录不存在: {bfs_mapping_dir}")
+        print(f"[ERROR] Directory does not exist: {bfs_mapping_dir}")
         return set()
 
     files = set()
@@ -76,26 +77,26 @@ def filter_bfs_mapping(
     verbose: bool = True
 ) -> Tuple[int, int, List[str]]:
     if verbose:
-        print(f"[INFO] 收集旧 bfs_mapping 的文件列表...")
-        print(f"       旧目录: {old_mapping}")
+        print(f"[INFO] Collecting file list from old bfs_mapping...")
+        print(f"       Old directory: {old_mapping}")
 
-    # 收集旧文件列表（白名单）- 使用规范化路径
+    # Collect old file list (whitelist) - using normalized paths
     old_files = collect_file_paths(old_mapping)
 
     if not old_files:
-        print(f"[ERROR] 旧 bfs_mapping 中没有找到任何文件")
+        print(f"[ERROR] No files found in old bfs_mapping")
         return 0, 0, []
 
     if verbose:
-        print(f"[INFO] 旧 bfs_mapping 共有 {len(old_files)} 个文件")
-        print(f"[INFO] 筛选新 bfs_mapping...")
-        print(f"       新目录: {new_mapping}")
+        print(f"[INFO] Old bfs_mapping contains {len(old_files)} files")
+        print(f"[INFO] Filtering new bfs_mapping...")
+        print(f"       New directory: {new_mapping}")
 
     kept = 0
     removed = 0
-    new_files_normalized = set()  # 收集新文件的规范化路径
+    new_files_normalized = set()  # Collect normalized paths of new files
 
-    # 遍历新生成的文件，删除不在白名单中的
+    # Iterate over newly generated files and delete those not in the whitelist
     for json_file in new_mapping.rglob("*.json"):
         try:
             rel_path = str(json_file.relative_to(new_mapping))
@@ -103,50 +104,50 @@ def filter_bfs_mapping(
             new_files_normalized.add(normalized)
 
             if normalized in old_files:
-                # 在白名单中，保留
+                # In the whitelist, keep it
                 kept += 1
             else:
-                # 不在白名单中，删除
+                # Not in the whitelist, delete it
                 json_file.unlink()
                 removed += 1
                 if verbose and removed <= 5:
-                    print(f"       删除: {rel_path}")
+                    print(f"       Deleted: {rel_path}")
         except Exception as e:
-            print(f"[WARNING] 处理文件失败: {json_file} -> {e}")
+            print(f"[WARNING] Failed to process file: {json_file} -> {e}")
 
-    # 检查哪些旧文件在新 mapping 中找不到（丢失）
+    # Check which old files are missing from the new mapping
     missing = []
     for old_file in old_files:
         if old_file not in new_files_normalized:
             missing.append(old_file)
-    
-    # 打印统计信息
+
+    # Print statistics
     print("")
     print("=" * 60)
-    print("筛选结果统计")
+    print("Filter Results Summary")
     print("=" * 60)
-    print(f"✅ 保留文件: {kept}")
-    print(f"❌ 删除文件: {removed}")
-    print(f"⚠️  丢失文件: {len(missing)}")
-    
-    # 计算丢失率
+    print(f"✅ Files kept: {kept}")
+    print(f"❌ Files deleted: {removed}")
+    print(f"⚠️  Files missing: {len(missing)}")
+
+    # Calculate missing rate
     if old_files:
         loss_rate = len(missing) / len(old_files) * 100
-        print(f"📊 丢失率: {loss_rate:.1f}%")
-        
+        print(f"📊 Missing rate: {loss_rate:.1f}%")
+
         if loss_rate > 50:
             print("")
-            print("⚠️  警告：丢失率超过 50%！")
-    
-    # 显示丢失的文件（前 20 个）
+            print("⚠️  Warning: missing rate exceeds 50%!")
+
+    # Show missing files (first 20)
     if missing:
         print("")
-        print(f"丢失的文件列表（共 {len(missing)} 个）：")
+        print(f"Missing files ({len(missing)} total):")
         for i, f in enumerate(missing[:20], 1):
             print(f"  {i}. {f}")
-        
+
         if len(missing) > 20:
-            print(f"  ... 还有 {len(missing) - 20} 个文件未显示")
+            print(f"  ... {len(missing) - 20} more files not shown")
     
     print("=" * 60)
     
@@ -155,49 +156,49 @@ def filter_bfs_mapping(
 
 def main():
     parser = argparse.ArgumentParser(
-        description="筛选 BFS mapping，只保留在参考 mapping 中存在的文件"
+        description="Filter BFS mapping, keeping only files that exist in the reference mapping"
     )
     parser.add_argument(
         "--old-mapping",
         type=Path,
         required=True,
-        help="旧的 bfs_mapping 目录（作为白名单）"
+        help="Old bfs_mapping directory (used as whitelist)"
     )
     parser.add_argument(
         "--new-mapping",
         type=Path,
         required=True,
-        help="新生成的 bfs_mapping 目录（将被筛选）"
+        help="Newly generated bfs_mapping directory (will be filtered)"
     )
     parser.add_argument(
         "--quiet",
         action="store_true",
-        help="静默模式，只显示统计信息"
+        help="Quiet mode, show statistics only"
     )
-    
+
     args = parser.parse_args()
-    
-    # 检查目录是否存在
+
+    # Check that directories exist
     if not args.old_mapping.exists():
-        print(f"[ERROR] 旧 bfs_mapping 目录不存在: {args.old_mapping}")
+        print(f"[ERROR] Old bfs_mapping directory does not exist: {args.old_mapping}")
         sys.exit(1)
-    
+
     if not args.new_mapping.exists():
-        print(f"[ERROR] 新 bfs_mapping 目录不存在: {args.new_mapping}")
+        print(f"[ERROR] New bfs_mapping directory does not exist: {args.new_mapping}")
         sys.exit(1)
-    
-    # 执行筛选
+
+    # Run the filter
     kept, removed, missing = filter_bfs_mapping(
         args.old_mapping,
         args.new_mapping,
         verbose=not args.quiet
     )
-    
-    # 返回状态码
+
+    # Return exit code
     if len(missing) > 0:
-        sys.exit(2)  # 有丢失文件，但不算错误
+        sys.exit(2)  # Missing files exist, but not considered an error
     else:
-        sys.exit(0)  # 成功
+        sys.exit(0)  # Success
 
 
 if __name__ == "__main__":

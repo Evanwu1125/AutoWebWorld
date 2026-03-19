@@ -19,12 +19,21 @@
   "path_length": {
     "len": [4, 6],
     "shortest_only": true,
-    "count_interceptors": false
+    "count_interceptors": false,
+    "strict": false
   },
   "home_nav_variants": ["direct"],
   "home_nav_coverage": "each",
   "list_filters": {
-    "enabled": false
+    "enabled": false,
+    "require_open_filtered": false
+  },
+  "policy": {
+    "home_policy": "navigation_first",
+    "back_policy": "recommended",
+    "interceptors": {
+      "cookie_placement": "home",
+      "permission_placement": "first_relevant_non_home"
+    }
   }
 }
-

@@ -1,0 +1,6 @@
+whole_pipeline/env_generator/data_augmentation/new_all_projects/Commerce_Finance/JD_COM/web
+whole_pipeline/env_generator/data_augmentation/new_all_projects/Commerce_Finance/aliexpress/web
+whole_pipeline/env_generator/data_augmentation/new_all_projects/Commerce_Finance/klaviyo/web
+whole_pipeline/env_generator/data_augmentation/new_all_projects/Commerce_Finance/revolut/web
+whole_pipeline/env_generator/data_augmentation/new_all_projects/Commerce_Finance/shopify/web
+whole_pipeline/env_generator/data_augmentation/new_all_projects/Commerce_Finance/walmart/web

@@ -1,0 +1,45 @@
+# Visual Style Guide - Video Sharing Platform (YouTube Inspired)
+
+## Theme & Tone
+- **Inspiration:** YouTube
+- **Target Audience:** General public, content creators, viewers.
+- **Visual Tone:** Clean, content-centric, immersive, modern.
+- **Mode:** Light/Dark hybrid (Modern "Dark Mode" aesthetic preferred for video platforms as it highlights content).
+
+## Color Palette
+- **Primary:** #FF0000 (YouTube Red) - Used for primary actions, play buttons, branding.
+- **Background:** #0F0F0F (Deep Black/Dark Gray) - Main background.
+- **Surface:** #272727 (Lighter Gray) - Cards, sidebars, input fields.
+- **Text Primary:** #FFFFFF (White) - Main headings, titles.
+- **Text Secondary:** #AAAAAA (Gray) - Meta info, descriptions.
+- **Accent:** #3EA6FF (Blue) - Links, hashtags, secondary actions.
+
+## Typography
+- **Font Family:** 'Roboto', 'Arial', sans-serif.
+- **Headings:** Bold, clean.
+- **Body:** Readable, moderate line height.
+
+## Layout Structure
+- **Global Header:** Fixed top bar with Logo (Home), Search Bar, Upload Icon, Profile.
+- **Navigation:**
+  - Desktop: Sidebar (collapsible or fixed left).
+  - Mobile: Bottom bar or hamburger menu.
+- **Grid System:** Responsive grid for video thumbnails (1 col mobile, 2 col tablet, 3-4 col desktop).
+- **Watch Page:** Video player prominent at top/left, recommendations on right/bottom.
+
+## Component Styling
+- **Buttons:**
+  - Primary: Solid Red (#FF0000), rounded corners (pill shape or slightly rounded).
+  - Secondary: Transparent with border or gray background.
+  - Icon Buttons: Circular hover effects.
+- **Cards (Video Items):**
+  - Thumbnail: 16:9 aspect ratio, rounded corners (approx 12px).
+  - Info: Title below thumbnail, channel name and views in smaller gray text.
+  - Hover: Slight scale up or shadow increase.
+- **Inputs:** Dark background (#121212), light border focus, rounded pill shape for search.
+- **Modals:** Centered, backdrop blur, dark theme card.
+
+## Image Usage
+- **Hero/Thumbnails:** High-quality real images fetched via ImageGetter.
+- **Avatars:** Circular channel icons.
+- **Placeholders:** Skeleton loading states (simulated).

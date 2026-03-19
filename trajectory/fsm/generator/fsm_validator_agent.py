@@ -1,5 +1,8 @@
 from typing import Dict, Any, Optional
 from .base_agent import BaseAgent
+from .reachability_checker import build_reachability_issues, run_bfs_summary
+from .scoring import apply_reachability_score
+from .utils import normalize_complexity_profile
 import json
 
 class FSMValidatorAgent(BaseAgent):
@@ -30,7 +33,8 @@ class FSMValidatorAgent(BaseAgent):
     def _build_instruction_prompt(self, fsm_data: Dict[str, Any], complexity_profile: Optional[Dict[str, Any]] = None) -> str:
         template = self._get_instruction_template()
         fsm_json_str = json.dumps(fsm_data, ensure_ascii=False, indent=2)
-        profile_json_str = json.dumps(complexity_profile, ensure_ascii=False, indent=2) if complexity_profile is not None else "{}"
+        normalized_profile = normalize_complexity_profile(complexity_profile)
+        profile_json_str = json.dumps(normalized_profile, ensure_ascii=False, indent=2)
         instruction = (
             template
             .replace("{fsm_json_here}", fsm_json_str)
@@ -40,13 +44,14 @@ class FSMValidatorAgent(BaseAgent):
 
     async def call(self, fsm_data: Dict[str, Any], **kwargs) -> Dict[str, Any]:
         if not fsm_data or not isinstance(fsm_data, dict):
-            raise ValueError("fsm_data 必须是非空字典")
+            raise ValueError("fsm_data must be a non-empty dict")
 
-        print(f"🔍 FSMValidatorAgent: 开始验证 FSM")
-        print(f"   页面数: {len(fsm_data.get('pages', []))}")
+        print(f"🔍 FSMValidatorAgent: Starting FSM validation")
+        print(f"   Pages: {len(fsm_data.get('pages', []))}")
 
+        normalized_profile = normalize_complexity_profile(kwargs.get('complexity_profile'))
         system_prompt = self._get_system_prompt()
-        instruction_prompt = self._build_instruction_prompt(fsm_data, kwargs.get('complexity_profile'))
+        instruction_prompt = self._build_instruction_prompt(fsm_data, normalized_profile)
 
         try:
             response = await self._call_llm(
@@ -56,16 +61,30 @@ class FSMValidatorAgent(BaseAgent):
             )
 
             validation_report = self._force_json(response)
+            bfs_summary = run_bfs_summary(fsm_data=fsm_data, max_depth=40)
+            local_reachability_issues = build_reachability_issues(bfs_summary)
+
+            validation_report = apply_reachability_score(
+                base_report=validation_report,
+                local_reachability_issues=local_reachability_issues,
+                reachability=bfs_summary.get("reachability", {}),
+            )
+            validation_report["_bfs_summary"] = bfs_summary
+
             score = validation_report.get("score", 0)
-            print(f"✅ FSMValidatorAgent: 验证完成，评分: {score}")
+            print(f"✅ FSMValidatorAgent: Validation complete, score: {score}")
             return validation_report
 
         except Exception as e:
-            print(f"❌ FSMValidatorAgent: 验证失败: {e}")
+            print(f"❌ FSMValidatorAgent: Validation failed: {e}")
             raise
 
     def get_score(self, validation_report: Dict[str, Any]) -> int:
-        return validation_report.get("score", 0)
+        raw_score = validation_report.get("score", 0)
+        try:
+            return int(float(raw_score))
+        except (TypeError, ValueError):
+            return 0
 
     def get_issues(self, validation_report: Dict[str, Any]) -> list:
         return validation_report.get("issues", [])

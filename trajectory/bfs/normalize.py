@@ -1,5 +1,5 @@
 # normalize_fsm.py
-# 用法：
+# Usage:
 #   python normalize_fsm.py --input ./perfect_fsm_email_100.json --output ./fsm_norm.json
 import json
 import argparse
@@ -20,7 +20,7 @@ def assert_true(cond: bool, msg: str):
         raise ValueError(msg)
 
 def _flatten_schema(prefix: str, schema: Any, out: Dict[str, str]):
-    # 将 signature_schema 展平成 JSONPath → 类型字符串
+    # Flatten signature_schema into JSONPath -> type string mapping
     if isinstance(schema, dict):
         for k, v in schema.items():
             key_path = f"{prefix}.{k}" if prefix else f"$.{k}"
@@ -44,7 +44,7 @@ def collect_reads_preconditions(action: Dict[str, Any]) -> List[str]:
         path = c.get("path")
         if isinstance(path, str):
             reads.append(path)
-    # 去重保序
+    # Deduplicate while preserving order
     seen, out = set(), []
     for r in reads:
         if r not in seen:
@@ -73,13 +73,13 @@ def normalize_fsm(fsm: Dict[str, Any]) -> Dict[str, Any]:
     terminals = meta.get("terminal_pages", [])
     pages: List[Dict[str, Any]] = fsm.get("pages", [])
 
-    assert_true(isinstance(initial, str) and initial, "meta.initial_page_id 缺失或非法")
-    assert_true(isinstance(terminals, list) and len(terminals) > 0, "meta.terminal_pages 必须是非空数组")
-    assert_true(isinstance(pages, list) and len(pages) > 0, "pages 必须是非空数组")
+    assert_true(isinstance(initial, str) and initial, "meta.initial_page_id is missing or invalid")
+    assert_true(isinstance(terminals, list) and len(terminals) > 0, "meta.terminal_pages must be a non-empty array")
+    assert_true(isinstance(pages, list) and len(pages) > 0, "pages must be a non-empty array")
 
     page_ids = [p.get("id") for p in pages]
-    assert_true(all(isinstance(x, str) and x for x in page_ids), "每个 page.id 必须是非空字符串")
-    assert_true(len(set(page_ids)) == len(page_ids), "page.id 必须唯一")
+    assert_true(all(isinstance(x, str) and x for x in page_ids), "Each page.id must be a non-empty string")
+    assert_true(len(set(page_ids)) == len(page_ids), "page.id must be unique")
 
     page_index: Dict[str, Dict[str, Any]] = {p["id"]: p for p in pages}
     schema_lookup = build_schema_lookup(pages)
@@ -92,7 +92,7 @@ def normalize_fsm(fsm: Dict[str, Any]) -> Dict[str, Any]:
             frm = act.get("from", pid)
             to = act.get("to", pid)
             is_nav = bool(act.get("is_navigation", False))
-            assert_true(isinstance(aid, str) and aid, f"动作缺少有效 id（page={pid}）")
+            assert_true(isinstance(aid, str) and aid, f"Action is missing a valid id (page={pid})")
             reads = collect_reads_preconditions(act)
             writes = collect_writes_effects(act)
             params_needed = collect_params_needed(act)

@@ -1,0 +1,2241 @@
+{
+  "meta": {
+    "app": "Email_Client-Outlook_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "SEND_EMAIL_SUCCESS",
+      "REPLY_EMAIL_SUCCESS",
+      "FORWARD_EMAIL_SUCCESS",
+      "SCHEDULE_MEETING_SUCCESS",
+      "MOVE_EMAIL_SUCCESS"
+    ],
+    "global_signature_schema": {
+      "emails": "array<object>|null",
+      "calendar_events": "array<object>|null"
+    },
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 25,
+        "max": 35
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover",
+        "menu"
+      ],
+      "home_nav_coverage": "any",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 4,
+        "two_step_parity": false,
+        "allowed_shapes": [
+          "checkboxes",
+          "sliders",
+          "sort"
+        ]
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "current_user_id": "string|null",
+        "cookie_consent_given": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_HOME_ACCEPT_COOKIES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cookie_consent_given",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_INBOX_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "MAIL_INBOX",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-mail"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_CALENDAR_HOVER",
+          "name": "select",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "CALENDAR_MONTH",
+          "parameters": {
+            "widget": "hover_menu"
+          },
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#app-launcher"
+            },
+            {
+              "op": "click",
+              "selector": "#app-launcher .tile-calendar",
+              "ui_elements": {
+                "container": "#app-launcher",
+                "options": [
+                  {
+                    "value": "Outlook",
+                    "selector": "#app-launcher .tile-outlook"
+                  },
+                  {
+                    "value": "Calendar",
+                    "selector": "#app-launcher .tile-calendar"
+                  },
+                  {
+                    "value": "People",
+                    "selector": "#app-launcher .tile-people"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_SETTINGS_MENU",
+          "name": "select",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "MAIL_SETTINGS_GENERAL",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#user-menu-toggle"
+            },
+            {
+              "op": "click",
+              "selector": "#user-menu-settings",
+              "ui_elements": {
+                "container": "#user-menu",
+                "options": [
+                  {
+                    "value": "View account",
+                    "selector": "#user-menu-account"
+                  },
+                  {
+                    "value": "My profile",
+                    "selector": "#user-menu-profile"
+                  },
+                  {
+                    "value": "Settings",
+                    "selector": "#user-menu-settings"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_PEOPLE_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "PEOPLE_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-people"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MAIL_INBOX",
+      "signature_schema": {
+        "emails": "array<object>|null",
+        "location_permission_granted": "boolean|null",
+        "inbox_filters_applied": "boolean|null",
+        "inbox_has_searched": "boolean|null",
+        "inbox_viewport_anchor_id": "string|null",
+        "matched_email_id": "string|null",
+        "selected_email_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_INBOX_GRANT_LOCATION",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MAIL_INBOX",
+          "to": "MAIL_INBOX",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "ACT_INBOX_FILTER_CHECKBOX",
+          "name": "select",
+          "is_navigation": false,
+          "from": "MAIL_INBOX",
+          "to": "MAIL_INBOX",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.inbox_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-unread-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_INBOX_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "MAIL_INBOX",
+          "to": "MAIL_INBOX",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.inbox_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#size-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#size-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_INBOX_FILTER_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "MAIL_INBOX",
+          "to": "MAIL_INBOX",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.inbox_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#sort-option-newest-desc",
+              "ui_elements": {
+                "container": "#sort-dropdown",
+                "options": [
+                  {
+                    "value": "newest",
+                    "selector": "#sort-option-newest-desc"
+                  },
+                  {
+                    "value": "oldest",
+                    "selector": "#sort-option-oldest"
+                  },
+                  {
+                    "value": "by_sender",
+                    "selector": "#sort-option-sender"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_INBOX_OPEN_FILTERED_EMAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_INBOX",
+          "to": "MAIL_MESSAGE_READ",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.inbox_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_email_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.inbox_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#mail-list .row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_INBOX_SEARCH_EMAIL",
+          "name": "search",
+          "is_navigation": false,
+          "from": "MAIL_INBOX",
+          "to": "MAIL_INBOX",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_email_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.inbox_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#inbox-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#inbox-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_INBOX_OPEN_MATCHED_EMAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_INBOX",
+          "to": "MAIL_MESSAGE_READ",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_email_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.inbox_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_email_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.inbox_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#mail-list .row-search-result"
+            }
+          ]
+        },
+        {
+          "id": "ACT_INBOX_SCROLL_EMAIL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MAIL_INBOX",
+          "to": "MAIL_INBOX",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.inbox_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#mail-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#mail-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_INBOX_OPEN_ANY_EMAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_INBOX",
+          "to": "MAIL_MESSAGE_READ",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.inbox_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_email_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.inbox_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#mail-list .row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_INBOX_OPEN_COMPOSE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_INBOX",
+          "to": "MAIL_COMPOSE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#button-new-message"
+            }
+          ]
+        },
+        {
+          "id": "ACT_INBOX_GO_TRASH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_INBOX",
+          "to": "MAIL_TRASH",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#folder-trash"
+            }
+          ]
+        },
+        {
+          "id": "ACT_INBOX_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_INBOX",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MAIL_MESSAGE_READ",
+      "signature_schema": {
+        "selected_email_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_READ_REPLY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_MESSAGE_READ",
+          "to": "MAIL_REPLY",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_email_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#button-reply"
+            }
+          ]
+        },
+        {
+          "id": "ACT_READ_FORWARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_MESSAGE_READ",
+          "to": "MAIL_FORWARD",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_email_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#button-forward"
+            }
+          ]
+        },
+        {
+          "id": "ACT_READ_MOVE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_MESSAGE_READ",
+          "to": "MAIL_MOVE",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_email_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#button-move"
+            }
+          ]
+        },
+        {
+          "id": "ACT_READ_BACK_INBOX",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_MESSAGE_READ",
+          "to": "MAIL_INBOX",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-inbox"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MAIL_COMPOSE",
+      "signature_schema": {
+        "draft_to": "string|null",
+        "draft_subject": "string|null",
+        "draft_body": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_COMPOSE_TYPE_TO",
+          "name": "type",
+          "is_navigation": false,
+          "from": "MAIL_COMPOSE",
+          "to": "MAIL_COMPOSE",
+          "parameters": {
+            "field": "to"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.draft_to",
+              "value": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#compose-to-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#compose-to-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COMPOSE_TYPE_SUBJECT",
+          "name": "type",
+          "is_navigation": false,
+          "from": "MAIL_COMPOSE",
+          "to": "MAIL_COMPOSE",
+          "parameters": {
+            "field": "subject"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.draft_subject",
+              "value": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#compose-subject-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#compose-subject-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COMPOSE_TYPE_BODY",
+          "name": "type",
+          "is_navigation": false,
+          "from": "MAIL_COMPOSE",
+          "to": "MAIL_COMPOSE",
+          "parameters": {
+            "field": "body"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.draft_body",
+              "value": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#compose-body-editor"
+            },
+            {
+              "op": "type_text",
+              "selector": "#compose-body-editor",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COMPOSE_SEND",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_COMPOSE",
+          "to": "SEND_EMAIL_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.draft_to",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.draft_subject",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.draft_body",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#compose-send-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_COMPOSE_BACK_INBOX",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_COMPOSE",
+          "to": "MAIL_INBOX",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#compose-discard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MAIL_REPLY",
+      "signature_schema": {
+        "reply_body": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_REPLY_TYPE_BODY",
+          "name": "type",
+          "is_navigation": false,
+          "from": "MAIL_REPLY",
+          "to": "MAIL_REPLY",
+          "parameters": {
+            "field": "body"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.reply_body",
+              "value": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#reply-body-editor"
+            },
+            {
+              "op": "type_text",
+              "selector": "#reply-body-editor",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REPLY_SEND",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_REPLY",
+          "to": "REPLY_EMAIL_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.reply_body",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#reply-send-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REPLY_BACK_READ",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_REPLY",
+          "to": "MAIL_MESSAGE_READ",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#reply-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MAIL_FORWARD",
+      "signature_schema": {
+        "forward_to": "string|null",
+        "forward_body": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_FORWARD_TYPE_TO",
+          "name": "type",
+          "is_navigation": false,
+          "from": "MAIL_FORWARD",
+          "to": "MAIL_FORWARD",
+          "parameters": {
+            "field": "to"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.forward_to",
+              "value": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#forward-to-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#forward-to-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FORWARD_TYPE_BODY",
+          "name": "type",
+          "is_navigation": false,
+          "from": "MAIL_FORWARD",
+          "to": "MAIL_FORWARD",
+          "parameters": {
+            "field": "body"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.forward_body",
+              "value": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#forward-body-editor"
+            },
+            {
+              "op": "type_text",
+              "selector": "#forward-body-editor",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FORWARD_SEND",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_FORWARD",
+          "to": "FORWARD_EMAIL_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.forward_to",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.forward_body",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#forward-send-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FORWARD_BACK_READ",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_FORWARD",
+          "to": "MAIL_MESSAGE_READ",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#forward-back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MAIL_MOVE",
+      "signature_schema": {
+        "selected_email_id": "string|null",
+        "selected_folder": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MOVE_SELECT_FOLDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "MAIL_MOVE",
+          "to": "MAIL_MOVE",
+          "parameters": {
+            "widget": "dropdown",
+            "folder": "Inbox"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_folder",
+              "value": "Inbox"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#move-folder-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#move-folder-inbox",
+              "ui_elements": {
+                "container": "#move-folder-dropdown",
+                "options": [
+                  {
+                    "value": "Inbox",
+                    "selector": "#move-folder-inbox"
+                  },
+                  {
+                    "value": "Archive",
+                    "selector": "#move-folder-archive"
+                  },
+                  {
+                    "value": "Junk",
+                    "selector": "#move-folder-junk"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_MOVE_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_MOVE",
+          "to": "MOVE_EMAIL_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_folder",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#move-confirm-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MOVE_BACK_READ",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_MOVE",
+          "to": "MAIL_MESSAGE_READ",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#move-cancel"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MAIL_SENT",
+      "signature_schema": {
+        "emails": "array<object>|null",
+        "sent_filters_applied": "boolean|null",
+        "sent_viewport_anchor_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SENT_FILTER_CHECKBOX",
+          "name": "select",
+          "is_navigation": false,
+          "from": "MAIL_SENT",
+          "to": "MAIL_SENT",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.sent_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sent-filter-has-attachments"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SENT_FILTER_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "MAIL_SENT",
+          "to": "MAIL_SENT",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.sent_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sent-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#sent-sort-option-recent",
+              "ui_elements": {
+                "container": "#sent-sort-dropdown",
+                "options": [
+                  {
+                    "value": "recent",
+                    "selector": "#sent-sort-option-recent"
+                  },
+                  {
+                    "value": "oldest",
+                    "selector": "#sent-sort-option-oldest"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_SENT_OPEN_FILTERED_EMAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_SENT",
+          "to": "MAIL_MESSAGE_READ",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.sent_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.sent_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sent-list .row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SENT_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MAIL_SENT",
+          "to": "MAIL_SENT",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.sent_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sent-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#sent-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SENT_BACK_INBOX",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_SENT",
+          "to": "MAIL_INBOX",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sent-back-inbox"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MAIL_DRAFTS",
+      "signature_schema": {
+        "emails": "array<object>|null",
+        "drafts_viewport_anchor_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_DRAFTS_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MAIL_DRAFTS",
+          "to": "MAIL_DRAFTS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.drafts_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#drafts-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#drafts-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DRAFTS_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_DRAFTS",
+          "to": "MAIL_COMPOSE",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.drafts_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.drafts_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#drafts-list .row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DRAFTS_BACK_INBOX",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_DRAFTS",
+          "to": "MAIL_INBOX",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#drafts-back-inbox"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MAIL_TRASH",
+      "signature_schema": {
+        "emails": "array<object>|null",
+        "trash_filters_applied": "boolean|null",
+        "trash_viewport_anchor_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_TRASH_FILTER_CHECKBOX",
+          "name": "select",
+          "is_navigation": false,
+          "from": "MAIL_TRASH",
+          "to": "MAIL_TRASH",
+          "parameters": {
+            "widget": "checkboxes"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.trash_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#trash-filter-deleted-today"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TRASH_OPEN_FILTERED_EMAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_TRASH",
+          "to": "MAIL_MESSAGE_READ",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.trash_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.trash_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#trash-list .row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TRASH_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MAIL_TRASH",
+          "to": "MAIL_TRASH",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.trash_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#trash-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#trash-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_TRASH_BACK_INBOX",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_TRASH",
+          "to": "MAIL_INBOX",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#trash-back-inbox"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CALENDAR_MONTH",
+      "signature_schema": {
+        "calendar_events": "array<object>|null",
+        "calendar_viewport_anchor_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CALENDAR_SCROLL",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CALENDAR_MONTH",
+          "to": "CALENDAR_MONTH",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.calendar_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#calendar-grid"
+            },
+            {
+              "op": "drag",
+              "selector": "#calendar-grid",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CALENDAR_OPEN_DAY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CALENDAR_MONTH",
+          "to": "CALENDAR_DAY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.calendar_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#calendar-day-1"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CALENDAR_NEW_EVENT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CALENDAR_MONTH",
+          "to": "CALENDAR_NEW_EVENT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#button-new-event"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CALENDAR_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CALENDAR_MONTH",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#calendar-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CALENDAR_DAY",
+      "signature_schema": {
+        "calendar_events": "array<object>|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_DAY_OPEN_EVENT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CALENDAR_DAY",
+          "to": "CALENDAR_EVENT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#day-view .event-slot"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DAY_BACK_MONTH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CALENDAR_DAY",
+          "to": "CALENDAR_MONTH",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#day-back-month"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CALENDAR_NEW_EVENT",
+      "signature_schema": {
+        "event_title": "string|null",
+        "event_location": "string|null",
+        "event_description": "string|null",
+        "event_datetime": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_EVENT_TYPE_TITLE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CALENDAR_NEW_EVENT",
+          "to": "CALENDAR_NEW_EVENT",
+          "parameters": {
+            "field": "title"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.event_title",
+              "value": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#event-title-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#event-title-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EVENT_TYPE_LOCATION",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CALENDAR_NEW_EVENT",
+          "to": "CALENDAR_NEW_EVENT",
+          "parameters": {
+            "field": "location"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.event_location",
+              "value": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#event-location-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#event-location-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EVENT_TYPE_DESCRIPTION",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CALENDAR_NEW_EVENT",
+          "to": "CALENDAR_NEW_EVENT",
+          "parameters": {
+            "field": "description"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.event_description",
+              "value": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#event-description-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#event-description-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EVENT_PICK_DATETIME",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CALENDAR_NEW_EVENT",
+          "to": "CALENDAR_NEW_EVENT",
+          "parameters": {
+            "widget": "date_picker",
+            "year": 2025,
+            "month": 10,
+            "day": 22,
+            "hour": 10,
+            "minute": 30
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.event_datetime",
+              "value_expr": "now()"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#date-picker"
+            },
+            {
+              "op": "click",
+              "selector": ".year-2025"
+            },
+            {
+              "op": "click",
+              "selector": ".month-10"
+            },
+            {
+              "op": "click",
+              "selector": ".day-22"
+            },
+            {
+              "op": "click",
+              "selector": ".hour-10"
+            },
+            {
+              "op": "click",
+              "selector": ".minute-30"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EVENT_SAVE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CALENDAR_NEW_EVENT",
+          "to": "SCHEDULE_MEETING_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.event_title",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.event_datetime",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#event-save-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EVENT_BACK_MONTH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CALENDAR_NEW_EVENT",
+          "to": "CALENDAR_MONTH",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#event-back-month"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CALENDAR_EVENT_DETAIL",
+      "signature_schema": {
+        "selected_event_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_EVENT_DETAIL_BACK_DAY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CALENDAR_EVENT_DETAIL",
+          "to": "CALENDAR_DAY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#event-detail-back-day"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MAIL_SETTINGS_GENERAL",
+      "signature_schema": {
+        "signature_text": "string|null",
+        "theme_choice": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SETTINGS_TYPE_SIGNATURE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "MAIL_SETTINGS_GENERAL",
+          "to": "MAIL_SETTINGS_GENERAL",
+          "parameters": {
+            "field": "signature"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.signature_text",
+              "value": "{input_text}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-signature-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#settings-signature-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_SELECT_THEME",
+          "name": "select",
+          "is_navigation": false,
+          "from": "MAIL_SETTINGS_GENERAL",
+          "to": "MAIL_SETTINGS_GENERAL",
+          "parameters": {
+            "widget": "dropdown",
+            "theme": "Dark"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.theme_choice",
+              "value": "Dark"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#theme-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#theme-dark",
+              "ui_elements": {
+                "container": "#theme-dropdown",
+                "options": [
+                  {
+                    "value": "Light",
+                    "selector": "#theme-light"
+                  },
+                  {
+                    "value": "Dark",
+                    "selector": "#theme-dark"
+                  },
+                  {
+                    "value": "HighContrast",
+                    "selector": "#theme-contrast"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_SETTINGS_GENERAL",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-back-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SETTINGS_GO_INBOX",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MAIL_SETTINGS_GENERAL",
+          "to": "MAIL_INBOX",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-go-inbox"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PEOPLE_LIST",
+      "signature_schema": {
+        "contacts": "array<object>|null",
+        "people_viewport_anchor_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PEOPLE_SCROLL",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PEOPLE_LIST",
+          "to": "PEOPLE_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.people_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#people-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#people-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PEOPLE_OPEN_CONTACT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PEOPLE_LIST",
+          "to": "PEOPLE_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.people_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.people_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#people-list .row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PEOPLE_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PEOPLE_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#people-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PEOPLE_DETAIL",
+      "signature_schema": {
+        "selected_contact_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PEOPLE_DETAIL_SEND_MAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PEOPLE_DETAIL",
+          "to": "MAIL_COMPOSE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contact-send-mail"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PEOPLE_DETAIL_BACK_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PEOPLE_DETAIL",
+          "to": "PEOPLE_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contact-back-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SEND_EMAIL_SUCCESS",
+      "signature_schema": {
+        "sent_message_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SEND_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SEND_EMAIL_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#send-success-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SEND_SUCCESS_GO_INBOX",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SEND_EMAIL_SUCCESS",
+          "to": "MAIL_INBOX",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#send-success-inbox"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REPLY_EMAIL_SUCCESS",
+      "signature_schema": {
+        "replied_message_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_REPLY_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REPLY_EMAIL_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#reply-success-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REPLY_SUCCESS_GO_INBOX",
+          "name": "click",
+          "is_navigation": true,
+          "from": "REPLY_EMAIL_SUCCESS",
+          "to": "MAIL_INBOX",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#reply-success-inbox"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FORWARD_EMAIL_SUCCESS",
+      "signature_schema": {
+        "forwarded_message_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_FORWARD_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FORWARD_EMAIL_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#forward-success-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FORWARD_SUCCESS_GO_INBOX",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FORWARD_EMAIL_SUCCESS",
+          "to": "MAIL_INBOX",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#forward-success-inbox"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SCHEDULE_MEETING_SUCCESS",
+      "signature_schema": {
+        "event_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_SCHEDULE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SCHEDULE_MEETING_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#schedule-success-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_SCHEDULE_SUCCESS_GO_CALENDAR",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SCHEDULE_MEETING_SUCCESS",
+          "to": "CALENDAR_MONTH",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#schedule-success-calendar"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MOVE_EMAIL_SUCCESS",
+      "signature_schema": {
+        "moved_message_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_MOVE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MOVE_EMAIL_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#move-success-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_MOVE_SUCCESS_GO_INBOX",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MOVE_EMAIL_SUCCESS",
+          "to": "MAIL_INBOX",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#move-success-inbox"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

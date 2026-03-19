@@ -1,0 +1,2361 @@
+{
+  "meta": {
+    "app": "Video_Sharing_Platform-Youtube_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "WATCH_LIKE_SUCCESS",
+      "WATCH_COMMENT_SUCCESS",
+      "UPLOAD_PUBLISH_SUCCESS",
+      "PLAYLIST_CREATE_SUCCESS",
+      "SUBSCRIBE_SUCCESS"
+    ],
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 25,
+        "max": 35
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover",
+        "menu"
+      ],
+      "home_nav_coverage": "any",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 4,
+        "two_step_parity": false,
+        "allowed_shapes": [
+          "checkboxes",
+          "sliders",
+          "sort"
+        ]
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "current_user_id": "string|null",
+        "cookie_consent_given": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "HOME_ACCEPT_COOKIES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cookie_consent_given",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_TRENDING_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "TRENDING",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-trending"
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_SUBSCRIPTIONS_HOVER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "SUBSCRIPTIONS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#nav-subscriptions-menu"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-subscriptions-menu .menu-item-subscriptions",
+              "ui_elements": {
+                "container": "#nav-subscriptions-menu",
+                "options": [
+                  {
+                    "value": "subscriptions",
+                    "selector": "#nav-subscriptions-menu .menu-item-subscriptions"
+                  },
+                  {
+                    "value": "library",
+                    "selector": "#nav-subscriptions-menu .menu-item-library"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_LIBRARY_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "LIBRARY",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-library-toggle"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-library-item-library",
+              "ui_elements": {
+                "container": "#nav-library-toggle",
+                "options": [
+                  {
+                    "value": "library",
+                    "selector": "#nav-library-item-library"
+                  },
+                  {
+                    "value": "history",
+                    "selector": "#nav-library-item-history"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_UPLOAD_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "UPLOAD_VIDEO",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-button-upload"
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_SEARCH_RESULTS_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "SEARCH_RESULTS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-search-results"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TRENDING",
+      "signature_schema": {
+        "videos": "array<object>|null",
+        "location_permission_granted": "boolean|null",
+        "trending_filters_applied": "boolean|null",
+        "trending_viewport_anchor_id": "string|null",
+        "trending_has_searched": "boolean|null",
+        "matched_video_id": "string|null",
+        "selected_video_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "TRENDING_GRANT_LOCATION",
+          "name": "click",
+          "is_navigation": false,
+          "from": "TRENDING",
+          "to": "TRENDING",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "TRENDING_FILTER_CHECKBOXES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "TRENDING",
+          "to": "TRENDING",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.trending_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-live-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "TRENDING_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "TRENDING",
+          "to": "TRENDING",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.trending_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-duration-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#filter-duration-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "TRENDING_FILTER_SORT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "TRENDING",
+          "to": "TRENDING",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.trending_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#sort-option-view-count-desc",
+              "ui_elements": {
+                "container": "#sort-dropdown",
+                "options": [
+                  {
+                    "value": "view_count",
+                    "selector": "#sort-option-view-count-desc"
+                  },
+                  {
+                    "value": "upload_date",
+                    "selector": "#sort-option-upload-date-inc"
+                  },
+                  {
+                    "value": "rating",
+                    "selector": "#sort-option-rating"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "TRENDING_OPEN_FILTERED_VIDEO",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TRENDING",
+          "to": "WATCH_VIDEO",
+          "parameters": {
+            "video_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.trending_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.trending_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_video_id",
+              "value_ref": "{video_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#trending-list .video-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "TRENDING_SCROLL_VIDEO_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "TRENDING",
+          "to": "TRENDING",
+          "parameters": {
+            "video_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.trending_viewport_anchor_id",
+              "value_ref": "{video_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#trending-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#trending-list",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "TRENDING_OPEN_ANY_VIDEO",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TRENDING",
+          "to": "WATCH_VIDEO",
+          "parameters": {
+            "video_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.trending_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_video_id",
+              "value_ref": "{video_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.trending_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#trending-list .video-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "TRENDING_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TRENDING",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#logo-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SEARCH_RESULTS",
+      "signature_schema": {
+        "videos": "array<object>|null",
+        "search_results_has_searched": "boolean|null",
+        "search_results_viewport_anchor_id": "string|null",
+        "matched_video_id": "string|null",
+        "selected_video_id": "string|null",
+        "search_results_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "SEARCH_RESULTS_FILTER_CHECKBOXES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SEARCH_RESULTS",
+          "to": "SEARCH_RESULTS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.search_results_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-hd-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "SEARCH_RESULTS_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SEARCH_RESULTS",
+          "to": "SEARCH_RESULTS",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.search_results_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-length-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#filter-length-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "SEARCH_RESULTS_FILTER_SORT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SEARCH_RESULTS",
+          "to": "SEARCH_RESULTS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.search_results_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#search-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#search-sort-option-relevance",
+              "ui_elements": {
+                "container": "#search-sort-dropdown",
+                "options": [
+                  {
+                    "value": "relevance",
+                    "selector": "#search-sort-option-relevance"
+                  },
+                  {
+                    "value": "upload_date",
+                    "selector": "#search-sort-option-upload-date"
+                  },
+                  {
+                    "value": "view_count",
+                    "selector": "#search-sort-option-view-count"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "SEARCH_RESULTS_OPEN_FILTERED_VIDEO",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SEARCH_RESULTS",
+          "to": "WATCH_VIDEO",
+          "parameters": {
+            "video_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.search_results_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.search_results_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_video_id",
+              "value_ref": "{video_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#results-list .video-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "SEARCH_RESULTS_SEARCH_VIDEOS",
+          "name": "search",
+          "is_navigation": false,
+          "from": "SEARCH_RESULTS",
+          "to": "SEARCH_RESULTS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_video_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.search_results_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#results-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#results-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "SEARCH_RESULTS_OPEN_MATCHED_VIDEO",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SEARCH_RESULTS",
+          "to": "WATCH_VIDEO",
+          "parameters": {
+            "video_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_video_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.search_results_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_video_id",
+              "value_ref": "{video_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.search_results_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#results-list .video-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "SEARCH_RESULTS_SCROLL_VIDEO_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SEARCH_RESULTS",
+          "to": "SEARCH_RESULTS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.search_results_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#results-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#results-list",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "SEARCH_RESULTS_OPEN_ANY_VIDEO",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SEARCH_RESULTS",
+          "to": "WATCH_VIDEO",
+          "parameters": {
+            "video_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.search_results_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_video_id",
+              "value_ref": "{video_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.search_results_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#results-list .video-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "SEARCH_RESULTS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SEARCH_RESULTS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#logo-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "WATCH_VIDEO",
+      "signature_schema": {
+        "selected_video_id": "string|null",
+        "is_liked": "boolean|null",
+        "is_subscribed": "boolean|null",
+        "comment_text_entered": "string|null"
+      },
+      "actions": [
+        {
+          "id": "WATCH_LIKE_VIDEO",
+          "name": "click",
+          "is_navigation": false,
+          "from": "WATCH_VIDEO",
+          "to": "WATCH_VIDEO",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_video_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.is_liked",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#like-button"
+            }
+          ]
+        },
+        {
+          "id": "WATCH_SUBSCRIBE_CHANNEL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "WATCH_VIDEO",
+          "to": "CHANNEL_SUBSCRIBE_CONFIRM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_video_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#subscribe-button"
+            }
+          ]
+        },
+        {
+          "id": "WATCH_TYPE_COMMENT",
+          "name": "type",
+          "is_navigation": false,
+          "from": "WATCH_VIDEO",
+          "to": "WATCH_VIDEO",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.comment_text_entered",
+              "value": "typed"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#comment-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#comment-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "WATCH_SUBMIT_COMMENT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "WATCH_VIDEO",
+          "to": "WATCH_COMMENT_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.comment_text_entered",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.selected_video_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#comment-submit-button"
+            }
+          ]
+        },
+        {
+          "id": "WATCH_GO_LIKE_SUCCESS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "WATCH_VIDEO",
+          "to": "WATCH_LIKE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.is_liked",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.selected_video_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#like-confirm-banner"
+            }
+          ]
+        },
+        {
+          "id": "WATCH_BACK_SEARCH_RESULTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "WATCH_VIDEO",
+          "to": "SEARCH_RESULTS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-to-results"
+            }
+          ]
+        },
+        {
+          "id": "WATCH_BACK_TRENDING",
+          "name": "click",
+          "is_navigation": true,
+          "from": "WATCH_VIDEO",
+          "to": "TRENDING",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-to-trending"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "WATCH_LIKE_SUCCESS",
+      "signature_schema": {
+        "selected_video_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "WATCH_LIKE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "WATCH_LIKE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#success-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "WATCH_COMMENT_SUCCESS",
+      "signature_schema": {
+        "selected_video_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "WATCH_COMMENT_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "WATCH_COMMENT_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#success-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHANNEL_SUBSCRIBE_CONFIRM",
+      "signature_schema": {
+        "channel_id": "string|null",
+        "confirm_checked": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "CHANNEL_SUBSCRIBE_CHECK_BELL",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CHANNEL_SUBSCRIBE_CONFIRM",
+          "to": "CHANNEL_SUBSCRIBE_CONFIRM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.confirm_checked",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#notify-all-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "CHANNEL_SUBSCRIBE_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHANNEL_SUBSCRIBE_CONFIRM",
+          "to": "SUBSCRIBE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.confirm_checked",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#subscribe-confirm-button"
+            }
+          ]
+        },
+        {
+          "id": "CHANNEL_SUBSCRIBE_BACK_WATCH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHANNEL_SUBSCRIBE_CONFIRM",
+          "to": "WATCH_VIDEO",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#subscribe-cancel"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SUBSCRIBE_SUCCESS",
+      "signature_schema": {
+        "channel_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "SUBSCRIBE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SUBSCRIBE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#success-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UPLOAD_VIDEO",
+      "signature_schema": {
+        "file_selected": "boolean|null",
+        "title_entered": "string|null",
+        "description_entered": "string|null",
+        "audience_selected": "string|null"
+      },
+      "actions": [
+        {
+          "id": "UPLOAD_SELECT_FILE",
+          "name": "click",
+          "is_navigation": false,
+          "from": "UPLOAD_VIDEO",
+          "to": "UPLOAD_VIDEO",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.file_selected",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#upload-file-input"
+            }
+          ]
+        },
+        {
+          "id": "UPLOAD_TYPE_TITLE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "UPLOAD_VIDEO",
+          "to": "UPLOAD_VIDEO",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.title_entered",
+              "value": "typed"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#upload-title-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#upload-title-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "UPLOAD_TYPE_DESCRIPTION",
+          "name": "type",
+          "is_navigation": false,
+          "from": "UPLOAD_VIDEO",
+          "to": "UPLOAD_VIDEO",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.description_entered",
+              "value": "typed"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#upload-description-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#upload-description-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "UPLOAD_SELECT_AUDIENCE",
+          "name": "click",
+          "is_navigation": false,
+          "from": "UPLOAD_VIDEO",
+          "to": "UPLOAD_VIDEO",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.audience_selected",
+              "value": "public"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#audience-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#audience-option-public",
+              "ui_elements": {
+                "container": "#audience-dropdown",
+                "options": [
+                  {
+                    "value": "public",
+                    "selector": "#audience-option-public"
+                  },
+                  {
+                    "value": "unlisted",
+                    "selector": "#audience-option-unlisted"
+                  },
+                  {
+                    "value": "private",
+                    "selector": "#audience-option-private"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "UPLOAD_GO_DETAILS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "UPLOAD_VIDEO",
+          "to": "UPLOAD_DETAILS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.file_selected",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.title_entered",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#upload-next-details"
+            }
+          ]
+        },
+        {
+          "id": "UPLOAD_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "UPLOAD_VIDEO",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#upload-cancel"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UPLOAD_DETAILS",
+      "signature_schema": {
+        "tags_entered": "string|null",
+        "thumbnail_selected": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "UPLOAD_DETAILS_TYPE_TAGS",
+          "name": "type",
+          "is_navigation": false,
+          "from": "UPLOAD_DETAILS",
+          "to": "UPLOAD_DETAILS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.tags_entered",
+              "value": "typed"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#tags-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#tags-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "UPLOAD_DETAILS_SELECT_THUMBNAIL",
+          "name": "click",
+          "is_navigation": false,
+          "from": "UPLOAD_DETAILS",
+          "to": "UPLOAD_DETAILS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.thumbnail_selected",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#thumbnail-option-1"
+            }
+          ]
+        },
+        {
+          "id": "UPLOAD_DETAILS_GO_VISIBILITY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "UPLOAD_DETAILS",
+          "to": "UPLOAD_VISIBILITY",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.thumbnail_selected",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#details-next-visibility"
+            }
+          ]
+        },
+        {
+          "id": "UPLOAD_DETAILS_BACK_UPLOAD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "UPLOAD_DETAILS",
+          "to": "UPLOAD_VIDEO",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#details-back-upload"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UPLOAD_VISIBILITY",
+      "signature_schema": {
+        "visibility_selected": "string|null"
+      },
+      "actions": [
+        {
+          "id": "UPLOAD_VISIBILITY_SELECT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "UPLOAD_VISIBILITY",
+          "to": "UPLOAD_VISIBILITY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.visibility_selected",
+              "value": "public"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#visibility-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#visibility-option-public",
+              "ui_elements": {
+                "container": "#visibility-dropdown",
+                "options": [
+                  {
+                    "value": "public",
+                    "selector": "#visibility-option-public"
+                  },
+                  {
+                    "value": "unlisted",
+                    "selector": "#visibility-option-unlisted"
+                  },
+                  {
+                    "value": "private",
+                    "selector": "#visibility-option-private"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "UPLOAD_VISIBILITY_PUBLISH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "UPLOAD_VISIBILITY",
+          "to": "UPLOAD_PUBLISH_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.visibility_selected",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#publish-button"
+            }
+          ]
+        },
+        {
+          "id": "UPLOAD_VISIBILITY_BACK_DETAILS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "UPLOAD_VISIBILITY",
+          "to": "UPLOAD_DETAILS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#visibility-back-details"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UPLOAD_PUBLISH_SUCCESS",
+      "signature_schema": {
+        "uploaded_video_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "UPLOAD_PUBLISH_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "UPLOAD_PUBLISH_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#success-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LIBRARY",
+      "signature_schema": {
+        "playlists": "array<object>|null",
+        "library_filters_applied": "boolean|null",
+        "library_viewport_anchor_id": "string|null",
+        "library_has_searched": "boolean|null",
+        "matched_playlist_id": "string|null",
+        "selected_playlist_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "LIBRARY_FILTER_CHECKBOXES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "LIBRARY",
+          "to": "LIBRARY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.library_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-watch-later-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "LIBRARY_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "LIBRARY",
+          "to": "LIBRARY",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.library_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-playlist-size-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#filter-playlist-size-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "LIBRARY_FILTER_SORT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "LIBRARY",
+          "to": "LIBRARY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.library_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#library-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#library-sort-option-recent",
+              "ui_elements": {
+                "container": "#library-sort-dropdown",
+                "options": [
+                  {
+                    "value": "recent",
+                    "selector": "#library-sort-option-recent"
+                  },
+                  {
+                    "value": "a_z",
+                    "selector": "#library-sort-option-a-z"
+                  },
+                  {
+                    "value": "z_a",
+                    "selector": "#library-sort-option-z-a"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "LIBRARY_OPEN_FILTERED_PLAYLIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "LIBRARY",
+          "to": "PLAYLIST_DETAIL",
+          "parameters": {
+            "playlist_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.library_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.library_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_playlist_id",
+              "value_ref": "{playlist_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#library-playlists .playlist-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "LIBRARY_SEARCH_PLAYLIST",
+          "name": "search",
+          "is_navigation": false,
+          "from": "LIBRARY",
+          "to": "LIBRARY",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_playlist_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.library_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#library-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#library-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "LIBRARY_OPEN_MATCHED_PLAYLIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "LIBRARY",
+          "to": "PLAYLIST_DETAIL",
+          "parameters": {
+            "playlist_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_playlist_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.library_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_playlist_id",
+              "value_ref": "{playlist_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.library_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#library-playlists .playlist-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "LIBRARY_SCROLL_PLAYLIST_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "LIBRARY",
+          "to": "LIBRARY",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.library_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#library-playlists"
+            },
+            {
+              "op": "drag",
+              "selector": "#library-playlists",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "LIBRARY_OPEN_ANY_PLAYLIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "LIBRARY",
+          "to": "PLAYLIST_DETAIL",
+          "parameters": {
+            "playlist_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.library_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_playlist_id",
+              "value_ref": "{playlist_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.library_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#library-playlists .playlist-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "LIBRARY_GO_CREATE_PLAYLIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "LIBRARY",
+          "to": "PLAYLIST_CREATE_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-playlist-button"
+            }
+          ]
+        },
+        {
+          "id": "LIBRARY_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "LIBRARY",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#logo-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAYLIST_DETAIL",
+      "signature_schema": {
+        "selected_playlist_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "PLAYLIST_DETAIL_BACK_LIBRARY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PLAYLIST_DETAIL",
+          "to": "LIBRARY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#playlist-back-library"
+            }
+          ]
+        },
+        {
+          "id": "PLAYLIST_DETAIL_GO_WATCH_FIRST_VIDEO",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PLAYLIST_DETAIL",
+          "to": "WATCH_VIDEO",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_playlist_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#playlist-first-video"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAYLIST_CREATE_FORM",
+      "signature_schema": {
+        "playlist_title_entered": "string|null",
+        "playlist_description_entered": "string|null",
+        "playlist_privacy_selected": "string|null"
+      },
+      "actions": [
+        {
+          "id": "PLAYLIST_FORM_TYPE_TITLE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PLAYLIST_CREATE_FORM",
+          "to": "PLAYLIST_CREATE_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.playlist_title_entered",
+              "value": "typed"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#playlist-title-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#playlist-title-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "PLAYLIST_FORM_TYPE_DESCRIPTION",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PLAYLIST_CREATE_FORM",
+          "to": "PLAYLIST_CREATE_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.playlist_description_entered",
+              "value": "typed"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#playlist-description-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#playlist-description-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "PLAYLIST_FORM_SELECT_PRIVACY",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PLAYLIST_CREATE_FORM",
+          "to": "PLAYLIST_CREATE_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.playlist_privacy_selected",
+              "value": "public"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#playlist-privacy-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#playlist-privacy-option-public",
+              "ui_elements": {
+                "container": "#playlist-privacy-dropdown",
+                "options": [
+                  {
+                    "value": "public",
+                    "selector": "#playlist-privacy-option-public"
+                  },
+                  {
+                    "value": "unlisted",
+                    "selector": "#playlist-privacy-option-unlisted"
+                  },
+                  {
+                    "value": "private",
+                    "selector": "#playlist-privacy-option-private"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "PLAYLIST_FORM_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PLAYLIST_CREATE_FORM",
+          "to": "PLAYLIST_CREATE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.playlist_title_entered",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.playlist_privacy_selected",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#playlist-create-submit"
+            }
+          ]
+        },
+        {
+          "id": "PLAYLIST_FORM_BACK_LIBRARY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PLAYLIST_CREATE_FORM",
+          "to": "LIBRARY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#playlist-create-cancel"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PLAYLIST_CREATE_SUCCESS",
+      "signature_schema": {
+        "created_playlist_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "PLAYLIST_CREATE_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PLAYLIST_CREATE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#success-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SUBSCRIPTIONS",
+      "signature_schema": {
+        "channels": "array<object>|null",
+        "subscriptions_filters_applied": "boolean|null",
+        "subscriptions_viewport_anchor_id": "string|null",
+        "subscriptions_has_searched": "boolean|null",
+        "matched_channel_id": "string|null",
+        "selected_channel_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "SUBSCRIPTIONS_FILTER_CHECKBOXES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SUBSCRIPTIONS",
+          "to": "SUBSCRIPTIONS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.subscriptions_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-notifications-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "SUBSCRIPTIONS_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SUBSCRIPTIONS",
+          "to": "SUBSCRIPTIONS",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.subscriptions_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-activity-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#filter-activity-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "SUBSCRIPTIONS_FILTER_SORT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SUBSCRIPTIONS",
+          "to": "SUBSCRIPTIONS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.subscriptions_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#subscriptions-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#subscriptions-sort-option-a-z-inc",
+              "ui_elements": {
+                "container": "#subscriptions-sort-dropdown",
+                "options": [
+                  {
+                    "value": "recent",
+                    "selector": "#subscriptions-sort-option-recent"
+                  },
+                  {
+                    "value": "a_z",
+                    "selector": "#subscriptions-sort-option-a-z-inc"
+                  },
+                  {
+                    "value": "z_a",
+                    "selector": "#subscriptions-sort-option-z-a-desc"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "SUBSCRIPTIONS_OPEN_FILTERED_CHANNEL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SUBSCRIPTIONS",
+          "to": "CHANNEL_PAGE",
+          "parameters": {
+            "channel_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.subscriptions_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.subscriptions_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_channel_id",
+              "value_ref": "{channel_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#subscriptions-list .channel-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "SUBSCRIPTIONS_SEARCH_CHANNEL",
+          "name": "search",
+          "is_navigation": false,
+          "from": "SUBSCRIPTIONS",
+          "to": "SUBSCRIPTIONS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_channel_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.subscriptions_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#subscriptions-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#subscriptions-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "SUBSCRIPTIONS_OPEN_MATCHED_CHANNEL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SUBSCRIPTIONS",
+          "to": "CHANNEL_PAGE",
+          "parameters": {
+            "channel_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_channel_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.subscriptions_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_channel_id",
+              "value_ref": "{channel_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.subscriptions_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#subscriptions-list .channel-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "SUBSCRIPTIONS_SCROLL_CHANNEL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "SUBSCRIPTIONS",
+          "to": "SUBSCRIPTIONS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.subscriptions_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#subscriptions-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#subscriptions-list",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "SUBSCRIPTIONS_OPEN_ANY_CHANNEL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SUBSCRIPTIONS",
+          "to": "CHANNEL_PAGE",
+          "parameters": {
+            "channel_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.subscriptions_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_channel_id",
+              "value_ref": "{channel_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.subscriptions_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#subscriptions-list .channel-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "SUBSCRIPTIONS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SUBSCRIPTIONS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#logo-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHANNEL_PAGE",
+      "signature_schema": {
+        "selected_channel_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "CHANNEL_PAGE_GO_SUBSCRIBE_CONFIRM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHANNEL_PAGE",
+          "to": "CHANNEL_SUBSCRIBE_CONFIRM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_channel_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#channel-subscribe-button"
+            }
+          ]
+        },
+        {
+          "id": "CHANNEL_PAGE_BACK_SUBSCRIPTIONS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHANNEL_PAGE",
+          "to": "SUBSCRIPTIONS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#channel-back-subscriptions"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

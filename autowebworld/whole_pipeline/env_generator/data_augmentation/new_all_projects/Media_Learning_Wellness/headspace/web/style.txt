@@ -1,0 +1,59 @@
+# Visual Style Guide - Meditation & Mindfulness App
+
+## Theme & Inspiration
+- **Reference App:** Headspace
+- **Target Audience:** General public seeking mindfulness, stress relief, and better sleep.
+- **Vibe:** Calm, playful, friendly, approachable, soothing.
+- **Visual Tone:** Soft, rounded, illustrative, warm.
+
+## Color Palette
+- **Primary:** #F47D31 (Warm Orange - energetic yet friendly)
+- **Secondary:** #3C4E75 (Deep Blue - calming, trust)
+- **Background:** #FDFBF7 (Off-white/Cream - softer than pure white)
+- **Text:** #333333 (Dark Grey - readable, softer than black)
+- **Accents:**
+  - Pastel Yellow: #FFD56B
+  - Pastel Blue: #A8D0E6
+  - Pastel Pink: #F8B7CD
+  - Success Green: #88C999
+  - Warning Red: #FF8B8B
+
+## Typography
+- **Headings:** 'Nunito', 'Quicksand', or rounded sans-serif. Bold, friendly.
+- **Body:** 'Open Sans', 'Lato', or clean sans-serif. Readable, comfortable line height (1.6).
+
+## UI Components
+- **Buttons:**
+  - Pill-shaped (fully rounded corners).
+  - Primary: Orange bg, white text, subtle shadow.
+  - Secondary: Transparent with colored border or soft colored bg.
+- **Cards:**
+  - Large border-radius (rounded-2xl or rounded-3xl).
+  - White background with soft, diffused shadow (shadow-lg).
+  - Hover effects: Slight lift (transform -translate-y-1).
+- **Inputs:**
+  - Rounded corners (rounded-xl).
+  - Light grey border, soft focus glow.
+- **Modals:**
+  - Centered, backdrop blur (glassmorphism hint).
+  - Friendly illustrations if possible.
+
+## Layout
+- **Container:** Centered max-width (max-w-4xl for dashboard, max-w-md for forms).
+- **Spacing:** Generous whitespace (p-6, p-8, gap-6). Breathable designs.
+- **Grid:** Responsive grid for lists (1 col mobile, 2-3 col desktop).
+
+## Imagery
+- **Strategy:** Use ImageGetter for realistic but calming images.
+- **Keywords:** "meditation illustration", "peaceful nature", "calm person", "sleeping cat", "focus study", "abstract soft shapes".
+- **Hero:** Large, inviting imagery on HOME.
+- **Thumbnails:** Consistent aspect ratio (square or 4:3), rounded corners.
+
+## Interactive Elements
+- **Hover:** Smooth transitions (duration-300).
+- **Feedback:** Visual feedback on selection (border color change, scaling).
+- **Z-Index:**
+  - Nav: z-20
+  - Modals: z-50
+  - Cookie: z-[10000]
+  - Permission: z-[9999]

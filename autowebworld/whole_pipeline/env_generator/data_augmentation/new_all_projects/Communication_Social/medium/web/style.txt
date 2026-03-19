@@ -1,0 +1,42 @@
+# Visual Design Style Guide - Blogging Platform (Medium Inspired)
+
+## Theme Overview
+The application follows a "Medium-inspired" design philosophy: content-first, minimal distraction, and high readability. The interface should feel sophisticated, intellectual, and clean.
+
+## Color Palette
+- **Primary:** Black (#000000) - For primary actions, headers, and strong emphasis.
+- **Secondary:** White (#FFFFFF) - Dominant background color.
+- **Accent:** Green (#1A8917) - For success states, primary call-to-actions (like Publish), and subtle highlights.
+- **Text:**
+  - Headings: #242424
+  - Body: #292929
+  - Muted/Metadata: #757575
+- **Borders/Dividers:** #F2F2F2 or #E6E6E6
+
+## Typography
+- **Headings (Serif):** "Charter", "Georgia", "Cambria", "Times New Roman", serif. Used for story titles and major section headers to give an editorial feel.
+- **Body (Serif):** "Charter", "Georgia", serif. High readability, generous line-height (1.6+).
+- **UI Elements (Sans-Serif):** "Soehne", "Helvetica Neue", "Arial", sans-serif. Used for buttons, navigation, settings, and metadata (dates, tags).
+
+## Layout & Spacing
+- **Container:** Centered column for reading (max-width: 680px to 720px) for articles. Wider container (max-width: 1192px) for feeds and discovery.
+- **Whitespace:** Generous padding and margins. "Airy" feel.
+- **Cards:** Minimalist. Often just text + thumbnail on the right. No shadows or borders for list items, usually just a bottom divider.
+
+## Visual Components
+- **Buttons:**
+  - Primary: Solid Green or Black, Rounded-full (pill shape).
+  - Secondary: Transparent with Border, or subtle gray background.
+- **Images:**
+  - User Avatars: Circular.
+  - Post Thumbnails: Rectangular, sharp or slightly rounded corners (2px-4px).
+  - Hero Images: Full width or large central placement.
+- **Input Fields:** Minimal borders (bottom border only or subtle outline), large text size.
+
+## Interactions
+- **Hover Effects:** Subtle dimming or underline.
+- **Transitions:** Smooth fades for modals and page transitions.
+
+## Image Usage
+- Use high-quality, realistic images for post covers and user avatars using ImageGetter.
+- Keywords: "minimalist workspace", "abstract art", "city life", "nature", "technology", "portrait".

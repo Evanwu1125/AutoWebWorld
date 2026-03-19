@@ -1,0 +1,2937 @@
+{
+  "meta": {
+    "app": "Cross_border_marketplace-AliExpress_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "CHECKOUT_FROM_CART_SUCCESS",
+      "CHECKOUT_BUYNOW_SUCCESS",
+      "ORDER_PAYPAL_SUCCESS",
+      "ORDER_CARD_SUCCESS",
+      "CONTACT_SELLER_SUCCESS"
+    ],
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 25,
+        "max": 30
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover",
+        "menu"
+      ],
+      "home_nav_coverage": "each",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 4,
+        "two_step_parity": false,
+        "allowed_shapes": [
+          "checkboxes",
+          "sliders",
+          "sort"
+        ]
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "current_user_id": "string|null",
+        "cookie_accepted": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_HOME_ACCEPT_COOKIES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_accepted",
+              "cond": "neq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cookie_accepted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_CATEGORY_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "CATEGORY_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_accepted",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#home-hot-categories"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_DEALS_HOVER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "DEALS_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_accepted",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#home-top-nav"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-flash-deals"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_ACCOUNT_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "ACCOUNT_LOGIN",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_accepted",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#account-menu-toggle"
+            },
+            {
+              "op": "click",
+              "selector": "#account-menu-login"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_GO_CART_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "CART_PAGE",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_accepted",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-cart-icon"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CATEGORY_LIST",
+      "signature_schema": {
+        "location_permission_granted": "boolean|null",
+        "categories": "array<object>|null",
+        "CATEGORY_LIST_has_searched": "boolean|null",
+        "CATEGORY_LIST_viewport_anchor_id": "string|null",
+        "CATEGORY_LIST_filters_applied": "boolean|null",
+        "matched_item_id": "string|null",
+        "selected_item_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CATEGORY_ALLOW_LOCATION",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CATEGORY_LIST",
+          "to": "CATEGORY_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CATEGORY_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CATEGORY_LIST",
+          "to": "CATEGORY_LIST",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.CATEGORY_LIST_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#category-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#category-sort-popular",
+              "ui_elements": {
+                "container": "#category-sort-dropdown",
+                "options": [
+                  {
+                    "value": "popular",
+                    "selector": "#category-sort-popular"
+                  },
+                  {
+                    "value": "orders",
+                    "selector": "#category-sort-orders"
+                  },
+                  {
+                    "value": "newest",
+                    "selector": "#category-sort-newest"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_CATEGORY_APPLY_SHIP_FROM_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CATEGORY_LIST",
+          "to": "CATEGORY_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.CATEGORY_LIST_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-ship-from-overseas"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CATEGORY_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CATEGORY_LIST",
+          "to": "CATEGORY_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.CATEGORY_LIST_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#category-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#category-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CATEGORY_OPEN_ANY_PRODUCT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CATEGORY_LIST",
+          "to": "PRODUCT_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.CATEGORY_LIST_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.CATEGORY_LIST_viewport_anchor_id"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_item_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#category-list-container .category-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CATEGORY_OPEN_FILTERED_CATEGORY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CATEGORY_LIST",
+          "to": "PRODUCT_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.CATEGORY_LIST_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.CATEGORY_LIST_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_item_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#category-list-container .category-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CATEGORY_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CATEGORY_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DEALS_LIST",
+      "signature_schema": {
+        "DEALS_LIST_has_searched": "boolean|null",
+        "DEALS_LIST_viewport_anchor_id": "string|null",
+        "DEALS_LIST_filters_applied": "boolean|null",
+        "matched_item_id": "string|null",
+        "selected_item_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_DEALS_FILTER_FREE_SHIPPING",
+          "name": "click",
+          "is_navigation": false,
+          "from": "DEALS_LIST",
+          "to": "DEALS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.DEALS_LIST_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-free-shipping-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DEALS_FILTER_PRICE_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "DEALS_LIST",
+          "to": "DEALS_LIST",
+          "parameters": {
+            "widget": "slider"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.DEALS_LIST_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#deals-price-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#deals-price-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DEALS_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "DEALS_LIST",
+          "to": "DEALS_LIST",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.DEALS_LIST_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#deals-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#deals-sort-discount-desc",
+              "ui_elements": {
+                "container": "#deals-sort-dropdown",
+                "options": [
+                  {
+                    "value": "biggest_discount",
+                    "selector": "#deals-sort-discount-desc"
+                  },
+                  {
+                    "value": "price_low_high",
+                    "selector": "#deals-sort-price-low"
+                  },
+                  {
+                    "value": "price_high_low",
+                    "selector": "#deals-sort-price-high"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_DEALS_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "DEALS_LIST",
+          "to": "DEALS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.DEALS_LIST_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#deals-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#deals-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DEALS_OPEN_ANY_ITEM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DEALS_LIST",
+          "to": "PRODUCT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.DEALS_LIST_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.DEALS_LIST_viewport_anchor_id"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_item_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#deals-list-container .deal-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DEALS_OPEN_FILTERED_ITEM",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DEALS_LIST",
+          "to": "PRODUCT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.DEALS_LIST_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.DEALS_LIST_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_item_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#deals-list-container .deal-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_DEALS_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "DEALS_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ACCOUNT_LOGIN",
+      "signature_schema": {
+        "login_email": "string|null",
+        "login_password": "string|null",
+        "login_error": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_LOGIN_TYPE_EMAIL",
+          "name": "type",
+          "is_navigation": false,
+          "from": "ACCOUNT_LOGIN",
+          "to": "ACCOUNT_LOGIN",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.login_email",
+              "value": "user@example.com"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#login-email-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#login-email-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LOGIN_TYPE_PASSWORD",
+          "name": "type",
+          "is_navigation": false,
+          "from": "ACCOUNT_LOGIN",
+          "to": "ACCOUNT_LOGIN",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.login_password",
+              "value": "password"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#login-password-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#login-password-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LOGIN_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_LOGIN",
+          "to": "ACCOUNT_OVERVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.login_email",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.login_password",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#login-submit-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_LOGIN_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_LOGIN",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#login-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ACCOUNT_OVERVIEW",
+      "signature_schema": {
+        "current_user_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ACCOUNT_GO_ORDERS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_OVERVIEW",
+          "to": "ORDERS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#account-orders-link"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ACCOUNT_GO_ADDRESSES",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_OVERVIEW",
+          "to": "ADDRESS_BOOK",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#account-addresses-link"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ACCOUNT_GO_PAYMENT_METHODS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_OVERVIEW",
+          "to": "PAYMENT_METHODS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#account-payments-link"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ACCOUNT_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_OVERVIEW",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#account-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PRODUCT_LIST",
+      "signature_schema": {
+        "products": "array<object>|null",
+        "matched_item_id": "string|null",
+        "selected_item_id": "string|null",
+        "PRODUCT_LIST_has_searched": "boolean|null",
+        "PRODUCT_LIST_viewport_anchor_id": "string|null",
+        "PRODUCT_LIST_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PRODUCT_LIST_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "PRODUCT_LIST",
+          "to": "PRODUCT_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.PRODUCT_LIST_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRODUCT_LIST_FILTER_FREE_SHIPPING",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PRODUCT_LIST",
+          "to": "PRODUCT_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.PRODUCT_LIST_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-free-shipping"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRODUCT_LIST_FILTER_PRICE_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PRODUCT_LIST",
+          "to": "PRODUCT_LIST",
+          "parameters": {
+            "widget": "slider"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.PRODUCT_LIST_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-price-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#filter-price-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRODUCT_LIST_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PRODUCT_LIST",
+          "to": "PRODUCT_LIST",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.PRODUCT_LIST_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#sort-option-orders",
+              "ui_elements": {
+                "container": "#sort-dropdown",
+                "options": [
+                  {
+                    "value": "orders",
+                    "selector": "#sort-option-orders"
+                  },
+                  {
+                    "value": "price_low_high",
+                    "selector": "#sort-option-price-low"
+                  },
+                  {
+                    "value": "price_high_low",
+                    "selector": "#sort-option-price-high"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRODUCT_LIST_OPEN_MATCHED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRODUCT_LIST",
+          "to": "PRODUCT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_item_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.PRODUCT_LIST_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.PRODUCT_LIST_has_searched"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#product-list .product-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRODUCT_LIST_OPEN_FILTERED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRODUCT_LIST",
+          "to": "PRODUCT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.PRODUCT_LIST_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.PRODUCT_LIST_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#product-list .product-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRODUCT_LIST_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PRODUCT_LIST",
+          "to": "PRODUCT_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.PRODUCT_LIST_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#product-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#product-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRODUCT_LIST_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRODUCT_LIST",
+          "to": "PRODUCT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.PRODUCT_LIST_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.PRODUCT_LIST_viewport_anchor_id"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_item_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#product-list .product-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRODUCT_LIST_BACK_CATEGORY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRODUCT_LIST",
+          "to": "CATEGORY_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#product-list-back-category"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PRODUCT_DETAIL",
+      "signature_schema": {
+        "selected_item_id": "string|null",
+        "selected_sku_id": "string|null",
+        "quantity": "number|null",
+        "ship_to_country": "string|null",
+        "buy_option": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PRODUCT_DETAIL_SELECT_SKU",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PRODUCT_DETAIL",
+          "to": "PRODUCT_DETAIL",
+          "parameters": {
+            "sku_id": "{SKU_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_sku_id",
+              "value_ref": "{sku_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sku-option-1"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRODUCT_DETAIL_SET_QUANTITY",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PRODUCT_DETAIL",
+          "to": "PRODUCT_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.quantity",
+              "value": 1
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#quantity-input"
+            },
+            {
+              "op": "key_press",
+              "key": "Ctrl+A"
+            },
+            {
+              "op": "key_press",
+              "key": "Delete"
+            },
+            {
+              "op": "type_text",
+              "selector": "#quantity-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRODUCT_DETAIL_SELECT_SHIP_TO",
+          "name": "select",
+          "is_navigation": false,
+          "from": "PRODUCT_DETAIL",
+          "to": "PRODUCT_DETAIL",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.ship_to_country",
+              "value": "US"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#ship-to-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#ship-to-us",
+              "ui_elements": {
+                "container": "#ship-to-dropdown",
+                "options": [
+                  {
+                    "value": "US",
+                    "selector": "#ship-to-us"
+                  },
+                  {
+                    "value": "UK",
+                    "selector": "#ship-to-uk"
+                  },
+                  {
+                    "value": "CN",
+                    "selector": "#ship-to-cn"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRODUCT_DETAIL_ADD_TO_CART",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRODUCT_DETAIL",
+          "to": "ADD_TO_CART_CONFIRM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_sku_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.quantity",
+              "cond": "gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.buy_option",
+              "value": "cart"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#add-to-cart-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRODUCT_DETAIL_BUY_NOW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRODUCT_DETAIL",
+          "to": "BUY_NOW_CHECKOUT",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_sku_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.quantity",
+              "cond": "gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.buy_option",
+              "value": "buynow"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#buy-now-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRODUCT_DETAIL_GO_REVIEWS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRODUCT_DETAIL",
+          "to": "PRODUCT_REVIEWS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#tab-reviews"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRODUCT_DETAIL_CONTACT_SELLER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRODUCT_DETAIL",
+          "to": "CONTACT_SELLER_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contact-seller-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PRODUCT_DETAIL_BACK_LIST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRODUCT_DETAIL",
+          "to": "PRODUCT_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#product-detail-back-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PRODUCT_REVIEWS",
+      "signature_schema": {
+        "selected_item_id": "string|null",
+        "PRODUCT_REVIEWS_viewport_anchor_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_REVIEWS_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PRODUCT_REVIEWS",
+          "to": "PRODUCT_REVIEWS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.PRODUCT_REVIEWS_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#reviews-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#reviews-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_REVIEWS_BACK_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PRODUCT_REVIEWS",
+          "to": "PRODUCT_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.PRODUCT_REVIEWS_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#reviews-back-product"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ADD_TO_CART_CONFIRM",
+      "signature_schema": {
+        "selected_item_id": "string|null",
+        "selected_sku_id": "string|null",
+        "quantity": "number|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ADD_TO_CART_GO_CART",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ADD_TO_CART_CONFIRM",
+          "to": "CART_PAGE",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.quantity",
+              "cond": "gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-to-cart-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ADD_TO_CART_CONTINUE_SHOPPING",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ADD_TO_CART_CONFIRM",
+          "to": "PRODUCT_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#continue-shopping-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ADD_TO_CART_BACK_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ADD_TO_CART_CONFIRM",
+          "to": "PRODUCT_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#add-to-cart-back-product"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CART_PAGE",
+      "signature_schema": {
+        "cart_items": "array<object>|null",
+        "CART_PAGE_viewport_anchor_id": "string|null",
+        "selected_item_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CART_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CART_PAGE",
+          "to": "CART_PAGE",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.CART_PAGE_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cart-items-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#cart-items-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CART_OPEN_ANY_ITEM_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CART_PAGE",
+          "to": "PRODUCT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.CART_PAGE_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.CART_PAGE_viewport_anchor_id"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_item_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cart-items-container .cart-item-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CART_PROCEED_CHECKOUT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CART_PAGE",
+          "to": "CART_CHECKOUT",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cart_items",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cart-checkout-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CART_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CART_PAGE",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cart-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CART_CHECKOUT",
+      "signature_schema": {
+        "selected_shipping_address_id": "string|null",
+        "selected_payment_method": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CART_CHECKOUT_SELECT_ADDRESS",
+          "name": "click",
+          "is_navigation": false,
+          "from": "CART_CHECKOUT",
+          "to": "CART_CHECKOUT",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_shipping_address_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#checkout-address-1"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CART_CHECKOUT_SELECT_PAYMENT_METHOD",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CART_CHECKOUT",
+          "to": "CART_CHECKOUT",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_payment_method",
+              "value": "card"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#checkout-payment-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#payment-option-card",
+              "ui_elements": {
+                "container": "#checkout-payment-dropdown",
+                "options": [
+                  {
+                    "value": "card",
+                    "selector": "#payment-option-card"
+                  },
+                  {
+                    "value": "paypal",
+                    "selector": "#payment-option-paypal"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_CART_CHECKOUT_PLACE_ORDER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CART_CHECKOUT",
+          "to": "CHECKOUT_FROM_CART_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_shipping_address_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.selected_payment_method",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#checkout-place-order-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CART_CHECKOUT_BACK_CART",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CART_CHECKOUT",
+          "to": "CART_PAGE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#checkout-back-cart"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BUY_NOW_CHECKOUT",
+      "signature_schema": {
+        "selected_shipping_address_id": "string|null",
+        "selected_payment_method": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_BUY_NOW_SELECT_ADDRESS",
+          "name": "click",
+          "is_navigation": false,
+          "from": "BUY_NOW_CHECKOUT",
+          "to": "BUY_NOW_CHECKOUT",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_shipping_address_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#buy-now-address-1"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BUY_NOW_SELECT_PAYMENT_METHOD",
+          "name": "select",
+          "is_navigation": false,
+          "from": "BUY_NOW_CHECKOUT",
+          "to": "BUY_NOW_CHECKOUT",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_payment_method",
+              "value": "card"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#buy-now-payment-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#buy-now-payment-card",
+              "ui_elements": {
+                "container": "#buy-now-payment-dropdown",
+                "options": [
+                  {
+                    "value": "card",
+                    "selector": "#buy-now-payment-card"
+                  },
+                  {
+                    "value": "paypal",
+                    "selector": "#buy-now-payment-paypal"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_BUY_NOW_PLACE_ORDER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BUY_NOW_CHECKOUT",
+          "to": "CHECKOUT_BUYNOW_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_shipping_address_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.selected_payment_method",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#buy-now-place-order-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BUY_NOW_BACK_PRODUCT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BUY_NOW_CHECKOUT",
+          "to": "PRODUCT_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#buy-now-back-product"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PAYMENT_METHODS",
+      "signature_schema": {
+        "selected_payment_method": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PAYMENT_SELECT_CARD",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PAYMENT_METHODS",
+          "to": "PAYMENT_METHODS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_payment_method",
+              "value": "card"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#payment-method-card"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENT_SELECT_PAYPAL",
+          "name": "click",
+          "is_navigation": false,
+          "from": "PAYMENT_METHODS",
+          "to": "PAYMENT_METHODS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_payment_method",
+              "value": "paypal"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#payment-method-paypal"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENT_GO_CARD_GATEWAY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PAYMENT_METHODS",
+          "to": "CARD_PAYMENT_GATEWAY",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_payment_method",
+              "cond": "eq",
+              "value": "card"
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#payment-save-card"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENT_GO_PAYPAL_GATEWAY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PAYMENT_METHODS",
+          "to": "PAYPAL_PAYMENT_GATEWAY",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_payment_method",
+              "cond": "eq",
+              "value": "paypal"
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#payment-save-paypal"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYMENT_BACK_ACCOUNT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PAYMENT_METHODS",
+          "to": "ACCOUNT_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#payments-back-account"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PAYPAL_PAYMENT_GATEWAY",
+      "signature_schema": {
+        "paypal_email": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PAYPAL_TYPE_EMAIL",
+          "name": "type",
+          "is_navigation": false,
+          "from": "PAYPAL_PAYMENT_GATEWAY",
+          "to": "PAYPAL_PAYMENT_GATEWAY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.paypal_email",
+              "value": "buyer@paypal.com"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#paypal-email-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#paypal-email-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYPAL_AUTHORIZE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PAYPAL_PAYMENT_GATEWAY",
+          "to": "ORDER_PAYPAL_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.paypal_email",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#paypal-authorize-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_PAYPAL_BACK_PAYMENTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PAYPAL_PAYMENT_GATEWAY",
+          "to": "PAYMENT_METHODS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#paypal-back-payments"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CARD_PAYMENT_GATEWAY",
+      "signature_schema": {
+        "card_number": "string|null",
+        "card_holder": "string|null",
+        "card_expiry": "string|null",
+        "card_cvv": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CARD_TYPE_NUMBER",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CARD_PAYMENT_GATEWAY",
+          "to": "CARD_PAYMENT_GATEWAY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.card_number",
+              "value": "4111111111111111"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#card-number-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#card-number-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CARD_TYPE_HOLDER",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CARD_PAYMENT_GATEWAY",
+          "to": "CARD_PAYMENT_GATEWAY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.card_holder",
+              "value": "John Doe"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#card-holder-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#card-holder-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CARD_TYPE_EXPIRY",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CARD_PAYMENT_GATEWAY",
+          "to": "CARD_PAYMENT_GATEWAY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.card_expiry",
+              "value": "12/30"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#card-expiry-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#card-expiry-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CARD_TYPE_CVV",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CARD_PAYMENT_GATEWAY",
+          "to": "CARD_PAYMENT_GATEWAY",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.card_cvv",
+              "value": "123"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#card-cvv-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#card-cvv-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CARD_AUTHORIZE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CARD_PAYMENT_GATEWAY",
+          "to": "ORDER_CARD_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.card_number",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.card_holder",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.card_expiry",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.card_cvv",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#card-authorize-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CARD_BACK_PAYMENTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CARD_PAYMENT_GATEWAY",
+          "to": "PAYMENT_METHODS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#card-back-payments"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ADDRESS_BOOK",
+      "signature_schema": {
+        "addresses": "array<object>|null",
+        "ADDRESS_BOOK_viewport_anchor_id": "string|null",
+        "selected_address_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ADDRESS_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "ADDRESS_BOOK",
+          "to": "ADDRESS_BOOK",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.ADDRESS_BOOK_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#address-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#address-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ADDRESS_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ADDRESS_BOOK",
+          "to": "EDIT_ADDRESS_FORM",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.ADDRESS_BOOK_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.ADDRESS_BOOK_viewport_anchor_id"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_address_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#address-list-container .address-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ADDRESS_GO_ADD_NEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ADDRESS_BOOK",
+          "to": "EDIT_ADDRESS_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#add-new-address-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ADDRESS_BACK_ACCOUNT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ADDRESS_BOOK",
+          "to": "ACCOUNT_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#address-back-account"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EDIT_ADDRESS_FORM",
+      "signature_schema": {
+        "address_full_name": "string|null",
+        "address_street": "string|null",
+        "address_city": "string|null",
+        "address_postcode": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_EDIT_ADDRESS_TYPE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "EDIT_ADDRESS_FORM",
+          "to": "EDIT_ADDRESS_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.address_full_name",
+              "value": "John Buyer"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#address-full-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#address-full-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EDIT_ADDRESS_TYPE_STREET",
+          "name": "type",
+          "is_navigation": false,
+          "from": "EDIT_ADDRESS_FORM",
+          "to": "EDIT_ADDRESS_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.address_street",
+              "value": "1 Market St"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#address-street-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#address-street-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EDIT_ADDRESS_TYPE_CITY",
+          "name": "type",
+          "is_navigation": false,
+          "from": "EDIT_ADDRESS_FORM",
+          "to": "EDIT_ADDRESS_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.address_city",
+              "value": "Shenzhen"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#address-city-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#address-city-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EDIT_ADDRESS_TYPE_POSTCODE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "EDIT_ADDRESS_FORM",
+          "to": "EDIT_ADDRESS_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.address_postcode",
+              "value": "518000"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#address-postcode-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#address-postcode-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EDIT_ADDRESS_SAVE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EDIT_ADDRESS_FORM",
+          "to": "ADDRESS_BOOK",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.address_full_name",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.address_street",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.address_city",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.address_postcode",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#address-save-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_EDIT_ADDRESS_BACK_BOOK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EDIT_ADDRESS_FORM",
+          "to": "ADDRESS_BOOK",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#address-back-book"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ORDERS_LIST",
+      "signature_schema": {
+        "ORDERS_LIST_has_searched": "boolean|null",
+        "ORDERS_LIST_viewport_anchor_id": "string|null",
+        "ORDERS_LIST_filters_applied": "boolean|null",
+        "matched_item_id": "string|null",
+        "selected_item_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ORDERS_SEARCH",
+          "name": "search",
+          "is_navigation": false,
+          "from": "ORDERS_LIST",
+          "to": "ORDERS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_item_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.ORDERS_LIST_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#orders-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#orders-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ORDERS_FILTER_STATUS",
+          "name": "click",
+          "is_navigation": false,
+          "from": "ORDERS_LIST",
+          "to": "ORDERS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.ORDERS_LIST_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-orders-pending-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ORDERS_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "ORDERS_LIST",
+          "to": "ORDERS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.ORDERS_LIST_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#orders-list-container"
+            },
+            {
+              "op": "drag",
+              "selector": "#orders-list-container",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ORDERS_OPEN_ANY",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ORDERS_LIST",
+          "to": "ORDER_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.ORDERS_LIST_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.ORDERS_LIST_viewport_anchor_id"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_item_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#orders-list-container .order-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ORDERS_OPEN_MATCHED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ORDERS_LIST",
+          "to": "ORDER_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_item_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.ORDERS_LIST_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.ORDERS_LIST_has_searched"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_item_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#orders-list-container .order-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ORDERS_BACK_ACCOUNT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ORDERS_LIST",
+          "to": "ACCOUNT_OVERVIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#orders-back-account"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ORDER_DETAIL",
+      "signature_schema": {
+        "selected_item_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ORDER_DETAIL_OPEN_TRACKING",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ORDER_DETAIL",
+          "to": "ORDER_TRACKING",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_item_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#order-tracking-link"
+            }
+          ]
+        },
+        {
+          "id": "ACT_ORDER_DETAIL_BACK_ORDERS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ORDER_DETAIL",
+          "to": "ORDERS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#order-back-orders"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ORDER_TRACKING",
+      "signature_schema": {
+        "selected_item_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_ORDER_TRACKING_BACK_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ORDER_TRACKING",
+          "to": "ORDER_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#tracking-back-order"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CONTACT_SELLER_FORM",
+      "signature_schema": {
+        "message_subject": "string|null",
+        "message_body": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CONTACT_TYPE_SUBJECT",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CONTACT_SELLER_FORM",
+          "to": "CONTACT_SELLER_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.message_subject",
+              "value": "Question about product"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contact-subject-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#contact-subject-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CONTACT_TYPE_BODY",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CONTACT_SELLER_FORM",
+          "to": "CONTACT_SELLER_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.message_body",
+              "value": "Please provide more details."
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contact-body-textarea"
+            },
+            {
+              "op": "type_text",
+              "selector": "#contact-body-textarea",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CONTACT_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CONTACT_SELLER_FORM",
+          "to": "CONTACT_SELLER_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.message_subject",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.message_body",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contact-submit-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_CONTACT_BACK_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CONTACT_SELLER_FORM",
+          "to": "PRODUCT_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contact-back-product"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHECKOUT_FROM_CART_SUCCESS",
+      "signature_schema": {
+        "order_id": "string|null",
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CART_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHECKOUT_FROM_CART_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#checkout-cart-success-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CHECKOUT_BUYNOW_SUCCESS",
+      "signature_schema": {
+        "order_id": "string|null",
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_BUYNOW_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CHECKOUT_BUYNOW_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#checkout-buynow-success-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ORDER_PAYPAL_SUCCESS",
+      "signature_schema": {
+        "order_id": "string|null",
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_PAYPAL_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ORDER_PAYPAL_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#paypal-success-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ORDER_CARD_SUCCESS",
+      "signature_schema": {
+        "order_id": "string|null",
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CARD_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ORDER_CARD_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#card-success-go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CONTACT_SELLER_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_CONTACT_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CONTACT_SELLER_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#contact-success-go-home"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

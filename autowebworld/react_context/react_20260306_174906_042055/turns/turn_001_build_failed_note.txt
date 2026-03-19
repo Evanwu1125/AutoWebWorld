@@ -1,0 +1,2 @@
+Host build failed in single-run mode. Fix issues and rerun the script.
+See: turn_001_final_build.log

@@ -1,0 +1,44 @@
+# Visual Design Style Guide - Signal Clone
+
+## Application Theme
+- **Reference Application:** Signal (Secure Messaging)
+- **Target Audience:** Privacy-conscious users, general public looking for secure communication.
+- **Visual Tone:** Clean, Minimalist, Secure, Professional, Trustworthy.
+
+## Color Scheme
+- **Primary Color:** #3B82F6 (Blue-500) - Used for primary actions, active states, and branding.
+- **Secondary Color:** #64748B (Slate-500) - Used for secondary text, icons, and borders.
+- **Accent Color:** #2563EB (Blue-600) - Hover states for primary buttons.
+- **Background:** #F8FAFC (Slate-50) - App background.
+- **Surface:** #FFFFFF (White) - Cards, list items, message bubbles (received).
+- **Message Bubble (Sent):** #3B82F6 (Blue-500) with White text.
+- **Message Bubble (Received):** #E2E8F0 (Slate-200) with Slate-900 text.
+- **Error/Destructive:** #EF4444 (Red-500) - Block user, delete, errors.
+
+## Typography
+- **Font Family:** Inter, system-ui, sans-serif.
+- **Weights:** Regular (400), Medium (500), Semibold (600), Bold (700).
+- **Sizes:**
+  - Headings: text-2xl, text-xl (Page titles)
+  - Body: text-base, text-sm (Message text, list items)
+  - Caption: text-xs (Timestamps, status indicators)
+
+## Layout & Component Styling
+- **Global Layout:** Mobile-first responsive design. Centered container on desktop (max-w-md or max-w-2xl for chat view).
+- **Cards/Lists:** clean white background with subtle borders (border-slate-200) or shadows (shadow-sm).
+- **Rounded Corners:** rounded-xl for cards and modals, rounded-full for avatars and buttons.
+- **Avatars:** Circle avatars for contacts and groups.
+- **Spacing:** Generous padding (p-4) to avoid clutter.
+- **Shadows:** Soft, diffused shadows to create depth without harshness.
+
+## Image Usage Strategy
+- **Avatars:** Use real portrait photos for contacts (via ImageGetter).
+- **Groups:** Use thematic images (nature, abstract, tech) for group icons.
+- **Hero/Empty States:** Use clean, high-quality illustrations or minimal photography for empty states or landing pages.
+
+## Interactive Elements
+- **Buttons:**
+  - Primary: Solid Blue, rounded-full or rounded-lg, white text.
+  - Secondary: Ghost or Outline, slate text.
+- **Inputs:** Gray background (bg-slate-100) focusing to white with Blue ring.
+- **Transitions:** Smooth fade and slide transitions (duration-200).

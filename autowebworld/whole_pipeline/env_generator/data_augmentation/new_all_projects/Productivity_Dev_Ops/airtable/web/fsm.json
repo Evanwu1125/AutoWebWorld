@@ -1,0 +1,2325 @@
+{
+  "meta": {
+    "app": "Spreadsheet Database-Airtable_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "BASE_CREATED_SUCCESS",
+      "RECORD_CREATED_SUCCESS",
+      "RECORD_UPDATED_SUCCESS",
+      "AUTOMATION_CREATED_SUCCESS",
+      "FORM_SUBMISSION_SUCCESS"
+    ],
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 20,
+        "max": 35
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover",
+        "menu"
+      ],
+      "home_nav_coverage": "any",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 4,
+        "two_step_parity": false,
+        "allowed_shapes": [
+          "checkboxes",
+          "sliders",
+          "sort"
+        ]
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "current_user_id": "string|null",
+        "cookie_consent_given": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_HOME_ACCEPT_COOKIES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cookie_consent_given",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_OPEN_BASES_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "BASES_DASHBOARD",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-bases-direct"
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_OPEN_BASES_HOVER",
+          "name": "select",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "BASES_DASHBOARD",
+          "parameters": {
+            "widget": "hover_menu"
+          },
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#topbar-workspace-menu"
+            },
+            {
+              "op": "click",
+              "selector": "#topbar-workspace-menu .option-bases",
+              "ui_elements": {
+                "container": "#topbar-workspace-menu",
+                "options": [
+                  {
+                    "value": "bases",
+                    "selector": "#topbar-workspace-menu .option-bases"
+                  },
+                  {
+                    "value": "workspaces",
+                    "selector": "#topbar-workspace-menu .option-workspaces"
+                  },
+                  {
+                    "value": "templates",
+                    "selector": "#topbar-workspace-menu .option-templates"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_HOME_OPEN_BASES_MENU",
+          "name": "select",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "BASES_DASHBOARD",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#sidebar-nav-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#sidebar-nav-bases",
+              "ui_elements": {
+                "container": "#sidebar-nav-dropdown",
+                "options": [
+                  {
+                    "value": "bases",
+                    "selector": "#sidebar-nav-bases"
+                  },
+                  {
+                    "value": "automations",
+                    "selector": "#sidebar-nav-automations"
+                  },
+                  {
+                    "value": "forms",
+                    "selector": "#sidebar-nav-forms"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BASES_DASHBOARD",
+      "signature_schema": {
+        "bases": "array<object>|null",
+        "location_permission_granted": "boolean|null",
+        "bases_dashboard_filters_applied": "boolean|null",
+        "bases_dashboard_viewport_anchor_id": "string|null",
+        "bases_dashboard_has_searched": "boolean|null",
+        "matched_base_id": "string|null",
+        "selected_base_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_BASES_GRANT_LOCATION",
+          "name": "click",
+          "is_navigation": false,
+          "from": "BASES_DASHBOARD",
+          "to": "BASES_DASHBOARD",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BASES_FILTER_BY_STARRED_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "BASES_DASHBOARD",
+          "to": "BASES_DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.bases_dashboard_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-starred-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BASES_FILTER_BY_ACTIVITY_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "BASES_DASHBOARD",
+          "to": "BASES_DASHBOARD",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.bases_dashboard_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#activity-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#activity-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BASES_SORT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "BASES_DASHBOARD",
+          "to": "BASES_DASHBOARD",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.bases_dashboard_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#bases-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#bases-sort-recent-desc",
+              "ui_elements": {
+                "container": "#bases-sort-dropdown",
+                "options": [
+                  {
+                    "value": "recent",
+                    "selector": "#bases-sort-recent-desc"
+                  },
+                  {
+                    "value": "alphabetical",
+                    "selector": "#bases-sort-alpha"
+                  },
+                  {
+                    "value": "starred",
+                    "selector": "#bases-sort-starred"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_BASES_OPEN_FILTERED_BASE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BASES_DASHBOARD",
+          "to": "BASE_WORKSPACE",
+          "parameters": {
+            "base_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.bases_dashboard_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.bases_dashboard_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_base_id",
+              "value_ref": "{base_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#bases-grid .base-card-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BASES_SCROLL_BASE_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "BASES_DASHBOARD",
+          "to": "BASES_DASHBOARD",
+          "parameters": {
+            "base_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.bases_dashboard_viewport_anchor_id",
+              "value_ref": "{base_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#bases-grid"
+            },
+            {
+              "op": "drag",
+              "selector": "#bases-grid",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BASES_OPEN_ANY_BASE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BASES_DASHBOARD",
+          "to": "BASE_WORKSPACE",
+          "parameters": {
+            "base_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.bases_dashboard_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.bases_dashboard_viewport_anchor_id"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_base_id",
+              "value_ref": "{base_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#bases-grid .base-card-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BASES_SEARCH_BASE",
+          "name": "search",
+          "is_navigation": false,
+          "from": "BASES_DASHBOARD",
+          "to": "BASES_DASHBOARD",
+          "parameters": {
+            "base_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_base_id",
+              "value_ref": "{base_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.bases_dashboard_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#bases-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#bases-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BASES_OPEN_MATCHED_BASE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BASES_DASHBOARD",
+          "to": "BASE_WORKSPACE",
+          "parameters": {
+            "base_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_base_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.bases_dashboard_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.bases_dashboard_has_searched"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_base_id",
+              "value_ref": "{base_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#bases-grid .base-card-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BASES_GO_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BASES_DASHBOARD",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BASES_GO_CREATE_BASE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BASES_DASHBOARD",
+          "to": "BASE_CREATE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-base-button"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BASE_CREATE",
+      "signature_schema": {
+        "bases": "array<object>|null",
+        "base_name_input": "string|null",
+        "base_color": "string|null",
+        "base_icon": "string|null",
+        "template_choice": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_BASE_CREATE_TYPE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "BASE_CREATE",
+          "to": "BASE_CREATE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.base_name_input",
+              "value_expr": "gen_id()"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#base-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#base-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BASE_CREATE_SELECT_COLOR",
+          "name": "select",
+          "is_navigation": false,
+          "from": "BASE_CREATE",
+          "to": "BASE_CREATE",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.base_color",
+              "value": "blue"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#base-color-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#base-color-blue",
+              "ui_elements": {
+                "container": "#base-color-dropdown",
+                "options": [
+                  {
+                    "value": "blue",
+                    "selector": "#base-color-blue"
+                  },
+                  {
+                    "value": "green",
+                    "selector": "#base-color-green"
+                  },
+                  {
+                    "value": "red",
+                    "selector": "#base-color-red"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_BASE_CREATE_SELECT_ICON",
+          "name": "select",
+          "is_navigation": false,
+          "from": "BASE_CREATE",
+          "to": "BASE_CREATE",
+          "parameters": {
+            "widget": "hover_menu"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.base_icon",
+              "value": "grid"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#base-icon-menu"
+            },
+            {
+              "op": "click",
+              "selector": "#base-icon-menu .icon-grid",
+              "ui_elements": {
+                "container": "#base-icon-menu",
+                "options": [
+                  {
+                    "value": "grid",
+                    "selector": "#base-icon-menu .icon-grid"
+                  },
+                  {
+                    "value": "calendar",
+                    "selector": "#base-icon-menu .icon-calendar"
+                  },
+                  {
+                    "value": "kanban",
+                    "selector": "#base-icon-menu .icon-kanban"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_BASE_CREATE_SELECT_TEMPLATE",
+          "name": "select",
+          "is_navigation": true,
+          "from": "BASE_CREATE",
+          "to": "BASE_CREATED_SUCCESS",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [
+            {
+              "path": "$.base_name_input",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.template_choice",
+              "value": "project-tracker"
+            },
+            {
+              "op": "set",
+              "path": "$.bases",
+              "value_expr": "append($.bases, {\"id\": gen_id(), \"name\": $.base_name_input})"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#template-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#template-project-tracker",
+              "ui_elements": {
+                "container": "#template-dropdown",
+                "options": [
+                  {
+                    "value": "project-tracker",
+                    "selector": "#template-project-tracker"
+                  },
+                  {
+                    "value": "sales-crm",
+                    "selector": "#template-sales-crm"
+                  },
+                  {
+                    "value": "content-calendar",
+                    "selector": "#template-content-calendar"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_BASE_CREATE_BACK_TO_DASHBOARD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BASE_CREATE",
+          "to": "BASES_DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-bases-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BASE_CREATED_SUCCESS",
+      "signature_schema": {
+        "created_base_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_BASE_CREATED_GO_TO_BASES",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BASE_CREATED_SUCCESS",
+          "to": "BASES_DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#view-bases-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BASE_CREATED_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BASE_CREATED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BASE_WORKSPACE",
+      "signature_schema": {
+        "selected_base_id": "string|null",
+        "tables": "array<object>|null",
+        "selected_table_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_BASE_WORKSPACE_OPEN_GRID_VIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BASE_WORKSPACE",
+          "to": "TABLE_GRID_VIEW",
+          "parameters": {
+            "table_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_table_id",
+              "value_ref": "{table_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#table-tabs .table-grid"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BASE_WORKSPACE_OPEN_KANBAN",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BASE_WORKSPACE",
+          "to": "KANBAN_VIEW",
+          "parameters": {
+            "table_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_table_id",
+              "value_ref": "{table_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#view-switcher-kanban"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BASE_WORKSPACE_OPEN_AUTOMATIONS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BASE_WORKSPACE",
+          "to": "AUTOMATIONS_DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-automations"
+            }
+          ]
+        },
+        {
+          "id": "ACT_BASE_WORKSPACE_BACK_TO_BASES",
+          "name": "click",
+          "is_navigation": true,
+          "from": "BASE_WORKSPACE",
+          "to": "BASES_DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-bases-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TABLE_GRID_VIEW",
+      "signature_schema": {
+        "records": "array<object>|null",
+        "table_grid_filters_applied": "boolean|null",
+        "table_grid_viewport_anchor_id": "string|null",
+        "table_grid_has_searched": "boolean|null",
+        "matched_record_id": "string|null",
+        "selected_record_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_GRID_FILTER_STATUS_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "TABLE_GRID_VIEW",
+          "to": "TABLE_GRID_VIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.table_grid_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-status-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_GRID_FILTER_PRIORITY_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "TABLE_GRID_VIEW",
+          "to": "TABLE_GRID_VIEW",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.table_grid_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#priority-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#priority-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "ACT_GRID_SORT_BY_DUE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "TABLE_GRID_VIEW",
+          "to": "TABLE_GRID_VIEW",
+          "parameters": {
+            "widget": "sort"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.table_grid_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#grid-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#grid-sort-due-date",
+              "ui_elements": {
+                "container": "#grid-sort-dropdown",
+                "options": [
+                  {
+                    "value": "due-date",
+                    "selector": "#grid-sort-due-date"
+                  },
+                  {
+                    "value": "created",
+                    "selector": "#grid-sort-created"
+                  },
+                  {
+                    "value": "priority",
+                    "selector": "#grid-sort-priority"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_GRID_OPEN_FILTERED_RECORD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TABLE_GRID_VIEW",
+          "to": "RECORD_DETAIL",
+          "parameters": {
+            "record_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.table_grid_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.table_grid_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_record_id",
+              "value_ref": "{record_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#grid-records .record-row-filtered"
+            }
+          ]
+        },
+        {
+          "id": "ACT_GRID_SCROLL_RECORD_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "TABLE_GRID_VIEW",
+          "to": "TABLE_GRID_VIEW",
+          "parameters": {
+            "record_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.table_grid_viewport_anchor_id",
+              "value_ref": "{record_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#grid-viewport"
+            },
+            {
+              "op": "drag",
+              "selector": "#grid-viewport",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_GRID_OPEN_ANY_RECORD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TABLE_GRID_VIEW",
+          "to": "RECORD_DETAIL",
+          "parameters": {
+            "record_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.table_grid_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.table_grid_viewport_anchor_id"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_record_id",
+              "value_ref": "{record_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#grid-records .record-row-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_GRID_SEARCH_RECORD",
+          "name": "search",
+          "is_navigation": false,
+          "from": "TABLE_GRID_VIEW",
+          "to": "TABLE_GRID_VIEW",
+          "parameters": {
+            "record_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.matched_record_id",
+              "value_ref": "{record_id}"
+            },
+            {
+              "op": "set",
+              "path": "$.table_grid_has_searched",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#grid-search-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#grid-search-input",
+              "text": "{search_query}"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_GRID_OPEN_MATCHED_RECORD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TABLE_GRID_VIEW",
+          "to": "RECORD_DETAIL",
+          "parameters": {
+            "record_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.matched_record_id",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.table_grid_has_searched",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.table_grid_has_searched"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_record_id",
+              "value_ref": "{record_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#grid-records .record-row-matched"
+            }
+          ]
+        },
+        {
+          "id": "ACT_GRID_OPEN_CREATE_RECORD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TABLE_GRID_VIEW",
+          "to": "RECORD_CREATE_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#add-record-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_GRID_BACK_TO_BASE_WORKSPACE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "TABLE_GRID_VIEW",
+          "to": "BASE_WORKSPACE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-base-workspace"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RECORD_DETAIL",
+      "signature_schema": {
+        "selected_record_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_RECORD_DETAIL_OPEN_EDIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "RECORD_DETAIL",
+          "to": "RECORD_EDIT_FORM",
+          "parameters": {
+            "record_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.selected_record_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#edit-record-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RECORD_DETAIL_OPEN_FORM_VIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "RECORD_DETAIL",
+          "to": "FORM_VIEW_SUBMISSION",
+          "parameters": {
+            "record_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.selected_record_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#open-form-view"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RECORD_DETAIL_BACK_TO_GRID",
+          "name": "click",
+          "is_navigation": true,
+          "from": "RECORD_DETAIL",
+          "to": "TABLE_GRID_VIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-grid-view"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RECORD_CREATE_FORM",
+      "signature_schema": {
+        "records": "array<object>|null",
+        "field_title_input": "string|null",
+        "field_status_select": "string|null",
+        "field_due_date": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_RECORD_CREATE_TYPE_TITLE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "RECORD_CREATE_FORM",
+          "to": "RECORD_CREATE_FORM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.field_title_input",
+              "value_expr": "gen_id()"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#field-title-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#field-title-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RECORD_CREATE_SELECT_STATUS",
+          "name": "select",
+          "is_navigation": false,
+          "from": "RECORD_CREATE_FORM",
+          "to": "RECORD_CREATE_FORM",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.field_status_select",
+              "value": "In progress"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#field-status-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#status-in-progress",
+              "ui_elements": {
+                "container": "#field-status-dropdown",
+                "options": [
+                  {
+                    "value": "To do",
+                    "selector": "#status-to-do"
+                  },
+                  {
+                    "value": "In progress",
+                    "selector": "#status-in-progress"
+                  },
+                  {
+                    "value": "Done",
+                    "selector": "#status-done"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_RECORD_CREATE_PICK_DUE_DATE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "RECORD_CREATE_FORM",
+          "to": "RECORD_CREATE_FORM",
+          "parameters": {
+            "widget": "date_picker"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.field_due_date",
+              "value_expr": "now()"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#date-picker"
+            },
+            {
+              "op": "click",
+              "selector": ".year-2025"
+            },
+            {
+              "op": "click",
+              "selector": ".month-10"
+            },
+            {
+              "op": "click",
+              "selector": ".day-15"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RECORD_CREATE_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "RECORD_CREATE_FORM",
+          "to": "RECORD_CREATED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.field_title_input",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.field_status_select",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.records",
+              "value_expr": "append($.records, {\"id\": gen_id(), \"title\": $.field_title_input})"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#submit-record-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RECORD_CREATE_BACK_TO_GRID",
+          "name": "click",
+          "is_navigation": true,
+          "from": "RECORD_CREATE_FORM",
+          "to": "TABLE_GRID_VIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-grid-view"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RECORD_CREATED_SUCCESS",
+      "signature_schema": {
+        "created_record_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_RECORD_CREATED_GO_TO_GRID",
+          "name": "click",
+          "is_navigation": true,
+          "from": "RECORD_CREATED_SUCCESS",
+          "to": "TABLE_GRID_VIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#view-grid-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RECORD_CREATED_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "RECORD_CREATED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RECORD_EDIT_FORM",
+      "signature_schema": {
+        "records": "array<object>|null",
+        "selected_record_id": "string|null",
+        "edit_title_input": "string|null",
+        "edit_status_select": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_RECORD_EDIT_TYPE_TITLE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "RECORD_EDIT_FORM",
+          "to": "RECORD_EDIT_FORM",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_record_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.edit_title_input",
+              "value_expr": "gen_id()"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#edit-title-input"
+            },
+            {
+              "op": "key_press",
+              "key": "Ctrl+A"
+            },
+            {
+              "op": "key_press",
+              "key": "Delete"
+            },
+            {
+              "op": "type_text",
+              "selector": "#edit-title-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RECORD_EDIT_SELECT_STATUS",
+          "name": "select",
+          "is_navigation": false,
+          "from": "RECORD_EDIT_FORM",
+          "to": "RECORD_EDIT_FORM",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.edit_status_select",
+              "value": "Done"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#edit-status-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#edit-status-done",
+              "ui_elements": {
+                "container": "#edit-status-dropdown",
+                "options": [
+                  {
+                    "value": "To do",
+                    "selector": "#edit-status-to-do"
+                  },
+                  {
+                    "value": "In progress",
+                    "selector": "#edit-status-in-progress"
+                  },
+                  {
+                    "value": "Done",
+                    "selector": "#edit-status-done"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_RECORD_EDIT_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "RECORD_EDIT_FORM",
+          "to": "RECORD_UPDATED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.edit_title_input",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.selected_record_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.records",
+              "value_expr": "map($.records, function(r){ if(r.id == $.selected_record_id){ return merge(r,{\"title\": $.edit_title_input}); } return r; })"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#save-record-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RECORD_EDIT_BACK_TO_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "RECORD_EDIT_FORM",
+          "to": "RECORD_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-record-detail"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RECORD_UPDATED_SUCCESS",
+      "signature_schema": {
+        "updated_record_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_RECORD_UPDATED_GO_TO_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "RECORD_UPDATED_SUCCESS",
+          "to": "RECORD_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#view-record-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_RECORD_UPDATED_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "RECORD_UPDATED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KANBAN_VIEW",
+      "signature_schema": {
+        "records": "array<object>|null",
+        "kanban_viewport_anchor_id": "string|null",
+        "kanban_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_KANBAN_FILTER_STATUS_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "KANBAN_VIEW",
+          "to": "KANBAN_VIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.kanban_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#kanban-filter-status-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_KANBAN_SCROLL_COLUMN",
+          "name": "click",
+          "is_navigation": false,
+          "from": "KANBAN_VIEW",
+          "to": "KANBAN_VIEW",
+          "parameters": {
+            "record_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.kanban_viewport_anchor_id",
+              "value_ref": "{record_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#kanban-board"
+            },
+            {
+              "op": "drag",
+              "selector": "#kanban-board",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_KANBAN_OPEN_RECORD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "KANBAN_VIEW",
+          "to": "RECORD_DETAIL",
+          "parameters": {
+            "record_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.kanban_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.kanban_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#kanban-board .kanban-card-visible"
+            }
+          ]
+        },
+        {
+          "id": "ACT_KANBAN_BACK_TO_BASE_WORKSPACE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "KANBAN_VIEW",
+          "to": "BASE_WORKSPACE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-base-workspace"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AUTOMATIONS_DASHBOARD",
+      "signature_schema": {
+        "automations": "array<object>|null",
+        "automations_filters_applied": "boolean|null",
+        "automations_viewport_anchor_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_AUTOMATIONS_FILTER_ACTIVE_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "AUTOMATIONS_DASHBOARD",
+          "to": "AUTOMATIONS_DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.automations_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-active-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "ACT_AUTOMATIONS_SCROLL",
+          "name": "click",
+          "is_navigation": false,
+          "from": "AUTOMATIONS_DASHBOARD",
+          "to": "AUTOMATIONS_DASHBOARD",
+          "parameters": {
+            "automation_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.automations_viewport_anchor_id",
+              "value_ref": "{automation_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#automations-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#automations-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "ACT_AUTOMATIONS_OPEN_CREATE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "AUTOMATIONS_DASHBOARD",
+          "to": "AUTOMATION_CREATE_TRIGGER",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-automation-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_AUTOMATIONS_BACK_TO_BASE_WORKSPACE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "AUTOMATIONS_DASHBOARD",
+          "to": "BASE_WORKSPACE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-base-workspace"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AUTOMATION_CREATE_TRIGGER",
+      "signature_schema": {
+        "automations": "array<object>|null",
+        "trigger_type": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_AUTOMATION_SELECT_TRIGGER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "AUTOMATION_CREATE_TRIGGER",
+          "to": "AUTOMATION_CREATE_TRIGGER",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.trigger_type",
+              "value": "when-record-created"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#trigger-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#trigger-record-created",
+              "ui_elements": {
+                "container": "#trigger-dropdown",
+                "options": [
+                  {
+                    "value": "when-record-created",
+                    "selector": "#trigger-record-created"
+                  },
+                  {
+                    "value": "when-record-updated",
+                    "selector": "#trigger-record-updated"
+                  },
+                  {
+                    "value": "at-scheduled-time",
+                    "selector": "#trigger-scheduled-time"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_AUTOMATION_NEXT_TO_ACTION",
+          "name": "click",
+          "is_navigation": true,
+          "from": "AUTOMATION_CREATE_TRIGGER",
+          "to": "AUTOMATION_CREATE_ACTION",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.trigger_type",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#next-to-action"
+            }
+          ]
+        },
+        {
+          "id": "ACT_AUTOMATION_TRIGGER_BACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "AUTOMATION_CREATE_TRIGGER",
+          "to": "AUTOMATIONS_DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-automations-dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AUTOMATION_CREATE_ACTION",
+      "signature_schema": {
+        "automations": "array<object>|null",
+        "trigger_type": "string|null",
+        "action_type": "string|null",
+        "email_recipient": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_AUTOMATION_SELECT_ACTION",
+          "name": "select",
+          "is_navigation": false,
+          "from": "AUTOMATION_CREATE_ACTION",
+          "to": "AUTOMATION_CREATE_ACTION",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.action_type",
+              "value": "send-email"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#action-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#action-send-email",
+              "ui_elements": {
+                "container": "#action-dropdown",
+                "options": [
+                  {
+                    "value": "send-email",
+                    "selector": "#action-send-email"
+                  },
+                  {
+                    "value": "update-record",
+                    "selector": "#action-update-record"
+                  },
+                  {
+                    "value": "create-record",
+                    "selector": "#action-create-record"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_AUTOMATION_TYPE_EMAIL_RECIPIENT",
+          "name": "type",
+          "is_navigation": false,
+          "from": "AUTOMATION_CREATE_ACTION",
+          "to": "AUTOMATION_CREATE_ACTION",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.email_recipient",
+              "value_expr": "gen_id()"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#email-recipient-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#email-recipient-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_AUTOMATION_SAVE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "AUTOMATION_CREATE_ACTION",
+          "to": "AUTOMATION_CREATED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.trigger_type",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.action_type",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.automations",
+              "value_expr": "append($.automations, {\"id\": gen_id(), \"trigger\": $.trigger_type, \"action\": $.action_type})"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#save-automation-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_AUTOMATION_ACTION_BACK",
+          "name": "click",
+          "is_navigation": true,
+          "from": "AUTOMATION_CREATE_ACTION",
+          "to": "AUTOMATION_CREATE_TRIGGER",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-trigger-step"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AUTOMATION_CREATED_SUCCESS",
+      "signature_schema": {
+        "created_automation_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_AUTOMATION_CREATED_GO_TO_AUTOMATIONS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "AUTOMATION_CREATED_SUCCESS",
+          "to": "AUTOMATIONS_DASHBOARD",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#view-automations-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_AUTOMATION_CREATED_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "AUTOMATION_CREATED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FORM_VIEW_SUBMISSION",
+      "signature_schema": {
+        "form_name": "string|null",
+        "form_email": "string|null",
+        "form_status": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_FORM_TYPE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "FORM_VIEW_SUBMISSION",
+          "to": "FORM_VIEW_SUBMISSION",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.form_name",
+              "value_expr": "gen_id()"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#form-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#form-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FORM_TYPE_EMAIL",
+          "name": "type",
+          "is_navigation": false,
+          "from": "FORM_VIEW_SUBMISSION",
+          "to": "FORM_VIEW_SUBMISSION",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.form_email",
+              "value_expr": "gen_id()"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#form-email-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#form-email-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FORM_SELECT_STATUS",
+          "name": "select",
+          "is_navigation": false,
+          "from": "FORM_VIEW_SUBMISSION",
+          "to": "FORM_VIEW_SUBMISSION",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.form_status",
+              "value": "Submitted"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#form-status-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#form-status-submitted",
+              "ui_elements": {
+                "container": "#form-status-dropdown",
+                "options": [
+                  {
+                    "value": "New",
+                    "selector": "#form-status-new"
+                  },
+                  {
+                    "value": "Submitted",
+                    "selector": "#form-status-submitted"
+                  },
+                  {
+                    "value": "Closed",
+                    "selector": "#form-status-closed"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "ACT_FORM_SUBMIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FORM_VIEW_SUBMISSION",
+          "to": "FORM_SUBMISSION_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.form_name",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.form_email",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#form-submit-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FORM_BACK_TO_DETAIL",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FORM_VIEW_SUBMISSION",
+          "to": "RECORD_DETAIL",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-record-detail"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FORM_SUBMISSION_SUCCESS",
+      "signature_schema": {
+        "submitted_record_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACT_FORM_SUCCESS_GO_TO_GRID",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FORM_SUBMISSION_SUCCESS",
+          "to": "TABLE_GRID_VIEW",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#view-grid-button"
+            }
+          ]
+        },
+        {
+          "id": "ACT_FORM_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FORM_SUBMISSION_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#go-home"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

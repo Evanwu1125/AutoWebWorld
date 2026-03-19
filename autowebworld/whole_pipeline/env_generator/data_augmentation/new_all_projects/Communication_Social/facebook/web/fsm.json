@@ -1,0 +1,2512 @@
+{
+  "meta": {
+    "app": "Social Network-Facebook_app",
+    "version": "1.0",
+    "initial_page_id": "HOME",
+    "terminal_pages": [
+      "POST_PUBLISH_SUCCESS",
+      "FRIEND_REQUEST_SENT_SUCCESS",
+      "EVENT_CREATE_SUCCESS",
+      "MESSAGE_SEND_SUCCESS",
+      "ACCOUNT_SETTINGS_SAVED_SUCCESS"
+    ],
+    "complexity_profile": {
+      "interceptors": {
+        "cookie": true,
+        "permissions": [
+          "location"
+        ],
+        "captcha": false,
+        "register_correction": false
+      },
+      "pages": {
+        "min": 20,
+        "max": 35
+      },
+      "actions": {
+        "per_page_min": 4,
+        "per_page_max": 6
+      },
+      "terminals": {
+        "count": 5
+      },
+      "path_length": {
+        "len": [
+          6,
+          8
+        ],
+        "shortest_only": true,
+        "count_interceptors": false
+      },
+      "home_nav_variants": [
+        "direct",
+        "hover",
+        "menu"
+      ],
+      "home_nav_coverage": "any",
+      "list_filters": {
+        "enabled": true,
+        "fields_max": 4,
+        "two_step_parity": false,
+        "allowed_shapes": [
+          "checkboxes",
+          "sliders",
+          "sort"
+        ]
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "HOME",
+      "signature_schema": {
+        "current_user_id": "string|null",
+        "cookie_consent_given": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "HOME_ACCEPT_COOKIES",
+          "name": "click",
+          "is_navigation": false,
+          "from": "HOME",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.cookie_consent_given",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cookie-accept"
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_NEWS_FEED_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "NEWS_FEED",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-news-feed"
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_FRIENDS_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "FRIENDS_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-menu"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-menu-friends"
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_MESSAGES_HOVER",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "MESSENGER_INBOX",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "hover",
+              "selector": "#nav-messenger"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-messenger-inbox"
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_EVENTS_MENU",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "EVENTS_LIST",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-menu"
+            },
+            {
+              "op": "click",
+              "selector": "#nav-menu-events"
+            }
+          ]
+        },
+        {
+          "id": "HOME_GO_SETTINGS_DIRECT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "HOME",
+          "to": "SETTINGS_ACCOUNT",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.cookie_consent_given",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#nav-settings"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "NEWS_FEED",
+      "signature_schema": {
+        "posts": "array<object>|null",
+        "location_permission_granted": "boolean|null",
+        "news_feed_viewport_anchor_id": "string|null",
+        "news_feed_filters_applied": "boolean|null",
+        "news_feed_has_searched": "boolean|null",
+        "matched_post_id": "string|null",
+        "selected_post_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "NEWS_FEED_LOCATION_PERMISSION_ALLOW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "NEWS_FEED",
+          "to": "NEWS_FEED",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.location_permission_granted",
+              "cond": "eq",
+              "value": null
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.location_permission_granted",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#permission-location-allow"
+            }
+          ]
+        },
+        {
+          "id": "NEWS_FEED_SCROLL_POST_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "NEWS_FEED",
+          "to": "NEWS_FEED",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.news_feed_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#news-feed-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#news-feed-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "NEWS_FEED_OPEN_ANY_POST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NEWS_FEED",
+          "to": "POST_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.news_feed_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_post_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.news_feed_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#news-feed-list .post-visible"
+            }
+          ]
+        },
+        {
+          "id": "NEWS_FEED_FILTER_FEED_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "NEWS_FEED",
+          "to": "NEWS_FEED",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.news_feed_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-friends-only-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "NEWS_FEED_FILTER_FEED_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "NEWS_FEED",
+          "to": "NEWS_FEED",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.news_feed_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-date-range-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#filter-date-range-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "NEWS_FEED_FILTER_FEED_SORT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "NEWS_FEED",
+          "to": "NEWS_FEED",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.news_feed_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#news-feed-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#sort-option-top-stories",
+              "ui_elements": {
+                "container": "#news-feed-sort-dropdown",
+                "options": [
+                  {
+                    "value": "top_stories",
+                    "selector": "#sort-option-top-stories"
+                  },
+                  {
+                    "value": "most_recent",
+                    "selector": "#sort-option-most-recent"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "NEWS_FEED_OPEN_FILTERED_POST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NEWS_FEED",
+          "to": "POST_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.news_feed_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.news_feed_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_post_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#news-feed-list .post-filtered"
+            }
+          ]
+        },
+        {
+          "id": "NEWS_FEED_GO_TO_CREATE_POST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NEWS_FEED",
+          "to": "CREATE_POST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-post-cta"
+            }
+          ]
+        },
+        {
+          "id": "NEWS_FEED_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "NEWS_FEED",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#header-logo-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_POST",
+      "signature_schema": {
+        "post_text": "string|null",
+        "post_audience": "string|null"
+      },
+      "actions": [
+        {
+          "id": "CREATE_POST_TYPE_TEXT",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CREATE_POST",
+          "to": "CREATE_POST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.post_text",
+              "value": "typed"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#post-composer-textarea"
+            },
+            {
+              "op": "type_text",
+              "selector": "#post-composer-textarea",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "CREATE_POST_SELECT_AUDIENCE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CREATE_POST",
+          "to": "CREATE_POST",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.post_audience",
+              "value": "friends"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#post-audience-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#audience-option-friends",
+              "ui_elements": {
+                "container": "#post-audience-dropdown",
+                "options": [
+                  {
+                    "value": "public",
+                    "selector": "#audience-option-public"
+                  },
+                  {
+                    "value": "friends",
+                    "selector": "#audience-option-friends"
+                  },
+                  {
+                    "value": "only_me",
+                    "selector": "#audience-option-only-me"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "CREATE_POST_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_POST",
+          "to": "CREATE_POST_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.post_text",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.post_audience",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#post-next-review"
+            }
+          ]
+        },
+        {
+          "id": "CREATE_POST_BACK_NEWS_FEED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_POST",
+          "to": "NEWS_FEED",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#post-cancel"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_POST_REVIEW",
+      "signature_schema": {
+        "post_text": "string|null",
+        "post_audience": "string|null"
+      },
+      "actions": [
+        {
+          "id": "CREATE_POST_REVIEW_PUBLISH",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_POST_REVIEW",
+          "to": "POST_PUBLISH_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.post_text",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.post_audience",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#post-publish-button"
+            }
+          ]
+        },
+        {
+          "id": "CREATE_POST_REVIEW_BACK_EDIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_POST_REVIEW",
+          "to": "CREATE_POST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#post-edit-back"
+            }
+          ]
+        },
+        {
+          "id": "CREATE_POST_REVIEW_BACK_NEWS_FEED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_POST_REVIEW",
+          "to": "NEWS_FEED",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#post-cancel-from-review"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "POST_DETAIL",
+      "signature_schema": {
+        "selected_post_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "POST_DETAIL_BACK_NEWS_FEED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "POST_DETAIL",
+          "to": "NEWS_FEED",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-to-feed"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "POST_PUBLISH_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "POST_PUBLISH_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "POST_PUBLISH_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Post published successfully"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#success-go-home"
+            }
+          ]
+        },
+        {
+          "id": "POST_PUBLISH_SUCCESS_VIEW_FEED",
+          "name": "click",
+          "is_navigation": true,
+          "from": "POST_PUBLISH_SUCCESS",
+          "to": "NEWS_FEED",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#view-news-feed"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FRIENDS_LIST",
+      "signature_schema": {
+        "friends": "array<object>|null",
+        "friend_requests_list_filters_applied": "boolean|null",
+        "friend_requests_list_viewport_anchor_id": "string|null",
+        "friend_requests_list_has_searched": "boolean|null",
+        "matched_user_id": "string|null",
+        "selected_user_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "FRIENDS_LIST_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "FRIENDS_LIST",
+          "to": "FRIENDS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.friend_requests_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-mutual-friends-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "FRIENDS_LIST_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "FRIENDS_LIST",
+          "to": "FRIENDS_LIST",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.friend_requests_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#friends-activity-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#friends-activity-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "FRIENDS_LIST_FILTER_SORT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "FRIENDS_LIST",
+          "to": "FRIENDS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.friend_requests_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#friends-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#friends-sort-option-name-inc",
+              "ui_elements": {
+                "container": "#friends-sort-dropdown",
+                "options": [
+                  {
+                    "value": "name",
+                    "selector": "#friends-sort-option-name-inc"
+                  },
+                  {
+                    "value": "recently_added",
+                    "selector": "#friends-sort-option-recently-added"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "FRIENDS_LIST_OPEN_FILTERED_PROFILE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FRIENDS_LIST",
+          "to": "PROFILE_TIMELINE",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.friend_requests_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.friend_requests_list_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_user_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#friends-list .friend-filtered"
+            }
+          ]
+        },
+        {
+          "id": "FRIENDS_LIST_SCROLL_FRIEND_IN_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "FRIENDS_LIST",
+          "to": "FRIENDS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.friend_requests_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#friends-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#friends-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "FRIENDS_LIST_OPEN_ANY_PROFILE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FRIENDS_LIST",
+          "to": "PROFILE_TIMELINE",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.friend_requests_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.selected_user_id",
+              "value_ref": "{item_id}"
+            },
+            {
+              "op": "clear",
+              "path": "$.friend_requests_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#friends-list .friend-visible"
+            }
+          ]
+        },
+        {
+          "id": "FRIENDS_LIST_GO_TO_SUGGESTIONS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FRIENDS_LIST",
+          "to": "FRIEND_SUGGESTIONS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#friend-suggestions-link"
+            }
+          ]
+        },
+        {
+          "id": "FRIENDS_LIST_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FRIENDS_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-home-from-friends"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FRIEND_SUGGESTIONS",
+      "signature_schema": {
+        "suggested_friends": "array<object>|null",
+        "friend_suggestions_viewport_anchor_id": "string|null",
+        "friend_suggestions_has_searched": "boolean|null",
+        "matched_user_id": "string|null",
+        "selected_user_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "FRIEND_SUGGESTIONS_SCROLL_INTO_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "FRIEND_SUGGESTIONS",
+          "to": "FRIEND_SUGGESTIONS",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.friend_suggestions_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#friend-suggestions-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#friend-suggestions-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "FRIEND_SUGGESTIONS_OPEN_ANY_PROFILE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FRIEND_SUGGESTIONS",
+          "to": "PROFILE_TIMELINE",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.friend_suggestions_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.friend_suggestions_viewport_anchor_id"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_user_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#friend-suggestions-list .suggested-visible"
+            }
+          ]
+        },
+        {
+          "id": "FRIEND_SUGGESTIONS_BACK_FRIENDS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FRIEND_SUGGESTIONS",
+          "to": "FRIENDS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-to-friends-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROFILE_TIMELINE",
+      "signature_schema": {
+        "selected_user_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "PROFILE_TIMELINE_GO_ABOUT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_TIMELINE",
+          "to": "PROFILE_ABOUT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#profile-about-tab"
+            }
+          ]
+        },
+        {
+          "id": "PROFILE_TIMELINE_GO_FRIEND_REQUEST",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_TIMELINE",
+          "to": "FRIEND_REQUEST_CONFIRM",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#add-friend-button"
+            }
+          ]
+        },
+        {
+          "id": "PROFILE_TIMELINE_GO_MESSAGE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_TIMELINE",
+          "to": "MESSAGE_COMPOSE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-button"
+            }
+          ]
+        },
+        {
+          "id": "PROFILE_TIMELINE_BACK_FRIENDS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_TIMELINE",
+          "to": "FRIENDS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-to-friends"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROFILE_ABOUT",
+      "signature_schema": {
+        "selected_user_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "PROFILE_ABOUT_BACK_TIMELINE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "PROFILE_ABOUT",
+          "to": "PROFILE_TIMELINE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-to-timeline"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FRIEND_REQUEST_CONFIRM",
+      "signature_schema": {
+        "selected_user_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "FRIEND_REQUEST_CONFIRM_SEND",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FRIEND_REQUEST_CONFIRM",
+          "to": "FRIEND_REQUEST_SENT_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.selected_user_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#confirm-add-friend"
+            }
+          ]
+        },
+        {
+          "id": "FRIEND_REQUEST_CONFIRM_BACK_PROFILE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FRIEND_REQUEST_CONFIRM",
+          "to": "PROFILE_TIMELINE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#cancel-add-friend"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FRIEND_REQUEST_SENT_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "FRIEND_REQUEST_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FRIEND_REQUEST_SENT_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Friend request sent"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#friend-request-success-home"
+            }
+          ]
+        },
+        {
+          "id": "FRIEND_REQUEST_SUCCESS_VIEW_PROFILE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "FRIEND_REQUEST_SENT_SUCCESS",
+          "to": "PROFILE_TIMELINE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#friend-request-success-view-profile"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MESSENGER_INBOX",
+      "signature_schema": {
+        "threads": "array<object>|null",
+        "messenger_inbox_viewport_anchor_id": "string|null",
+        "messenger_inbox_has_searched": "boolean|null",
+        "matched_thread_id": "string|null",
+        "selected_thread_id": "string|null",
+        "messenger_inbox_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "MESSENGER_INBOX_SCROLL_THREAD_IN_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MESSENGER_INBOX",
+          "to": "MESSENGER_INBOX",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.messenger_inbox_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#messenger-thread-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#messenger-thread-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "MESSENGER_INBOX_OPEN_ANY_THREAD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSENGER_INBOX",
+          "to": "MESSAGE_THREAD",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.messenger_inbox_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.messenger_inbox_viewport_anchor_id"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_thread_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#messenger-thread-list .thread-visible"
+            }
+          ]
+        },
+        {
+          "id": "MESSENGER_INBOX_FILTER_UNREAD_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MESSENGER_INBOX",
+          "to": "MESSENGER_INBOX",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.messenger_inbox_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#filter-unread-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "MESSENGER_INBOX_FILTER_SORT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "MESSENGER_INBOX",
+          "to": "MESSENGER_INBOX",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.messenger_inbox_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#messenger-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#messenger-sort-option-recent",
+              "ui_elements": {
+                "container": "#messenger-sort-dropdown",
+                "options": [
+                  {
+                    "value": "recent",
+                    "selector": "#messenger-sort-option-recent"
+                  },
+                  {
+                    "value": "unread",
+                    "selector": "#messenger-sort-option-unread"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "MESSENGER_INBOX_OPEN_FILTERED_THREAD",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSENGER_INBOX",
+          "to": "MESSAGE_THREAD",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.messenger_inbox_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.messenger_inbox_filters_applied"
+            },
+            {
+              "op": "set",
+              "path": "$.selected_thread_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#messenger-thread-list .thread-filtered"
+            }
+          ]
+        },
+        {
+          "id": "MESSENGER_INBOX_NEW_MESSAGE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSENGER_INBOX",
+          "to": "MESSAGE_COMPOSE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#new-message-button"
+            }
+          ]
+        },
+        {
+          "id": "MESSENGER_INBOX_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSENGER_INBOX",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#messenger-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MESSAGE_THREAD",
+      "signature_schema": {
+        "selected_thread_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "MESSAGE_THREAD_BACK_INBOX",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGE_THREAD",
+          "to": "MESSENGER_INBOX",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-to-inbox"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MESSAGE_COMPOSE",
+      "signature_schema": {
+        "message_text": "string|null",
+        "recipient_selected": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "MESSAGE_COMPOSE_SELECT_RECIPIENT",
+          "name": "select",
+          "is_navigation": false,
+          "from": "MESSAGE_COMPOSE",
+          "to": "MESSAGE_COMPOSE",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.recipient_selected",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#recipient-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#recipient-option-item-any",
+              "ui_elements": {
+                "container": "#recipient-dropdown",
+                "options": [
+                  {
+                    "value": "friend_1",
+                    "selector": "#recipient-option-friend-1"
+                  },
+                  {
+                    "value": "friend_2",
+                    "selector": "#recipient-option-friend-2"
+                  },
+                  {
+                    "value": "item_any",
+                    "selector": "#recipient-option-item-any"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "MESSAGE_COMPOSE_TYPE_MESSAGE",
+          "name": "type",
+          "is_navigation": false,
+          "from": "MESSAGE_COMPOSE",
+          "to": "MESSAGE_COMPOSE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.message_text",
+              "value": "typed"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-textarea"
+            },
+            {
+              "op": "type_text",
+              "selector": "#message-textarea",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "MESSAGE_COMPOSE_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGE_COMPOSE",
+          "to": "MESSAGE_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.message_text",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.recipient_selected",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-next-review"
+            }
+          ]
+        },
+        {
+          "id": "MESSAGE_COMPOSE_BACK_INBOX",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGE_COMPOSE",
+          "to": "MESSENGER_INBOX",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-cancel"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MESSAGE_REVIEW",
+      "signature_schema": {
+        "message_text": "string|null",
+        "recipient_selected": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "MESSAGE_REVIEW_SEND",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGE_REVIEW",
+          "to": "MESSAGE_SEND_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.message_text",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.recipient_selected",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-send-button"
+            }
+          ]
+        },
+        {
+          "id": "MESSAGE_REVIEW_BACK_COMPOSE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGE_REVIEW",
+          "to": "MESSAGE_COMPOSE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-edit-back"
+            }
+          ]
+        },
+        {
+          "id": "MESSAGE_REVIEW_BACK_INBOX",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGE_REVIEW",
+          "to": "MESSENGER_INBOX",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-cancel-from-review"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MESSAGE_SEND_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "MESSAGE_SEND_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGE_SEND_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Message sent"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-success-home"
+            }
+          ]
+        },
+        {
+          "id": "MESSAGE_SEND_SUCCESS_VIEW_INBOX",
+          "name": "click",
+          "is_navigation": true,
+          "from": "MESSAGE_SEND_SUCCESS",
+          "to": "MESSENGER_INBOX",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#message-success-view-inbox"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EVENTS_LIST",
+      "signature_schema": {
+        "events": "array<object>|null",
+        "events_list_viewport_anchor_id": "string|null",
+        "events_list_filters_applied": "boolean|null"
+      },
+      "actions": [
+        {
+          "id": "EVENTS_LIST_FILTER_CHECKBOX",
+          "name": "click",
+          "is_navigation": false,
+          "from": "EVENTS_LIST",
+          "to": "EVENTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.events_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#events-filter-going-checkbox"
+            }
+          ]
+        },
+        {
+          "id": "EVENTS_LIST_FILTER_SLIDER",
+          "name": "select",
+          "is_navigation": false,
+          "from": "EVENTS_LIST",
+          "to": "EVENTS_LIST",
+          "parameters": {
+            "widget": "sliders"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.events_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#events-date-range-slider"
+            },
+            {
+              "op": "drag",
+              "selector": "#events-date-range-slider",
+              "to_value": "right"
+            }
+          ]
+        },
+        {
+          "id": "EVENTS_LIST_FILTER_SORT",
+          "name": "click",
+          "is_navigation": false,
+          "from": "EVENTS_LIST",
+          "to": "EVENTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.events_list_filters_applied",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#events-sort-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#events-sort-option-upcoming",
+              "ui_elements": {
+                "container": "#events-sort-dropdown",
+                "options": [
+                  {
+                    "value": "upcoming",
+                    "selector": "#events-sort-option-upcoming"
+                  },
+                  {
+                    "value": "past",
+                    "selector": "#events-sort-option-past"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "EVENTS_LIST_OPEN_FILTERED_EVENT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EVENTS_LIST",
+          "to": "EVENT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.events_list_filters_applied",
+              "cond": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.events_list_filters_applied"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#events-list .event-filtered"
+            }
+          ]
+        },
+        {
+          "id": "EVENTS_LIST_SCROLL_EVENT_IN_VIEW",
+          "name": "click",
+          "is_navigation": false,
+          "from": "EVENTS_LIST",
+          "to": "EVENTS_LIST",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.events_list_viewport_anchor_id",
+              "value_ref": "{item_id}"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#events-list"
+            },
+            {
+              "op": "drag",
+              "selector": "#events-list",
+              "to_value": "down"
+            }
+          ]
+        },
+        {
+          "id": "EVENTS_LIST_OPEN_ANY_EVENT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EVENTS_LIST",
+          "to": "EVENT_DETAIL",
+          "parameters": {
+            "item_id": "{ITEM_ANY}"
+          },
+          "preconditions": [
+            {
+              "path": "$.events_list_viewport_anchor_id",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "op": "clear",
+              "path": "$.events_list_viewport_anchor_id"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#events-list .event-visible"
+            }
+          ]
+        },
+        {
+          "id": "EVENTS_LIST_GO_CREATE_EVENT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EVENTS_LIST",
+          "to": "CREATE_EVENT_DETAILS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#create-event-button"
+            }
+          ]
+        },
+        {
+          "id": "EVENTS_LIST_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EVENTS_LIST",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#events-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EVENT_DETAIL",
+      "signature_schema": {
+        "selected_event_id": "string|null"
+      },
+      "actions": [
+        {
+          "id": "EVENT_DETAIL_BACK_EVENTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EVENT_DETAIL",
+          "to": "EVENTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#back-to-events-list"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_EVENT_DETAILS",
+      "signature_schema": {
+        "event_name": "string|null",
+        "event_location": "string|null"
+      },
+      "actions": [
+        {
+          "id": "CREATE_EVENT_TYPE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CREATE_EVENT_DETAILS",
+          "to": "CREATE_EVENT_DETAILS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.event_name",
+              "value": "typed"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#event-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#event-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "CREATE_EVENT_TYPE_LOCATION",
+          "name": "type",
+          "is_navigation": false,
+          "from": "CREATE_EVENT_DETAILS",
+          "to": "CREATE_EVENT_DETAILS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.event_location",
+              "value": "typed"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#event-location-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#event-location-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "CREATE_EVENT_GO_DATE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_EVENT_DETAILS",
+          "to": "CREATE_EVENT_DATE",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.event_name",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.event_location",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#event-next-date"
+            }
+          ]
+        },
+        {
+          "id": "CREATE_EVENT_DETAILS_BACK_EVENTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_EVENT_DETAILS",
+          "to": "EVENTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#event-cancel"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_EVENT_DATE",
+      "signature_schema": {
+        "event_date": "string|null"
+      },
+      "actions": [
+        {
+          "id": "CREATE_EVENT_PICK_DATE",
+          "name": "select",
+          "is_navigation": false,
+          "from": "CREATE_EVENT_DATE",
+          "to": "CREATE_EVENT_DATE",
+          "parameters": {
+            "widget": "date_picker"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.event_date",
+              "value": "picked"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#date-picker"
+            },
+            {
+              "op": "click",
+              "selector": ".year-2025"
+            },
+            {
+              "op": "click",
+              "selector": ".month-10"
+            },
+            {
+              "op": "click",
+              "selector": ".day-15"
+            },
+            {
+              "op": "key_press",
+              "key": "Enter"
+            }
+          ]
+        },
+        {
+          "id": "CREATE_EVENT_DATE_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_EVENT_DATE",
+          "to": "CREATE_EVENT_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.event_date",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#event-next-review"
+            }
+          ]
+        },
+        {
+          "id": "CREATE_EVENT_DATE_BACK_DETAILS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_EVENT_DATE",
+          "to": "CREATE_EVENT_DETAILS",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#event-back-details"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CREATE_EVENT_REVIEW",
+      "signature_schema": {
+        "event_name": "string|null",
+        "event_location": "string|null",
+        "event_date": "string|null"
+      },
+      "actions": [
+        {
+          "id": "CREATE_EVENT_REVIEW_CREATE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_EVENT_REVIEW",
+          "to": "EVENT_CREATE_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.event_name",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.event_location",
+              "cond": "length_gt",
+              "value": 0
+            },
+            {
+              "path": "$.event_date",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#event-create-button"
+            }
+          ]
+        },
+        {
+          "id": "CREATE_EVENT_REVIEW_BACK_DATE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_EVENT_REVIEW",
+          "to": "CREATE_EVENT_DATE",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#event-back-date"
+            }
+          ]
+        },
+        {
+          "id": "CREATE_EVENT_REVIEW_BACK_EVENTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "CREATE_EVENT_REVIEW",
+          "to": "EVENTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#event-cancel-from-review"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "EVENT_CREATE_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "EVENT_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EVENT_CREATE_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Event created"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#event-success-home"
+            }
+          ]
+        },
+        {
+          "id": "EVENT_SUCCESS_VIEW_EVENTS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "EVENT_CREATE_SUCCESS",
+          "to": "EVENTS_LIST",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#event-success-view-events"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SETTINGS_ACCOUNT",
+      "signature_schema": {
+        "name_input_filled": "boolean|null",
+        "privacy_option": "string|null"
+      },
+      "actions": [
+        {
+          "id": "SETTINGS_ACCOUNT_TYPE_NAME",
+          "name": "type",
+          "is_navigation": false,
+          "from": "SETTINGS_ACCOUNT",
+          "to": "SETTINGS_ACCOUNT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.name_input_filled",
+              "value": true
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-name-input"
+            },
+            {
+              "op": "type_text",
+              "selector": "#settings-name-input",
+              "text": "{input_text}"
+            }
+          ]
+        },
+        {
+          "id": "SETTINGS_ACCOUNT_SELECT_PRIVACY",
+          "name": "select",
+          "is_navigation": false,
+          "from": "SETTINGS_ACCOUNT",
+          "to": "SETTINGS_ACCOUNT",
+          "parameters": {
+            "widget": "dropdown"
+          },
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.privacy_option",
+              "value": "friends"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-privacy-dropdown"
+            },
+            {
+              "op": "click",
+              "selector": "#privacy-option-friends",
+              "ui_elements": {
+                "container": "#settings-privacy-dropdown",
+                "options": [
+                  {
+                    "value": "public",
+                    "selector": "#privacy-option-public"
+                  },
+                  {
+                    "value": "friends",
+                    "selector": "#privacy-option-friends"
+                  },
+                  {
+                    "value": "only_me",
+                    "selector": "#privacy-option-only-me"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "SETTINGS_ACCOUNT_REVIEW",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SETTINGS_ACCOUNT",
+          "to": "SETTINGS_ACCOUNT_REVIEW",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.name_input_filled",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.privacy_option",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-next-review"
+            }
+          ]
+        },
+        {
+          "id": "SETTINGS_ACCOUNT_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SETTINGS_ACCOUNT",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-back-home"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SETTINGS_ACCOUNT_REVIEW",
+      "signature_schema": {
+        "name_input_filled": "boolean|null",
+        "privacy_option": "string|null"
+      },
+      "actions": [
+        {
+          "id": "SETTINGS_ACCOUNT_REVIEW_SAVE",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SETTINGS_ACCOUNT_REVIEW",
+          "to": "ACCOUNT_SETTINGS_SAVED_SUCCESS",
+          "parameters": {},
+          "preconditions": [
+            {
+              "path": "$.name_input_filled",
+              "cond": "eq",
+              "value": true
+            },
+            {
+              "path": "$.privacy_option",
+              "cond": "length_gt",
+              "value": 0
+            }
+          ],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-save-button"
+            }
+          ]
+        },
+        {
+          "id": "SETTINGS_ACCOUNT_REVIEW_BACK_EDIT",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SETTINGS_ACCOUNT_REVIEW",
+          "to": "SETTINGS_ACCOUNT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-back-edit"
+            }
+          ]
+        },
+        {
+          "id": "SETTINGS_ACCOUNT_REVIEW_BACK_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "SETTINGS_ACCOUNT_REVIEW",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-cancel-from-review"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ACCOUNT_SETTINGS_SAVED_SUCCESS",
+      "signature_schema": {
+        "success_message": "string|null"
+      },
+      "actions": [
+        {
+          "id": "ACCOUNT_SETTINGS_SUCCESS_GO_HOME",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_SETTINGS_SAVED_SUCCESS",
+          "to": "HOME",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [
+            {
+              "op": "set",
+              "path": "$.success_message",
+              "value": "Settings saved"
+            }
+          ],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-success-home"
+            }
+          ]
+        },
+        {
+          "id": "ACCOUNT_SETTINGS_SUCCESS_BACK_SETTINGS",
+          "name": "click",
+          "is_navigation": true,
+          "from": "ACCOUNT_SETTINGS_SAVED_SUCCESS",
+          "to": "SETTINGS_ACCOUNT",
+          "parameters": {},
+          "preconditions": [],
+          "effects": [],
+          "gui_procedure": [
+            {
+              "op": "click",
+              "selector": "#settings-success-back-settings"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
