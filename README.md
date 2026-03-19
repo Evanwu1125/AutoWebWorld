@@ -263,7 +263,8 @@ AutoWebWorld/
 ## 🚧 TODO
 
 - [ ] Evaluation framework: benchmarks and metrics for web automation agents
-- [ ] Public dataset release: pre-generated FSMs and trajectories across domains
+- [x] Public dataset release: pre-generated FSMs and trajectories across domains
+- [x] Release all websites used in the paper
 
 ## 🤝 Contributing
 
