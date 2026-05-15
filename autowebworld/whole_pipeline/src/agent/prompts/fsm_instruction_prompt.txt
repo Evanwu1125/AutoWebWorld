@@ -1,0 +1,48 @@
+Generate an **fsm.json** for:
+
+* theme = {theme}
+
+If the theme references a well-known application (e.g., "Email client-gmail"), design the FSM to closely match that application's core features, page structure, user flows, terminology, and distinctive functionalities.
+
+## Complexity Profile
+
+```json
+{COMPLEXITY_PROFILE_JSON}
+```
+
+**Interpretation**: `pages:{min,max}` → page count range. `terminals:{count}` → terminal pages. `path_length:{len[min,max]}` → HOME→terminal trajectory target. `home_nav_variants` → navigation patterns from HOME. `list_filters` → filter config. `interceptors` → gate actions.
+
+## Generation Steps
+
+### Step 1: Page Enumeration
+
+* Generate pages within profile range. Add intermediate pages as needed (category, subcategory, detail, review, confirmation).
+* Prefer ≥1 HOME→terminal trajectory within `path_length.len`.
+* Define `signature_schema` with essential runtime state per page, following [D1-D5].
+
+### Step 2: Action Design
+
+For each page, define actions with: `id`, `name` (click|type|search|select), `is_navigation`, `from`, `to`, `parameters`, `preconditions`, `effects`, `gui_procedure`.
+
+All actions MUST follow the GUI procedure patterns defined in the system prompt.
+
+### Step 3: Navigation Skeleton
+
+Output cross-page edges as: `{from, to, via}`.
+
+## Constraints
+
+- HOME is navigation-first. Cookie on HOME if enabled; permission on first relevant non-HOME page.
+- Generate only necessary navigation actions.
+- For path length, use intermediate pages + non-nav actions to reach target depth.
+- Avoid trivial direct HOME→terminal edges unless intended.
+- Multiple user journeys → separate terminals for different paths.
+- CRUD: list/detail pages with persistent collections via effects.
+- Submit/finalize gates on non-empty selection (`length_gt 0`).
+- Search + scroll parity on list pages. Search only on child pages (not HOME).
+- Terminal pages: success message + "Go Home". Every non-initial page has Back.
+- No pagination. Infinite scroll only.
+
+## Output
+
+Return a **valid JSON object only** (no prose). Order: `meta` → `pages`.

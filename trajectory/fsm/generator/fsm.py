@@ -1,10 +1,12 @@
 import os
 import asyncio
+import base64
 import time
 from typing import Dict, Any, List, Tuple, Optional
 from .fsm_generator_agent import FSMGeneratorAgent
 from .fsm_validator_agent import FSMValidatorAgent
 from .fsm_improve_agent import FSMImproveAgent
+from .reference_fetcher import ReferenceFetcher
 from .utils import (
     save_json,
     save_cost_report,
@@ -41,7 +43,8 @@ class FSMPerfectGenerator:
         self.validator = FSMValidatorAgent(model=model, debug_output_dir=validator_debug_dir)
         self.improver = FSMImproveAgent(model=model, debug_output_dir=improver_debug_dir)
 
-    async def generate_initial_fsms(self, theme: str, output_dir: str) -> List[Dict[str, Any]]:
+    async def generate_initial_fsms(self, theme: str, output_dir: str,
+                                     reference_image_b64: Optional[str] = None) -> List[Dict[str, Any]]:
         print(f"🚀 Starting concurrent generation of {self.concurrent_count} initial FSMs...")
         print(f"   Theme: {theme}")
 
@@ -50,7 +53,8 @@ class FSMPerfectGenerator:
                 theme=theme,
                 process_id=i + 1,
                 output_dir=f"{output_dir}/initial",
-                complexity_profile=self.complexity_profile
+                complexity_profile=self.complexity_profile,
+                reference_image_b64=reference_image_b64,
             )
             for i in range(self.concurrent_count)
         ]
@@ -154,7 +158,9 @@ class FSMPerfectGenerator:
 
     async def find_perfect_fsm(self,
                             theme: str,
-                            output_dir: str = "fsm_perfect_outputs") -> Optional[Dict[str, Any]]:
+                            output_dir: str = "fsm_perfect_outputs",
+                            auto_fetch_reference: bool = False,
+                            reference_image_b64: Optional[str] = None) -> Optional[Dict[str, Any]]:
         os.makedirs(output_dir, exist_ok=True)
 
         print("=" * 80)
@@ -174,7 +180,16 @@ class FSMPerfectGenerator:
         print(f"   Output directory: {themed_output_dir}")
         print("=" * 80)
 
-        initial_fsms = await self.generate_initial_fsms(theme, themed_output_dir)
+        # Optionally fetch a reference homepage screenshot before generation
+        if auto_fetch_reference and not reference_image_b64:
+            fetcher = ReferenceFetcher(model=self.model)
+            ref = await fetcher.fetch(theme, themed_output_dir)
+            if ref:
+                reference_image_b64 = ref.image_b64
+            # If fetch failed or was skipped, reference_image_b64 remains None and generation continues normally
+
+        initial_fsms = await self.generate_initial_fsms(theme, themed_output_dir,
+                                                         reference_image_b64=reference_image_b64)
         if not initial_fsms:
             print("❌ No initial FSM was generated successfully")
             return None
@@ -264,9 +279,17 @@ async def generate_perfect_fsm(theme: str,
                             concurrent_count: int = 16,
                             output_dir: str = "fsm_perfect_outputs",
                             complexity_profile: Optional[Dict[str, Any]] = None,
-                            debug_llm_calls: bool = False) -> Optional[Dict[str, Any]]:
+                            debug_llm_calls: bool = False,
+                            auto_fetch_reference: bool = False,
+                            reference_image_path: Optional[str] = None) -> Optional[Dict[str, Any]]:
     """Entry function for generating a perfect FSM"""
     debug_dir = os.path.join(output_dir, "llm_calls") if debug_llm_calls else None
+
+    # Pre-load reference image from disk if a path was provided
+    reference_image_b64: Optional[str] = None
+    if reference_image_path:
+        with open(reference_image_path, "rb") as f:
+            reference_image_b64 = base64.b64encode(f.read()).decode()
 
     generator = FSMPerfectGenerator(
         model=model,
@@ -276,7 +299,12 @@ async def generate_perfect_fsm(theme: str,
         debug_output_dir=debug_dir
     )
 
-    return await generator.find_perfect_fsm(theme=theme, output_dir=output_dir)
+    return await generator.find_perfect_fsm(
+        theme=theme,
+        output_dir=output_dir,
+        auto_fetch_reference=auto_fetch_reference,
+        reference_image_b64=reference_image_b64,
+    )
 
 
 if __name__ == "__main__":
@@ -291,6 +319,10 @@ if __name__ == "__main__":
         parser.add_argument("--output_dir", default="fsm_perfect_outputs", help="Output directory")
         parser.add_argument("--profile_json", default=None, help="Complexity profile JSON path, optional")
         parser.add_argument("--debug_llm_calls", action="store_true", help="Save input/output of all LLM calls")
+        parser.add_argument("--auto-fetch-reference", action="store_true",
+                            help="Auto-fetch and screenshot reference website before FSM generation")
+        parser.add_argument("--reference-image", default=None,
+                            help="Path to an existing reference homepage screenshot (skips auto-fetch)")
         args = parser.parse_args()
 
         profile_data = None
@@ -304,7 +336,9 @@ if __name__ == "__main__":
             concurrent_count=args.concurrent_count,
             output_dir=args.output_dir,
             complexity_profile=profile_data,
-            debug_llm_calls=args.debug_llm_calls
+            debug_llm_calls=args.debug_llm_calls,
+            auto_fetch_reference=args.auto_fetch_reference,
+            reference_image_path=args.reference_image,
         )
 
         if perfect_fsm:

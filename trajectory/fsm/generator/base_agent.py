@@ -170,10 +170,21 @@ class BaseAgent(ABC):
     async def _call_llm(self,
                         system_prompt: str,
                         user_prompt: str,
-                        response_format: Optional[Dict[str, str]] = None) -> str:
+                        response_format: Optional[Dict[str, str]] = None,
+                        image_b64: Optional[str] = None) -> str:
 
         client = await self._get_client()
         start_time = time.time()
+
+        # Build user content — plain text or multimodal list when an image is provided
+        if image_b64:
+            user_content = [
+                {"type": "text", "text": user_prompt},
+                {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{image_b64}"}},
+            ]
+        else:
+            user_content = user_prompt
+
         if self.model.startswith("gpt-"):
             request_params = {
                 "model": self.model,
@@ -181,7 +192,7 @@ class BaseAgent(ABC):
                 "temperature": self.temperature,
                 "messages": [
                     {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt}
+                    {"role": "user", "content": user_content}
                 ]
             }
 
@@ -192,7 +203,7 @@ class BaseAgent(ABC):
                 "temperature": self.temperature,
                 "messages": [
                     {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt}
+                    {"role": "user", "content": user_content}
                 ]
             }
 
@@ -204,7 +215,7 @@ class BaseAgent(ABC):
                 "temperature": self.temperature,
                 "messages": [
                     {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt}
+                    {"role": "user", "content": user_content}
                 ]
             }
 

@@ -5,6 +5,7 @@ import argparse
 import json
 import os
 import re
+import shutil
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -35,7 +36,7 @@ def _import_mini_swe_agent(mini_src: str | None):
     env_src = os.getenv("MINI_SWE_AGENT_SRC")
     if env_src:
         candidates.append(Path(env_src))
-    candidates.append(Path.cwd().parent / "mini-swe-agent" / "src")
+    candidates.append(Path.cwd() / "mini-swe-agent" / "src")
     candidates.append(Path("/Users/evanwu/Desktop/autoguiworld/mini-swe-agent/src"))
 
     tried: list[str] = []
@@ -338,6 +339,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Skip template/Vite initialization and assume project already exists",
     )
+    parser.add_argument(
+        "--reference-image",
+        default=None,
+        help="Path to a reference homepage screenshot; copied into project and noted in the agent prompt",
+    )
     return parser.parse_args()
 
 
@@ -383,6 +389,18 @@ def main() -> None:
 
     tools = ProjectTools(project_root=project_root, fsm_path=fsm_path, npm_client=args.npm_client)
     copied_fsm_path = tools.copy_fsm_into_project(args.fsm_copy_name)
+
+    # Copy reference screenshot into the project so the coding agent can read it as a file
+    reference_image_project_path: Path | None = None
+    if args.reference_image:
+        src = Path(args.reference_image).resolve()
+        if src.exists():
+            dest = project_root / "reference_homepage.png"
+            shutil.copy2(src, dest)
+            reference_image_project_path = dest
+            print(f"[reference] screenshot copied to {dest}")
+        else:
+            print(f"[warn] --reference-image path not found, skipping: {src}")
     run_id = args.run_id or _new_run_id(prefix="react")
     run_context_dir = (context_root / run_id).resolve()
     run_context_dir.mkdir(parents=True, exist_ok=False)
@@ -400,6 +418,16 @@ def main() -> None:
         else ""
     )
     fsm_input = copied_fsm_path.read_text(encoding="utf-8")
+
+    # Prepend reference screenshot note to the instruction template if available
+    if reference_image_project_path is not None:
+        reference_note = (
+            "A reference screenshot of the real website's homepage has been saved to "
+            f"`reference_homepage.png` in your project directory. "
+            "Use it to guide the visual design, layout, color scheme, and page structure "
+            "of the web application you are building.\n\n"
+        )
+        instruction_prompt_template = reference_note + instruction_prompt_template
 
     context_run_meta = {
         "run_id": run_id,

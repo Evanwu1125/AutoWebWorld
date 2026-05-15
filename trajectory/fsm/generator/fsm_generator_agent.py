@@ -47,15 +47,26 @@ class FSMGeneratorAgent(BaseAgent):
         print(f"🚀 FSMGeneratorAgent: Starting FSM generation")
         print(f"   Theme: {theme}")
 
+        reference_image_b64: Optional[str] = kwargs.get('reference_image_b64')
+
         normalized_profile = normalize_complexity_profile(kwargs.get('complexity_profile'))
         system_prompt = self._get_system_prompt()
         instruction_prompt = self._build_instruction_prompt(theme, normalized_profile)
+
+        if reference_image_b64:
+            instruction_prompt += (
+                "\n\n[Reference Screenshot] The image attached shows the real website's homepage. "
+                "Use it to understand the navigation structure, feature set, page hierarchy, "
+                "and key UI patterns when designing the FSM. Mirror the real product's scope and flows."
+            )
+            print(f"   Reference screenshot: attached")
 
         try:
             response = await self._call_llm(
                 system_prompt=system_prompt,
                 user_prompt=instruction_prompt,
-                response_format={"type": "json_object"} if self.model.startswith("gpt-") else None
+                response_format={"type": "json_object"} if self.model.startswith("gpt-") else None,
+                image_b64=reference_image_b64,
             )
 
             fsm_data = self._force_json(response)

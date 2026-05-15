@@ -17,8 +17,25 @@ env/
 
 # Large generated data
 autowebworld/whole_pipeline/new_outputs/
+autowebworld/whole_pipeline/fsm_outputs/
+autowebworld/whole_pipeline/test_images/
 trajectory/fsm/generator/fsm_perfect_outputs/
 trajectory/fsm/temp/
+
+# Local agent/dependency checkouts
+.claude/
+mini-swe-agent/
+.screenshots/
+
+# Node
+node_modules/
+.pnpm-store/
+.vite/
+
+# Local databases
+*.db
+*.db-shm
+*.db-wal
 
 # Compressed archives
 *.tar.gz

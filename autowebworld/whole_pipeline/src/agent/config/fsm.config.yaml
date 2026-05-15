@@ -1,0 +1,41 @@
+default_model: gpt-5.4
+
+model_list:
+- model_name: gpt-5.4
+  litellm_params:
+    model: gpt-5.4
+    api_type: openai
+    api_base: https://newapi.deepwisdom.ai/v1
+    api_key_env: OPENAI_API_KEY
+    temperature: 1
+    drop_params: true
+  model_info:
+    input_cost_per_token: 5.0e-06
+    output_cost_per_token: 2.5e-05
+    max_output_tokens: 32768
+
+- model_name: gemini-3.1-pro-preview
+  litellm_params:
+    model: gemini-3.1-pro-preview
+    api_type: openai
+    api_base: https://newapi.deepwisdom.ai/v1
+    api_key_env: OPENAI_API_KEY
+    temperature: 1
+    drop_params: true
+  model_info:
+    input_cost_per_token: 1.25e-06
+    output_cost_per_token: 1.0e-05
+    max_output_tokens: 65536
+
+- model_name: claude-sonnet-4-6
+  litellm_params:
+    model: claude-sonnet-4-6
+    api_type: openai
+    api_base: https://newapi.deepwisdom.ai/v1
+    api_key_env: OPENAI_API_KEY
+    temperature: 1
+    drop_params: true
+  model_info:
+    input_cost_per_token: 3.0e-06
+    output_cost_per_token: 1.5e-05
+    max_output_tokens: 64000

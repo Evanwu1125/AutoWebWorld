@@ -21,11 +21,29 @@ cd "${PROJECT_ROOT}"
 export OPENAI_API_KEY="${OPENAI_API_KEY:-${DEFAULT_OPENAI_API_KEY}}"
 MODEL="${FSM_MODEL:-${DEFAULT_MODEL}}"
 
+# Reference screenshot options (both optional):
+#   AUTO_FETCH_REFERENCE=1  — discover URL via LLM, confirm interactively, then screenshot
+#   REFERENCE_IMAGE=path    — use an existing screenshot (skips auto-fetch)
+AUTO_FETCH_REFERENCE="${AUTO_FETCH_REFERENCE:-0}"
+REFERENCE_IMAGE="${REFERENCE_IMAGE:-}"
+
 # Note: base_url uses the default value from trajectory/fsm/generator/base_agent.py
 # Set OPENAI_BASE_URL environment variable to override
-python -m trajectory.fsm.generator.fsm \
-  --theme "${THEME}" \
-  --model "${MODEL}" \
-  --concurrent_count "${CONCURRENT_COUNT}" \
-  --output_dir "${OUTPUT_DIR}" \
+cmd=(
+  python -m trajectory.fsm.generator.fsm
+  --theme "${THEME}"
+  --model "${MODEL}"
+  --concurrent_count "${CONCURRENT_COUNT}"
+  --output_dir "${OUTPUT_DIR}"
   --profile_json "${PROFILE_JSON}"
+)
+
+if [[ "${AUTO_FETCH_REFERENCE}" == "1" ]]; then
+  cmd+=(--auto-fetch-reference)
+fi
+
+if [[ -n "${REFERENCE_IMAGE}" ]]; then
+  cmd+=(--reference-image "${REFERENCE_IMAGE}")
+fi
+
+exec "${cmd[@]}"
