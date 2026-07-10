@@ -33,7 +33,7 @@ The app will be available at `http://localhost:5173`.
 
 ## 📰 News
 
-- **[2026-03-19]** Released the training data used in our paper: [HuggingFace Dataset](https://huggingface.co/datasets/Evanwu50020/travel_media_commerce_communication_productivity/settings)
+- **[2026-03-19]** Released the training data used in our paper: [HuggingFace Dataset](https://huggingface.co/datasets/Evanwu50020/travel_media_commerce_communication_productivity)
 - **[2026-03-18]** Added `autowebworld/` Web Synthesis module: FSM → React UI via multi-turn coding agent
 - **[2026-02-10]** Added GRPO training module for vision-language model training
 - **[2026-02-10]** Completed BFS traversal module
