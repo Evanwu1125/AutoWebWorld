@@ -1,0 +1,144 @@
+# ========================================
+# Batch Run Configuration File
+# ========================================
+
+# ========================================
+# Data Configuration
+#
+# Supported dataset layouts:
+#
+#   WebVoyager:
+#     data_dir: "data/webvoyager/web_split"
+#     Each sub-directory is a website name (Apple, ArXiv, etc.)
+#     containing .jsonl task files.
+#
+#   Online Mind2Web:
+#     data_dir: "data/mind2web/web_split"
+#     Use a single entry: webs: ["Online_Mind2Web"]
+# ========================================
+
+# Data directory (adjust for your dataset)
+data_dir: "data/webvoyager/web_split"
+# data_dir: "data/mind2web/web_split"   # <- use this for Online Mind2Web
+
+# List of webs/splits to run (leave empty to run all sub-directories)
+webs: [
+  "Apple",
+  # "ArXiv",
+  # "BBC_News",
+  # "Cambridge_Dictionary",
+  # "Coursera",
+  # "Huggingface",
+  # "Booking",
+  # "Amazon",
+  # "Google_Flights",
+  # "Wolfram_Alpha",
+  # "Google_Map"
+]
+# For Online Mind2Web, use:
+# webs: ["Online_Mind2Web"]
+
+# Maximum number of tasks to run per web (null means run all)
+max_tasks_per_web: null  # e.g. 5 means only run the first 5 tasks per web
+
+# Task indices to skip (optional)
+# Example: {"Apple": [0, 1], "Amazon": [2]} skips the first two tasks for Apple and the 3rd for Amazon
+skip_tasks: {}
+
+# ========================================
+# Output Configuration
+#
+# The output directory is dataset-specific by convention:
+#   WebVoyager        -> output/webvoyager
+#   Online Mind2Web   -> output/mind2web
+# Web name and timestamp are appended automatically.
+# ========================================
+
+output_base_dir: "output/webvoyager"
+# output_base_dir: "output/mind2web"   # <- use this for Online Mind2Web
+
+# Whether to save detailed logs
+save_logs: true
+
+# Whether to save screenshots
+capture: true
+
+# ========================================
+# Model and Step Configuration
+# ========================================
+
+# Agent type: "gui_agent", "ui_venus", "tongui", "showui", "ui_tars", "open_cua"
+agent_type: "gui_agent"
+
+# Model name as defined in global_configs/model_config.yaml
+model: "gemini-3-flash-preview"
+
+# Maximum number of action steps
+max_steps: 15
+
+# Number of text history steps to retain
+text_steps: 15
+
+# Number of image history steps to retain
+image_steps: 1
+
+# ========================================
+# Browser Configuration
+# ========================================
+
+# Whether to run in headless mode
+headless: true
+
+# Viewport width
+width: 1280
+
+# Viewport height
+height: 720
+
+# Chrome/Chromium executable path (required for non-default installations)
+# Leave commented out to use the Playwright-managed browser automatically.
+# executable_path: "/path/to/chromium"
+
+# ========================================
+# Execution Control
+# ========================================
+
+# Wait seconds when action=wait
+wait_seconds: 1.0
+
+# Server startup timeout (seconds)
+timeout: 60
+
+# Whether to continue running when a task fails
+continue_on_error: true
+
+# Number of parallel runs (1 means serial execution)
+# Note: Due to browser resource limits, 1 is recommended
+parallel: 1
+
+# ========================================
+# Progress Saving
+# ========================================
+
+# Whether to enable checkpoint/resume
+resume: true
+
+# Note: progress file is auto-generated at output_base_dir/{web_timestamp}/progress.json
+
+# ========================================
+# GPT Evaluation Configuration
+# ========================================
+
+# Whether to enable GPT evaluation (assesses task completion accuracy)
+# Note: Only tasks with stop_reason="finish_action" will be evaluated
+evaluate: true
+
+# Model to use for GPT evaluation (must be defined in model_config.yaml)
+eval_model: "gemini-3-flash-preview"
+
+# Maximum number of screenshots to use in evaluation (uses last N screenshots)
+eval_max_screenshots: 5
+
+# Concurrent evaluation count (each task runs N evaluations concurrently, best result is selected)
+# Set to 1 to run only one evaluation (no concurrency)
+eval_concurrent_count: 1
